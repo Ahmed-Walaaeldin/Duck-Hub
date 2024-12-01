@@ -1,17 +1,23 @@
 package duckHub.backend;
 
+import javafx.scene.image.Image;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Story extends Content {
     private static int storyCounter = 0;
 
-    private Story(String contentId, String authorId, String contentText, String contentImage, LocalDateTime timestamp) {
+    public Story(){
+
+    }
+
+    public Story(String contentId, String authorId, String contentText, Image contentImage, LocalDateTime timestamp) {
         super(contentId, authorId, contentText, contentImage, timestamp);
     }
 
     // Factory method
-    public static Story create(String authorId, String contentText, String contentImage) {
+    public static Story create(String authorId, String contentText, Image contentImage) {
         String contentId = generateId();
         LocalDateTime timestamp = LocalDateTime.now();
         return new Story(contentId, authorId, contentText, contentImage, timestamp);
