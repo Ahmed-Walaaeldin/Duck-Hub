@@ -1,16 +1,23 @@
 package duckHub.backend;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import javafx.scene.image.Image;
 import java.time.LocalDateTime;
 
+//@JsonIgnoreProperties(ignoreUnknown = true)
 public class Post extends Content {
     private static int postCounter = 0;
 
-    private Post(String contentId, String authorId, String contentText, String contentImage, LocalDateTime timestamp) {
+    public Post(){
+        super();
+
+    }
+    public Post(String contentId, String authorId, String contentText, Image contentImage, LocalDateTime timestamp) {
         super(contentId, authorId, contentText, contentImage, timestamp);
     }
 
     // Factory method
-    public static Post create(String authorId, String contentText, String contentImage) {
+    public static Post create(String authorId, String contentText, Image contentImage) {
         String contentId = generateId();
         LocalDateTime timestamp = LocalDateTime.now();
         return new Post(contentId, authorId, contentText, contentImage, timestamp);

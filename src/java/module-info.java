@@ -6,5 +6,12 @@ module LAB.duckHub {
     requires javafx.media;
     requires javafx.swing;
     requires javafx.base;
+    requires jdk.compiler;
+    requires jdk.httpserver;
+    requires com.fasterxml.jackson.datatype.jsr310;
+    requires com.fasterxml.jackson.databind;
+    exports duckHub.backend.database;
+    exports duckHub.backend;
+    opens duckHub.backend to com.fasterxml.jackson.databind;
     opens duckHub;
 }

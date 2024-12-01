@@ -1,21 +1,26 @@
 package duckHub.backend;
 
+import javafx.scene.image.Image;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class User {
     private static int userCounter = 0;
-    private final String userId;
-    private final String email;
+    private String userId;
+    private String email;
     private String username;
     private String password;
-    private final LocalDate dateOfBirth;
+    private LocalDate dateOfBirth;
     private boolean status;
-    private final ArrayList<String> friends;
-    private final ArrayList<String> blocked;
-    private final ArrayList<Post> posts;
-    private final ArrayList<Story> stories;
+    private ArrayList<String> friends;
+    private ArrayList<String> blocked;
+    private ArrayList<Post> posts;
+    private ArrayList<Story> stories;
 
+    public User(){
+
+    }
     public User(String email, String username, String password, LocalDate dateOfBirth) {
         userId = generateId();
         this.email = email;
@@ -94,7 +99,7 @@ public class User {
             stories.add(story);
         }
     }
-    public void createContent(boolean permanent,String contentText, String contentImage) {
+    public void createContent(boolean permanent,String contentText, Image contentImage) {
         if(permanent) {
             Post post = Post.create(userId,contentText,contentImage);
             posts.add(post);
@@ -103,4 +108,5 @@ public class User {
             stories.add(story);
         }
     }
+
 }
