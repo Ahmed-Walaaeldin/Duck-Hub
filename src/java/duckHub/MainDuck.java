@@ -3,9 +3,13 @@ package duckHub;
 import duckHub.backend.*;
 import duckHub.backend.database.Load;
 import duckHub.backend.database.Save;
-import duckHub.frontend.feed.MainScene;
+//import duckHub.frontend.feed.MainScene;
 import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
@@ -32,9 +36,11 @@ public class MainDuck extends Application {
         Save save = new Save();
         save.saveToFile(users);
 
+        users.clear();
+
         Load load = new Load();
-        load.loadFromFile();
-        users = load.getUsers();
+        load.loadFromFile(BackendDuck.getUsers());
+        users = BackendDuck.getUsers();
         System.out.println(users);
         for (User user : users) {
             System.out.println(user.getUserId());
@@ -43,5 +49,17 @@ public class MainDuck extends Application {
                 System.out.println(post.getContentImage().getUrl());
             }
         }
+
+//        Stage window = new Stage();
+//
+//        BorderPane mainLayout = new BorderPane();
+//        VBox root = new VBox();
+//        ScrollPane scrollPane = new ScrollPane();
+//        scrollPane.setContent();
+//
+//        Scene scene = new Scene(mainLayout, 600, 500);
+//        window.setScene(scene);
+//        window.setTitle("Friends Interface");
+//        window.show();
     }
 }
