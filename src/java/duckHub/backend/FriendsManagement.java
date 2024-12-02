@@ -3,53 +3,81 @@ package duckHub.backend;
 import java.util.ArrayList;
 
 public class FriendsManagement {
-    private User user;
-    private ArrayList<User> users;
+    private final User user;
+    private final ArrayList<User> users;
     private ArrayList<String> suggestedFriends;
 
     public FriendsManagement(User user) {
         this.user = user;
         suggestedFriends = new ArrayList<>();
-        users = new BackendDuck().getUsers();
+        users = BackendDuck.getUsers();
     }
 
-    public void sendFriendRequest(String friendID) {
-        user.getPendingSent().add(friendID);
-        User friend = getUserByID(friendID);
-        if (friend != null)
-            friend.getPendingReceived().add(user.getUserId());
-    }
-    public void acceptFriendRequest(String friendID) {
-//?        if (user.getPendingReceived().contains(friendID)) {
-            user.getPendingReceived().remove(friendID);
-            user.getFriends().add(friendID);
-
-            User friend = getUserByID(friendID);
+   public boolean sendFriendRequest(String friendID) {
+    if (!user.getFriends().contains(friendID) && !user.getBlocked().contains(friendID)) {
+        if (!user.getPendingSent().contains(friendID)) {
+            user.getPendingSent().add(friendID);
+            User friend = BackendDuck.getUserByID(friendID);
             if (friend != null) {
-                friend.getPendingSent().remove(user.getUserId());
-                friend.getFriends().add(user.getUserId());
+                friend.getPendingReceived().add(user.getUserId());
+                return true;
             }
-//?        }
+        }
     }
-    public void declineFriendRequest(String friendID) {
-//?        if (user.getPendingReceived().contains(friendID)) {
-            user.getPendingReceived().remove(friendID);
+    return false;
+}
 
-            User friend = getUserByID(friendID);
-            if (friend != null) friend.getPendingSent().remove(user.getUserId());
+public boolean acceptFriendRequest(String friendID) {
+    if (user.getPendingReceived().contains(friendID)) {
+        user.getPendingReceived().remove(friendID);
+        user.addFriend(friendID);
 
-//?        }
+        User friend = BackendDuck.getUserByID(friendID);
+        if (friend != null) {
+            friend.getPendingSent().remove(user.getUserId());
+            friend.addFriend(user.getUserId());
+            return true;
+        }
     }
+    return false;
+}
 
-    public void removeFriend(String friendID) {
+public boolean declineFriendRequest(String friendID) {
+    if (user.getPendingReceived().contains(friendID)) {
+        user.getPendingReceived().remove(friendID);
+
+        User friend = BackendDuck.getUserByID(friendID);
+        if (friend != null) {
+            friend.getPendingSent().remove(user.getUserId());
+            return true;
+        }
+    }
+    return false;
+}
+
+public boolean removeFriend(String friendID) {
+    if (user.getFriends().contains(friendID)) {
         user.removeFriend(friendID);
+        return true;
     }
-    public void block(String friendID) {
+    return false;
+}
+
+public boolean block(String friendID) {
+    if (user.getFriends().contains(friendID) && !user.getBlocked().contains(friendID)) {
         user.block(friendID);
+        return true;
     }
-    public void unblock(String friendID) {
+    return false;
+}
+
+public boolean unblock(String friendID) {
+    if (user.getBlocked().contains(friendID)) {
         user.unblock(friendID);
+        return true;
     }
+    return false;
+}
 
     public ArrayList<String> getSuggestedFriends() {
         suggestedFriends.clear();
@@ -68,14 +96,4 @@ public class FriendsManagement {
         }
         return suggestedFriends;
     }
-
-    private User getUserByID(String userId) {
-        for (User u : users) {
-            if (u.getUserId().equals(userId)) {
-                return u;
-            }
-        }
-        return null;
-    }
-
 }
