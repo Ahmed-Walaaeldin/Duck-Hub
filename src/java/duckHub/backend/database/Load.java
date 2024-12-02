@@ -11,17 +11,14 @@ import java.util.ArrayList;
 
 public class Load implements Paths{
 
-    public ArrayList<User> loadFromFile() {
-        ArrayList<User> users = new ArrayList<>();
+    public void loadFromFile(ArrayList<User> users) {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
 
         File directory = new File(USERS_DATABASE_PATH);
         File[] files = directory.listFiles((dir, name) -> name.endsWith(".json"));
 
-        if (files == null) {
-            return users;
-        }else {
+        if (files != null) {
             for (File file : files) {
                 try{
                     User user = objectMapper.readValue(file,User.class);
@@ -36,6 +33,5 @@ public class Load implements Paths{
                 }
             }
         }
-        return users;
     }
 }
