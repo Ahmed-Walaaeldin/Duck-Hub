@@ -1,5 +1,6 @@
 package duckHub.frontend;
 
+import duckHub.MainDuck;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -17,20 +18,12 @@ import javafx.stage.Stage;
 
 import java.util.Objects;
 
-public class LoginPage extends Application {
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-    @Override
-    public void start(Stage IntroductionStage) throws Exception {
-        IntroductionStage.setTitle("Duck-Hub");
-
+public class LoginPage {
+    public Scene getScene(MainDuck mainDuck) {
+        VBox mainLayout = new VBox();
         // full screen window
         double screenWidth = Screen.getPrimary().getBounds().getWidth();
         double screenHeight = Screen.getPrimary().getBounds().getHeight();
-        IntroductionStage.setWidth(screenWidth);
-        IntroductionStage.setHeight(screenHeight);
 
         // image
         Image logo = new Image("file:duck.png");
@@ -53,10 +46,10 @@ public class LoginPage extends Application {
         grid.setVgap(10);
         grid.setPadding(new Insets(10, 10, 10, 10));
 
-        Label emailLabel = new Label("Email:");
-        grid.add(emailLabel, 0, 0);
-        TextField emailField = new TextField();
-        grid.add(emailField, 1, 0);
+        Label usernameLabel = new Label("Username:");
+        grid.add(usernameLabel, 0, 0);
+        TextField usernameField = new TextField();
+        grid.add(usernameField, 1, 0);
 
         Label passwordLabel = new Label("Password:");
         grid.add(passwordLabel, 0, 1);
@@ -66,15 +59,15 @@ public class LoginPage extends Application {
         // log-in button
         Button loginButton = new Button("Login");
         loginButton.setOnAction(e -> {
-            boolean status = login(emailField.getText(),passwordField.getText());
+            boolean status = login(usernameField.getText(),passwordField.getText());
             if(status) {
                 // kind of flag to change to the next page
             }
         });
         // sign-up button
         Button signupButton = new Button("Don't have account? Sign up");
+        signupButton.setOnAction(e -> mainDuck.showSignupPage());
 
-        VBox mainLayout = new VBox();
         mainLayout.setAlignment(Pos.TOP_CENTER);
 
 
@@ -104,22 +97,14 @@ public class LoginPage extends Application {
             System.out.println("StylesSheet unavailable");
         }
 
-        IntroductionStage.setScene(scene);
-        IntroductionStage.show();
+        return new Scene(mainLayout, screenWidth, screenHeight);
     }
-    private boolean login(String email, String password) {
-        if(email.isEmpty() || password.isEmpty()) {
+    private boolean login(String username, String password) {
+        if(username.isEmpty() || password.isEmpty()) {
             PopUp.display(true,"Login Error","All fields are required");
             return false;
         }
-        if(!isEmailValid(email)){
-            PopUp.display(true,"Login Error","Invalid email format");
-            return false;
-        }
-        return Database.login(email,password);
-    }
-    public boolean isEmailValid(String email) {
-        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
-        return email.matches(emailRegex);
+        return Database.login(username,password);
+
     }
 }
