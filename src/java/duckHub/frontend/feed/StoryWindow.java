@@ -2,6 +2,7 @@ package duckHub.frontend.feed;
 
 import duckHub.backend.Story;
 import duckHub.backend.User;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -12,6 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import jdk.swing.interop.SwingInterOpUtils;
 
 import java.util.ArrayList;
 
@@ -26,6 +28,9 @@ public class StoryWindow {
     private HBox userDataLayout;
     private User user;
     private int storyCounter;
+    private Button nextStoryButton;
+    private Button previousStoryButton;
+    private ImageView imageView;
 
     private void setStage(){
         sceneWidth = 600;
@@ -33,48 +38,69 @@ public class StoryWindow {
         stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
         scene = new Scene(storyPane, sceneWidth, sceneHeight);
+        stage.setScene(scene);
     }
 
     private void initializeLayouts(){
         storyPane = new StackPane();
         storyPane.setMaxWidth(sceneWidth);
         storyPane.setMaxHeight(sceneHeight);
-
         userDataLayout = new HBox();
     }
 
-    private void showStory(Story story) {
-        System.out.println("Story: " + story);
+    private void organizeUserDataLayout(){
         // Set the user data
         Label userName = new Label(user.getUsername());
         userPane = user.RoundedProfileImage();
         System.out.println("userPane: " + userPane);
         userDataLayout.getChildren().addAll(userPane,userName);
         storyPane.getChildren().add(userDataLayout);
+        StackPane.setAlignment(userDataLayout, Pos.CENTER_RIGHT);
         System.out.println("storyPane: " + storyPane);
-        userDataLayout.setAlignment(Pos.TOP_LEFT);
+    }
 
+    private void showStory(Story story) {
+        storyPane.getChildren().clear();
+        System.out.println("Story: " + story);
         // show the story
         Image image = story.getContentImage();
-        ImageView imageView = new ImageView(image);
+        imageView = new ImageView(image);
         imageView.setFitHeight(sceneHeight);
         imageView.setFitWidth(sceneWidth);
         storyPane.getChildren().add(imageView);
     }
 
     private void navigateStoriesButtons(){
-        Button nextStoryButton = new Button("Next");
+        nextStoryButton = new Button("Next");
         storyPane.getChildren().add(nextStoryButton);
-        nextStoryButton.setAlignment(Pos.CENTER_RIGHT);
+        StackPane.setAlignment(nextStoryButton, Pos.CENTER_RIGHT);
         nextStoryButton.setOnAction(e -> {
-            showStory(stories.get(storyCounter++));
+            if (storyCounter < stories.size()){
+//                storyPane.getChildren().remove(imageView);
+                System.out.println("story counter: " + storyCounter);
+                System.out.println("Story Image" + stories.get(storyCounter));
+                showStory(stories.get(storyCounter++));
+                organizeUserDataLayout();
+                navigateStoriesButtons();
+            }else {
+                stage.close();
+            }
         });
 
-        Button previousStoryButton = new Button("Previous");
+        previousStoryButton = new Button("Previous");
         storyPane.getChildren().add(previousStoryButton);
-        previousStoryButton.setAlignment(Pos.CENTER_LEFT);
+        StackPane.setAlignment(previousStoryButton, Pos.CENTER_LEFT);
         previousStoryButton.setOnAction(e -> {
-            showStory(stories.get(storyCounter--));
+            if (storyCounter < stories.size()){
+//                storyPane.getChildren().remove(imageView);
+                System.out.println("story counter: " + storyCounter);
+                System.out.println("Story Image" + stories.get(storyCounter));
+                showStory(stories.get(storyCounter--));
+                organizeUserDataLayout();
+                navigateStoriesButtons();
+            }else {
+                stage.close();
+            }
         });
     }
 
@@ -86,7 +112,9 @@ public class StoryWindow {
         System.out.println("initialized layouts");
 
         System.out.println("stage set");
+        organizeUserDataLayout();
         showStory(stories.getFirst());
+        storyCounter++;
         navigateStoriesButtons();
         setStage();
         stage.showAndWait();
