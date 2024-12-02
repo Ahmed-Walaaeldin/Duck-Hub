@@ -43,5 +43,10 @@ public class MainDuck extends Application {
                 System.out.println(post.getContentImage().getUrl());
             }
         }
+        Image image = new Image("/duckhub/frontend/soura.jpg");
+        naggar.createContent(true,"This is a post",image);
+        MainScene mainScene = new MainScene();
+        mainScene.displayScene(naggar);
+
     }
 }
