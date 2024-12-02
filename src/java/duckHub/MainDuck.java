@@ -3,7 +3,6 @@ package duckHub;
 import duckHub.backend.*;
 import duckHub.backend.database.Load;
 import duckHub.backend.database.Save;
-import duckHub.frontend.feed.MainScene;
 import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -33,8 +32,7 @@ public class MainDuck extends Application {
         save.saveToFile(users);
 
         Load load = new Load();
-        load.loadFromFile();
-        users = load.getUsers();
+//        users = load.loadFromFile();
         System.out.println(users);
         for (User user : users) {
             System.out.println(user.getUserId());
@@ -45,8 +43,8 @@ public class MainDuck extends Application {
         }
         Image image = new Image("/duckhub/frontend/soura.jpg");
         naggar.createContent(true,"This is a post",image);
-        MainScene mainScene = new MainScene();
-        mainScene.displayScene(naggar);
+//        MainScene mainScene = new MainScene();
+//        mainScene.displayScene(naggar);
 
     }
 }

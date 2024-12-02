@@ -1,5 +1,9 @@
 package duckHub.backend;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import duckHub.backend.database.ImageDeserializer;
+import duckHub.backend.database.ImageSerializer;
 import javafx.scene.image.Image;
 
 import java.time.LocalDate;
@@ -12,6 +16,10 @@ public class User {
     private String username;
     private String password;
     private LocalDate dateOfBirth;
+
+    @JsonSerialize(using = ImageSerializer.class)
+    @JsonDeserialize(using = ImageDeserializer.class)
+    private Image userProfileImage;
     private boolean status;
     private ArrayList<String> friends;
     private ArrayList<String> blocked;
@@ -77,7 +85,12 @@ public class User {
     public ArrayList<Story> getStories() {
         return stories;
     }
-
+    public void setUserProfileImage(Image userProfileImage) {
+        this.userProfileImage = userProfileImage;
+    }
+    public Image getUserProfileImage() {
+        return userProfileImage;
+    }
 
     // helper methods
     public void addFriend(String friendId) {
