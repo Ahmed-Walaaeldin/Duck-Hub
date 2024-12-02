@@ -1,6 +1,7 @@
 package duckHub.frontend.feed;
 
 import duckHub.MainDuck;
+import duckHub.backend.BackendDuck;
 import duckHub.backend.Post;
 import duckHub.backend.User;
 import javafx.scene.Scene;
@@ -150,8 +151,7 @@ public class MainScene {
         layoutsInitializer();
         layoutsOrganizer();
         setScene();
-
-        showPeopleWithStories(mainDuck.getUsers());
+        showPeopleWithStories(MainDuck.users);
         showPosts(user);
         stage.show();
     }

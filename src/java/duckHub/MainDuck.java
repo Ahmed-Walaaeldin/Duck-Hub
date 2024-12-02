@@ -3,6 +3,7 @@ package duckHub;
 import duckHub.backend.*;
 import duckHub.backend.database.Load;
 import duckHub.backend.database.Save;
+import duckHub.frontend.feed.MainScene;
 import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class MainDuck extends Application {
-    private ArrayList<User> users = new ArrayList<>();
+    public static ArrayList<User> users = new ArrayList<>();
     public static void main(String[] args) {
         launch(args);
     }
@@ -30,21 +31,22 @@ public class MainDuck extends Application {
 
         Save save = new Save();
         save.saveToFile(users);
-
-        Load load = new Load();
+//
+//        Load load = new Load();
 //        users = load.loadFromFile();
-        System.out.println(users);
-        for (User user : users) {
-            System.out.println(user.getUserId());
-            for (Post post : user.getPosts()) {
-                System.out.println(post.getAuthorId());
-                System.out.println(post.getContentImage().getUrl());
-            }
-        }
+//        System.out.println(users);
+//        for (User user : users) {
+//            System.out.println(user.getUserId());
+//            for (Post post : user.getPosts()) {
+//                System.out.println(post.getAuthorId());
+//                System.out.println(post.getContentImage().getUrl());
+//            }
+//        }
         Image image = new Image("/duckhub/frontend/soura.jpg");
         naggar.createContent(true,"This is a post",image);
-//        MainScene mainScene = new MainScene();
-//        mainScene.displayScene(naggar);
+        naggar.setUserProfileImage(image);
+        MainScene mainScene = new MainScene();
+        mainScene.displayScene(naggar);
 
     }
 }
