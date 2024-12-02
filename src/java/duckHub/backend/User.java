@@ -15,6 +15,8 @@ public class User {
     private boolean status;
     private ArrayList<String> friends;
     private ArrayList<String> blocked;
+    private ArrayList<String> pendingSent;
+    private ArrayList<String> pendingReceived;
     private ArrayList<Post> posts;
     private ArrayList<Story> stories;
 
@@ -30,6 +32,8 @@ public class User {
         status = true;
         friends = new ArrayList<>();
         blocked = new ArrayList<>();
+        pendingSent = new ArrayList<>();
+        pendingReceived = new ArrayList<>();
         posts = new ArrayList<>();
         stories = new ArrayList<>();
     }
@@ -71,6 +75,12 @@ public class User {
     public ArrayList<String> getBlocked() {
         return blocked;
     }
+    public ArrayList<String> getPendingSent() {
+        return pendingSent;
+    }
+    public ArrayList<String> getPendingReceived() {
+        return pendingReceived;
+    }
     public ArrayList<Post> getPosts() {
         return posts;
     }
@@ -89,6 +99,9 @@ public class User {
     public void block(String blockedId) {
         friends.remove(blockedId);
         blocked.add(blockedId);
+    }
+    public void unblock(String blockedId) {
+        blocked.remove(blockedId);
     }
     public void createContent(boolean permanent,String contentText) {
         if(permanent) {
