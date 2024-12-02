@@ -9,11 +9,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Load   implements Paths{
-    private ArrayList<User> users;
+public class Load implements Paths{
 
-    public void loadFromFile() {
-        users = new ArrayList<>();
+    public ArrayList<User> loadFromFile() {
+        ArrayList<User> users = new ArrayList<>();
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
 
@@ -21,7 +20,7 @@ public class Load   implements Paths{
         File[] files = directory.listFiles((dir, name) -> name.endsWith(".json"));
 
         if (files == null) {
-            return;
+            return users;
         }else {
             for (File file : files) {
                 try{
@@ -37,9 +36,6 @@ public class Load   implements Paths{
                 }
             }
         }
-    }
-
-    public ArrayList<User> getUsers() {
         return users;
     }
 }
