@@ -5,6 +5,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import duckHub.backend.database.ImageDeserializer;
 import duckHub.backend.database.ImageSerializer;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -120,6 +124,27 @@ public class User {
             Story story = Story.create(userId,contentText,contentImage);
             stories.add(story);
         }
+    }
+    public StackPane RoundedProfileImage() {
+        Image userImage = userProfileImage;
+        ImageView userImageView = new ImageView(userImage);
+
+        double radius = 25;
+        userImageView.setFitHeight(radius*2);
+        userImageView.setFitWidth(radius*2);
+
+        Circle userImageClip = new Circle(radius,radius,radius);
+        userImageView.setClip(userImageClip);
+
+        // create the border
+        Circle userImageBorder = new Circle(radius +2);
+        userImageBorder.setStroke(Color.PURPLE);
+        userImageBorder.setStrokeWidth(3);
+        userImageBorder.setFill(null);
+
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().addAll(userImageBorder,userImageView);
+        return stackPane;
     }
 
 }

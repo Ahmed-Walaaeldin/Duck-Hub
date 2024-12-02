@@ -1,7 +1,6 @@
 package duckHub.frontend.feed;
 
 import duckHub.MainDuck;
-import duckHub.backend.BackendDuck;
 import duckHub.backend.Post;
 import duckHub.backend.User;
 import javafx.scene.Scene;
@@ -15,8 +14,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 import java.time.format.DateTimeFormatter;
@@ -50,7 +47,7 @@ public class MainScene {
         allPostsVBox = new VBox();
         // stories layouts
         storiesHBox = new HBox();
-        storiesHBox.setSpacing(10);
+        storiesHBox.setSpacing(0);
         storiesScrollPane = new ScrollPane();
         storiesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         storiesScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -111,35 +108,19 @@ public class MainScene {
 
     private void showPeopleWithStories(ArrayList<User> users) {
         for (User user : users) {
-            if (!user.getStories().isEmpty()) {
-                Image userImage = user.getUserProfileImage();
-                ImageView userImageView = new ImageView(userImage);
-
-                double radius = 25;
-                userImageView.setFitHeight(radius*2);
-                userImageView.setFitWidth(radius*2);
-
-                Circle userImageClip = new Circle(radius,radius,radius);
-                userImageView.setClip(userImageClip);
-
-                // create the border
-                Circle userImageBorder = new Circle(radius +2);
-                userImageBorder.setStroke(Color.PURPLE);
-                userImageBorder.setStrokeWidth(3);
-                userImageBorder.setFill(null);
-
-                StackPane stackPane = new StackPane();
-                stackPane.getChildren().addAll(userImageBorder,userImageView);
-
+//            if (!user.getStories().isEmpty()) {
+                StackPane stackPane = user.RoundedProfileImage();
                 Button userStoryButton = new Button();
                 userStoryButton.setGraphic(stackPane);
+                userStoryButton.getStyleClass().add("story-button");
                 userStoryButton.setStyle("-fx-background-color: transparent;");
                 userStoryButton.setOnAction(e -> {
-                    System.out.println("Story button clicked");
+                    System.out.println("Clicked on story button");
+                    StoryWindow storyWindow = new StoryWindow();
+                    storyWindow.display(user);
                 });
-
                 storiesHBox.getChildren().add(userStoryButton);
-            }
+//            }
         }
     }
 
