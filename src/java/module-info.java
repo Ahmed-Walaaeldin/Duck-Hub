@@ -6,5 +6,6 @@ module LAB.duckHub {
     requires javafx.media;
     requires javafx.swing;
     requires javafx.base;
+    exports duckHub.frontend to javafx.graphics;
     opens duckHub;
 }
