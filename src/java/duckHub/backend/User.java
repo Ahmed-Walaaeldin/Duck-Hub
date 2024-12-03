@@ -110,6 +110,22 @@ public class User {
     public void unblock(String blockedId) {
         blocked.remove(blockedId);
     }
+    public void suggestFriends(User[] users) {
+        this.getSuggestedFriends().clear();
+
+        for (User potentialFriend : users) {
+            String potentialFriendId = potentialFriend.getUserId();
+
+            if (!potentialFriendId.equals(this.getUserId()) &&
+                    !this.getFriends().contains(potentialFriendId) &&
+                    !this.getBlocked().contains(potentialFriendId) &&
+                    !this.getPendingSent().contains(potentialFriendId) &&
+                    !this.getPendingReceived().contains(potentialFriendId)) {
+
+                this.getSuggestedFriends().add(potentialFriendId);
+            }
+        }
+    }
     public void createContent(boolean permanent,String contentText) {
         if(permanent) {
             Post post = Post.create(userId,contentText);

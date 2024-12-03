@@ -3,16 +3,16 @@ package duckHub.backend;
 import java.util.ArrayList;
 
 public class FriendsManagement {
-    private final User user;
-    private final ArrayList<User> users;
+    private static User user;
+    private final User[] users;
 
 
     public FriendsManagement(User user) {
-        this.user = user;
+        FriendsManagement.user = user;
         users = BackendDuck.getUsers();
     }
 
-   public boolean sendFriendRequest(String friendID) {
+   public static boolean sendFriendRequest(String friendID) {
     if (!user.getFriends().contains(friendID) && !user.getBlocked().contains(friendID)) {
         if (!user.getPendingSent().contains(friendID)) {
             user.getPendingSent().add(friendID);
@@ -26,7 +26,7 @@ public class FriendsManagement {
     return false;
 }
 
-public boolean acceptFriendRequest(String friendID) {
+public static boolean acceptFriendRequest(String friendID) {
     if (user.getPendingReceived().contains(friendID)) {
         user.getPendingReceived().remove(friendID);
         user.addFriend(friendID);
@@ -41,7 +41,7 @@ public boolean acceptFriendRequest(String friendID) {
     return false;
 }
 
-public boolean declineFriendRequest(String friendID) {
+public static boolean declineFriendRequest(String friendID) {
     if (user.getPendingReceived().contains(friendID)) {
         user.getPendingReceived().remove(friendID);
 
@@ -54,7 +54,7 @@ public boolean declineFriendRequest(String friendID) {
     return false;
 }
 
-public boolean removeFriend(String friendID) {
+public static boolean removeFriend(String friendID) {
     if (user.getFriends().contains(friendID)) {
         user.removeFriend(friendID);
         return true;
@@ -62,7 +62,7 @@ public boolean removeFriend(String friendID) {
     return false;
 }
 
-public boolean block(String friendID) {
+public static boolean block(String friendID) {
     if (user.getFriends().contains(friendID) && !user.getBlocked().contains(friendID)) {
         user.block(friendID);
         return true;
@@ -70,7 +70,7 @@ public boolean block(String friendID) {
     return false;
 }
 
-public boolean unblock(String friendID) {
+public static boolean unblock(String friendID) {
     if (user.getBlocked().contains(friendID)) {
         user.unblock(friendID);
         return true;
@@ -78,20 +78,5 @@ public boolean unblock(String friendID) {
     return false;
 }
 
-    public void suggestFriends() {
-        user.getSuggestedFriends().clear();
 
-        for (User potentialFriend : users) {
-            String potentialFriendId = potentialFriend.getUserId();
-
-            if (!potentialFriendId.equals(user.getUserId()) &&
-                    !user.getFriends().contains(potentialFriendId) &&
-                    !user.getBlocked().contains(potentialFriendId) &&
-                    !user.getPendingSent().contains(potentialFriendId) &&
-                    !user.getPendingReceived().contains(potentialFriendId)) {
-
-                user.getSuggestedFriends().add(potentialFriendId);
-            }
-        }
-    }
 }
