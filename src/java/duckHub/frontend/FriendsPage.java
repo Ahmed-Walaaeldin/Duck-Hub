@@ -16,9 +16,8 @@ public class FriendsPage {
 
     public Scene getScene(MainDuck mainDuck, User user) {
 
-        //! removed suggestion bu still needs to be called from User class
-        //? problem with not having an access to list of users so we need here an access from BackendDuck
         //TODO find where we need to refresh the suggested List of friends
+        //? when to user.suggestFriends()
 
         VBox mainLayout = new VBox();
         mainLayout.setAlignment(Pos.TOP_CENTER);

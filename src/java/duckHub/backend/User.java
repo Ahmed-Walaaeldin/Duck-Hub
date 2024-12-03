@@ -110,9 +110,10 @@ public class User {
     public void unblock(String blockedId) {
         blocked.remove(blockedId);
     }
-    public void suggestFriends(User[] users) {
+    public void suggestFriends() {
         this.getSuggestedFriends().clear();
 
+        User[] users = BackendDuck.getUsers();
         for (User potentialFriend : users) {
             String potentialFriendId = potentialFriend.getUserId();
 
