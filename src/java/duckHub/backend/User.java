@@ -17,6 +17,7 @@ public class User {
     private ArrayList<String> blocked;
     private ArrayList<String> pendingSent;
     private ArrayList<String> pendingReceived;
+    private ArrayList<String> suggestedFriends;
     private ArrayList<Post> posts;
     private ArrayList<Story> stories;
 
@@ -34,6 +35,7 @@ public class User {
         blocked = new ArrayList<>();
         pendingSent = new ArrayList<>();
         pendingReceived = new ArrayList<>();
+        suggestedFriends = new ArrayList<>();
         posts = new ArrayList<>();
         stories = new ArrayList<>();
     }
@@ -81,6 +83,11 @@ public class User {
     public ArrayList<String> getPendingReceived() {
         return pendingReceived;
     }
+
+    public ArrayList<String> getSuggestedFriends() {
+        return suggestedFriends;
+    }
+
     public ArrayList<Post> getPosts() {
         return posts;
     }

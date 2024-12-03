@@ -5,11 +5,10 @@ import java.util.ArrayList;
 public class FriendsManagement {
     private final User user;
     private final ArrayList<User> users;
-    private ArrayList<String> suggestedFriends;
+
 
     public FriendsManagement(User user) {
         this.user = user;
-        suggestedFriends = new ArrayList<>();
         users = BackendDuck.getUsers();
     }
 
@@ -79,8 +78,8 @@ public boolean unblock(String friendID) {
     return false;
 }
 
-    public ArrayList<String> getSuggestedFriends() {
-        suggestedFriends.clear();
+    public void suggestFriends() {
+        user.getSuggestedFriends().clear();
 
         for (User potentialFriend : users) {
             String potentialFriendId = potentialFriend.getUserId();
@@ -91,9 +90,8 @@ public boolean unblock(String friendID) {
                     !user.getPendingSent().contains(potentialFriendId) &&
                     !user.getPendingReceived().contains(potentialFriendId)) {
 
-                suggestedFriends.add(potentialFriendId);
+                user.getSuggestedFriends().add(potentialFriendId);
             }
         }
-        return suggestedFriends;
     }
 }
