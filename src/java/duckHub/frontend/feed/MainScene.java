@@ -3,6 +3,8 @@ package duckHub.frontend.feed;
 import duckHub.MainDuck;
 import duckHub.backend.Post;
 import duckHub.backend.User;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,6 +16,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.time.format.DateTimeFormatter;
@@ -33,14 +37,19 @@ public class MainScene {
 //    private FlowPane rootFlowPane;
     private BorderPane root;
     private ScrollPane postsScrollPane;
-//    private FlowPane postsFlowPane;
+    //    private FlowPane postsFlowPane;
     private ScrollPane storiesScrollPane;
     private HBox storiesHBox;
     private VBox allPostsVBox;
     private VBox postVBox;
+    private StackPane feedStackPane;
+
+    private Button newContentButton;
+    private Button newPostButton;
+    private Button newStoryButton;
 
 
-    private void layoutsInitializer(){
+    private void layoutsInitializer() {
         // posts layout
         root = new BorderPane();
         postsScrollPane = new ScrollPane();
@@ -49,29 +58,35 @@ public class MainScene {
         storiesHBox = new HBox();
         storiesHBox.setSpacing(0);
         storiesScrollPane = new ScrollPane();
+        feedStackPane = new StackPane();
+
         storiesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         storiesScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         storiesScrollPane.setFitToHeight(true);
         storiesScrollPane.setContent(storiesHBox);
     }
 
-    private void layoutsOrganizer(){
+    private void layoutsOrganizer() {
+        postsScrollPane.setFitToWidth(true);
+        postsScrollPane.setPrefViewportWidth(400);
+        postsScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         postsScrollPane.setContent(allPostsVBox);
-        root.setLeft(postsScrollPane);
+        feedStackPane.getChildren().add(postsScrollPane);
+        root.setLeft(feedStackPane);
         root.setTop(storiesScrollPane);
     }
 
     private void setScene() {
         stage = new Stage();
-        scene = new Scene(root,600,500);
+        scene = new Scene(root, 600, 500);
         stage.setScene(scene);
     }
 
     private void showPosts(User user) {
-        convertPostsToNodes(user.getPosts(),allPostsVBox);
+        convertPostsToNodes(user.getPosts(), allPostsVBox);
     }
 
-    private void convertPostsToNodes(ArrayList<Post> posts,VBox layout) {
+    private void convertPostsToNodes(ArrayList<Post> posts, VBox layout) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         for (Post post : posts) {
             Label authorName = new Label(post.getAuthorId());
@@ -93,7 +108,7 @@ public class MainScene {
             // ###########################
             Label timeStampLabel = new Label(formatter.format(post.getTimestamp()));
             VBox postVBox = new VBox();
-            postVBox.getChildren().addAll(authorName,textArea);
+            postVBox.getChildren().addAll(authorName, textArea);
             if (imageContent != null) {
                 postVBox.getChildren().add(imageView);
             }
@@ -104,19 +119,68 @@ public class MainScene {
 
     private void showPeopleWithStories(ArrayList<User> users) {
         for (User user : users) {
-//            if (!user.getStories().isEmpty()) {
-                StackPane stackPane = user.RoundedProfileImage();
-                Button userStoryButton = new Button();
-                userStoryButton.setGraphic(stackPane);
-                userStoryButton.getStyleClass().add("story-button");
-                userStoryButton.setStyle("-fx-background-color: transparent;");
-                userStoryButton.setOnAction(_ -> {
-                    StoryWindow storyWindow = new StoryWindow();
-                    storyWindow.display(user);
-                });
-                storiesHBox.getChildren().add(userStoryButton);
-//            }
+            if (!user.getStories().isEmpty()) {
+            StackPane stackPane = user.roundedProfileImage(25);
+            Button userStoryButton = new Button();
+            userStoryButton.setGraphic(stackPane);
+            userStoryButton.getStyleClass().add("story-button");
+            userStoryButton.setStyle("-fx-background-color: transparent;");
+            userStoryButton.setOnAction(_ -> {
+                StoryWindow storyWindow = new StoryWindow();
+                storyWindow.display(user);
+            });
+            storiesHBox.getChildren().add(userStoryButton);
+            }
         }
+    }
+
+    private void showContentButton() {
+        newContentButton = new Button();
+        newPostButton = new Button();
+        newStoryButton = new Button();
+
+        Image newContentLogo = new Image("/duckhub/frontend/duck.png");
+        ImageView newContentLogoView = new ImageView(newContentLogo);
+        Image newPostLogo = new Image("/duckhub/frontend/duck.png");
+        ImageView newPostLogoView = new ImageView(newPostLogo);
+        Image newStoryLogo = new Image("/duckhub/frontend/duck.png");
+        ImageView newStoryLogoView = new ImageView(newStoryLogo);
+
+        ButtonCustomizer buttonCustomizer = new ButtonCustomizer();
+        buttonCustomizer.roundedButtonImage(newContentLogoView, newContentButton);
+        buttonCustomizer.roundedButtonImage(newPostLogoView, newPostButton);
+        buttonCustomizer.roundedButtonImage(newStoryLogoView, newStoryButton);
+
+        Rectangle overlay = new Rectangle(65, 120, Color.rgb(190, 190, 190));
+        overlay.setArcHeight(15);
+        overlay.setArcWidth(15);
+
+        VBox newContentButtonsLayout = new VBox();
+        newContentButtonsLayout.setAlignment(Pos.BOTTOM_RIGHT);
+        newContentButtonsLayout.getChildren().addAll(newPostButton, newStoryButton);
+
+        StackPane overlayNewContentLayout = new StackPane(overlay, newContentButtonsLayout);
+        overlayNewContentLayout.setAlignment(Pos.BOTTOM_RIGHT);
+        overlayNewContentLayout.setVisible(false);
+
+        newContentButton.setOnAction(_ -> overlayNewContentLayout.setVisible(!overlayNewContentLayout.isVisible()));
+
+        VBox newContentVBox = new VBox(overlayNewContentLayout, newContentButton);
+        newContentVBox.setPadding(new Insets(0, 5, 10, 0));
+        newContentVBox.setAlignment(Pos.BOTTOM_RIGHT);
+
+        newContentVBox.setMouseTransparent(false);
+        newContentVBox.setPickOnBounds(false);
+        overlayNewContentLayout.setPickOnBounds(false);
+
+        // Add the VBox to feedStackPane with proper alignment
+        feedStackPane.getChildren().add(newContentVBox);
+        StackPane.setAlignment(newContentVBox, Pos.BOTTOM_RIGHT);
+
+        // Ensure buttons still receive mouse events
+        newContentButton.setMouseTransparent(false);
+        newPostButton.setMouseTransparent(false);
+        newStoryButton.setMouseTransparent(false);
     }
 
     public void displayScene(User user) {
@@ -125,6 +189,7 @@ public class MainScene {
         setScene();
         showPeopleWithStories(MainDuck.users);
         showPosts(user);
+        showContentButton();
         stage.show();
     }
 }
