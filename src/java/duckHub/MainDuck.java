@@ -45,8 +45,14 @@ public class MainDuck extends Application {
 //            }
 //        }
         Image image = new Image("/duckhub/frontend/soura.jpg");
-        Image story1 = new Image("/duckhub/frontend/duckStory1.jpg");
-        Image story2 = new Image("/duckhub/frontend/duckStory2.jpg");
+        Image story1 = new Image("/duckhub/frontend/duckStory1.jpeg");
+        Image story2 = new Image("/duckhub/frontend/duckStory2.jpeg");
+        naggar.createContent(true,"This is a post",image);
+        naggar.createContent(true,"This is a post",image);
+        naggar.createContent(true,"This is a post",image);
+        naggar.createContent(true,"This is a post",image);
+        naggar.createContent(true,"This is a post",image);
+        naggar.createContent(true,"This is a post",image);
         naggar.createContent(true,"This is a post",image);
         naggar.setUserProfileImage(image);
         naggar.createContent(false,"fuck you",story1);

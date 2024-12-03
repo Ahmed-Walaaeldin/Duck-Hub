@@ -51,15 +51,14 @@ public class StoryWindow {
         userDataLayout.getChildren().clear();
         Label userName = new Label(user.getUsername());
         userName.setMinHeight(5);
-        userPane = user.RoundedProfileImage();
+        userPane = user.roundedProfileImage(10);
         userPane.setMaxWidth(20);
         userPane.setMaxHeight(20);
         userDataLayout.getChildren().addAll(userPane, userName);
         userDataLayout.setAlignment(Pos.TOP_LEFT);
         Image image = story.getContentImage();
         imageView = new ImageView(image);
-        storyPane.getChildren().add(imageView);
-        storyPane.getChildren().add(userDataLayout);
+        storyPane.getChildren().addAll(imageView, userDataLayout);
         navigateStoriesButtons();
     }
 
