@@ -24,7 +24,7 @@ public class FriendsScene {
     // Displayed Scene
     private Scene scene;
 
-    // ArrayList of all the posts that will be shown
+    // ArrayList of all the friends that will be shown
     private ArrayList<VBox> friendsList;
 
     // Layouts
