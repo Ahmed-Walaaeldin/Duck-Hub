@@ -102,10 +102,6 @@ public class MainScene {
         }
     }
 
-    private void showStories(ArrayList<User> users) {
-//        convertStoriesToNodes(users);
-    }
-
     private void showPeopleWithStories(ArrayList<User> users) {
         for (User user : users) {
 //            if (!user.getStories().isEmpty()) {
@@ -114,18 +110,13 @@ public class MainScene {
                 userStoryButton.setGraphic(stackPane);
                 userStoryButton.getStyleClass().add("story-button");
                 userStoryButton.setStyle("-fx-background-color: transparent;");
-                userStoryButton.setOnAction(e -> {
-                    System.out.println("Clicked on story button");
+                userStoryButton.setOnAction(_ -> {
                     StoryWindow storyWindow = new StoryWindow();
                     storyWindow.display(user);
                 });
                 storiesHBox.getChildren().add(userStoryButton);
 //            }
         }
-    }
-
-    private void convertStoryToNodes(User user) {
-
     }
 
     public void displayScene(User user) {

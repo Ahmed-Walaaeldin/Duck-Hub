@@ -30,7 +30,7 @@ public class StoryWindow {
     private Button previousStoryButton;
     private ImageView imageView;
 
-    private void setStage(){
+    private void setStage() {
         sceneWidth = 600;
         sceneHeight = 500;
         stage = new Stage();
@@ -39,22 +39,23 @@ public class StoryWindow {
         stage.setScene(scene);
     }
 
-    private void initializeLayouts(){
+    private void initializeLayouts() {
         storyPane = new StackPane();
         storyPane.setMaxWidth(sceneWidth);
         storyPane.setMaxHeight(sceneHeight);
         userDataLayout = new HBox();
     }
 
-    private void showStoryContent(Story story){
+    private void showStoryContent(Story story) {
         storyPane.getChildren().clear();
         userDataLayout.getChildren().clear();
         Label userName = new Label(user.getUsername());
+        userName.setMinHeight(5);
         userPane = user.RoundedProfileImage();
         userPane.setMaxWidth(20);
         userPane.setMaxHeight(20);
-        userDataLayout.getChildren().addAll(userPane,userName);
-        userDataLayout.setAlignment(Pos.TOP_CENTER);
+        userDataLayout.getChildren().addAll(userPane, userName);
+        userDataLayout.setAlignment(Pos.TOP_LEFT);
         Image image = story.getContentImage();
         imageView = new ImageView(image);
         storyPane.getChildren().add(imageView);
@@ -62,25 +63,28 @@ public class StoryWindow {
         navigateStoriesButtons();
     }
 
-    private void navigateStoriesButtons(){
+    private void navigateStoriesButtons() {
         nextStoryButton = new Button("Next");
         storyPane.getChildren().add(nextStoryButton);
         StackPane.setAlignment(nextStoryButton, Pos.CENTER_RIGHT);
         nextStoryButton.setOnAction(_ -> {
-            if (storyCounter < stories.size()){
-                showStoryContent(stories.get(storyCounter++));
-            }else {
+            if (storyCounter < stories.size()-1) {
+                showStoryContent(stories.get(++storyCounter));
+            } else {
                 stage.close();
             }
         });
 
         previousStoryButton = new Button("Previous");
-        storyPane.getChildren().add(previousStoryButton);
+        if(storyCounter > 0)
+            storyPane.getChildren().add(previousStoryButton);
         StackPane.setAlignment(previousStoryButton, Pos.CENTER_LEFT);
         previousStoryButton.setOnAction(_ -> {
-            if (storyCounter < stories.size()){
-                showStoryContent(stories.get(storyCounter--));
-            }else {
+            if (storyCounter == 0)
+                return;
+            else if (storyCounter < stories.size()) {
+                showStoryContent(stories.get(--storyCounter));
+            } else {
                 stage.close();
             }
         });
@@ -91,7 +95,6 @@ public class StoryWindow {
         stories = user.getStories();
         initializeLayouts();
         showStoryContent(stories.getFirst());
-        storyCounter++;
         setStage();
         stage.showAndWait();
     }
