@@ -60,6 +60,7 @@ public class FriendsScene {
     private void convertFriendsToNodes(ArrayList<String> friends) {
         for (String friendID : friends) {
             User friend = BackendDuck.getUserByID(friendID);
+
             Label friendUsername = new Label(friend.getUsername());
             Label friendStatus;
             if (friend.getStatus())
