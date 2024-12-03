@@ -1,6 +1,7 @@
 package duckHub.frontend;
 
 import duckHub.MainDuck;
+import duckHub.backend.SignupBackend;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -73,11 +74,20 @@ public class SignupPage {
         // sign-up button
         Button signupButton = new Button("Sign Up");
         signupButton.setOnAction(e -> {
-            boolean state = signup(emailField.getText(),datePicker.getValue(),usernameField.getText(),passwordField.getText())
+            boolean state = signup(emailField.getText(),datePicker.getValue(),usernameField.getText(),passwordField.getText());
+            if(state) {
+                mainDuck.showNewsfeed(); // need to pass username ?
+            }
+            else{
+                PopUp.display(true,"Error","Something went wrong");
+            }
 ;        });
 
         // back to login page
         Button backButton = new Button("Already have account? login");
+        backButton.setOnAction(e -> {
+            mainDuck.showLoginPage();
+        });
 
         mainLayout.setAlignment(Pos.TOP_CENTER);
 
@@ -99,7 +109,7 @@ public class SignupPage {
         mainLayout.getChildren().add(signupButton);
         mainLayout.getChildren().add(backButton);
 
-        Scene scene = new Scene(mainLayout, 300, 200);
+        Scene scene = new Scene(mainLayout, screenWidth, screenHeight);
         try{
             String styles = Objects.requireNonNull(getClass().getResource("/duckHub/Styles.css")).toExternalForm();
             scene.getStylesheets().add(styles);
@@ -107,7 +117,7 @@ public class SignupPage {
             System.out.println("StylesSheet unavailable");
         }
 
-        return new Scene(mainLayout, screenWidth, screenHeight);
+        return scene;
     }
     private boolean signup(String email,LocalDate dateOfBirth,String username,String password) {
         if(email.isEmpty()||username.isEmpty()||password.isEmpty()|| dateOfBirth == null) {
@@ -122,7 +132,7 @@ public class SignupPage {
             PopUp.display(true,"Error","Date of birth is invalid");
             return false;
         }
-        return Backend.signup(email,dateOfBirth,username,password);
+        return SignupBackend.signup(email,dateOfBirth,username,password);
     }
 
     public boolean isEmailValid(String email) {

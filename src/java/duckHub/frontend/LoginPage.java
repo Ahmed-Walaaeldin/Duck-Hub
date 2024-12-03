@@ -1,7 +1,7 @@
 package duckHub.frontend;
 
+import duckHub.backend.LoginBackend;
 import duckHub.MainDuck;
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,7 +14,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
-import javafx.stage.Stage;
 
 import java.util.Objects;
 
@@ -59,9 +58,12 @@ public class LoginPage {
         // log-in button
         Button loginButton = new Button("Login");
         loginButton.setOnAction(e -> {
-            boolean status = login(usernameField.getText(),passwordField.getText());
-            if(status) {
-                // kind of flag to change to the next page
+            boolean state = login(usernameField.getText(),passwordField.getText());
+            if(state) {
+                mainDuck.showNewsfeed(); // need to pass username ?
+            }
+            else{
+                PopUp.display(true,"Error","Something went wrong");
             }
         });
         // sign-up button
@@ -89,7 +91,7 @@ public class LoginPage {
         mainLayout.getChildren().add(loginButton);
         mainLayout.getChildren().add(signupButton);
 
-        Scene scene = new Scene(mainLayout, 300, 200);
+        Scene scene = new Scene(mainLayout, screenWidth, screenHeight);
         try{
             String styles = Objects.requireNonNull(getClass().getResource("/duckHub/Styles.css")).toExternalForm();
             scene.getStylesheets().add(styles);
@@ -97,14 +99,13 @@ public class LoginPage {
             System.out.println("StylesSheet unavailable");
         }
 
-        return new Scene(mainLayout, screenWidth, screenHeight);
+        return scene;
     }
     private boolean login(String username, String password) {
         if(username.isEmpty() || password.isEmpty()) {
             PopUp.display(true,"Login Error","All fields are required");
             return false;
         }
-        return Database.login(username,password);
-
+        return LoginBackend.login(username,password);
     }
 }

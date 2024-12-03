@@ -11,6 +11,7 @@ module LAB.duckHub {
     requires jdk.httpserver;
     requires com.fasterxml.jackson.datatype.jsr310;
     requires com.fasterxml.jackson.databind;
+    requires jbcrypt;
     exports duckHub.backend.database;
     exports duckHub.backend;
     opens duckHub.backend to com.fasterxml.jackson.databind;

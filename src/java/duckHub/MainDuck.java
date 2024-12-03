@@ -33,32 +33,8 @@ public class MainDuck extends Application {
         Scene signupScene = signupPage.getScene(this);
         primaryStage.setScene(signupScene);
     }
+    public void showNewsfeed(){
+        System.out.println("Switching to Newsfeed Page");
+        // yalla ya nigo
+    }
 }
-
-
-
-//import org.mindrot.jbcrypt.BCrypt;
-//
-//public class PasswordHasher {
-//    public static String hashPassword(String password) {
-//        // Generate a salt and hash the password
-//        return BCrypt.hashpw(password, BCrypt.gensalt(12)); // 12 is the computational cost
-//    }
-//
-//    public static boolean verifyPassword(String password, String hashedPassword) {
-//        // Verify the password against the hashed value
-//        return BCrypt.checkpw(password, hashedPassword);
-//    }
-//
-//    public static void main(String[] args) {
-//        String password = "mypassword123";
-//
-//        // Hash the password
-//        String hashedPassword = hashPassword(password);
-//        System.out.println("Hashed Password: " + hashedPassword);
-//
-//        // Verify the password
-//        boolean isMatch = verifyPassword("mypassword123", hashedPassword);
-//        System.out.println("Password matches: " + isMatch);
-//    }
-//}
