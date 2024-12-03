@@ -125,11 +125,10 @@ public class User {
             stories.add(story);
         }
     }
-    public StackPane RoundedProfileImage() {
+    public StackPane roundedProfileImage(double radius) {
         Image userImage = userProfileImage;
         ImageView userImageView = new ImageView(userImage);
 
-        double radius = 25;
         userImageView.setFitHeight(radius*2);
         userImageView.setFitWidth(radius*2);
 
