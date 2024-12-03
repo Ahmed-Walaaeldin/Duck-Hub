@@ -1,6 +1,7 @@
 package duckHub.frontend;
 
 import duckHub.MainDuck;
+import duckHub.backend.FriendsManagement;
 import duckHub.backend.User;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,6 +15,9 @@ import java.util.Objects;
 public class FriendsPage {
 
     public Scene getScene(MainDuck mainDuck, User user) {
+        FriendsManagement manager = new FriendsManagement(user);
+        manager.suggestFriends();
+
         VBox mainLayout = new VBox();
         mainLayout.setAlignment(Pos.TOP_CENTER);
 
@@ -33,7 +37,14 @@ public class FriendsPage {
         pendingLayout.setContent(populateList(user.getPendingReceived().toArray(new String[0])));
         mainLayout.getChildren().add(pendingLayout);
 
-        // @zoz law get t3mel keda fy el suggested friends hatla2y b2a enha mosh f nafs el makan, mosh user.getSuggested
+        //? @zoz law get t3mel keda fy el suggested friends hatla2y b2a enha mosh f nafs el makan, mosh user.getSuggested
+        //! ana 3amalt list f el user fyha el suggested w betetzabbat mn manager (which is an instance of FriendsManagement)
+
+        ScrollPane suggestedLayout = new ScrollPane();
+        pendingLayout.setContent(populateList(user.getSuggestedFriends().toArray(new String[0])));
+        mainLayout.getChildren().add(suggestedLayout);
+
+
 
 
         Scene scene = new Scene(mainLayout, screenWidth, screenHeight);

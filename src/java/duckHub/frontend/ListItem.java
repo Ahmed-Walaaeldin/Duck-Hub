@@ -14,7 +14,7 @@ public class ListItem {
         User user = BackendDuck.getUserByID(userId);
         HBox banner = new HBox();
         Label username = new Label(user.getUsername());
-        Image photo = new Image("ducky.jpeg"); // get photo i guess from profile @rofa
+        Image photo = new Image("ducky.jpg"); // get photo i guess from profile @rofa
         ImageView imageView = new ImageView(photo);
         imageView.setFitWidth(50);
         imageView.setFitHeight(50);
