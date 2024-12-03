@@ -19,7 +19,7 @@ public class MainDuck extends Application {
         this.primaryStage = primaryStage;
 
         primaryStage.setTitle("DuckHub");
-        showFriendsPage(user); // Start with Login Page
+//TODO        showFriendsPage(); // Start with Login Page
 
         primaryStage.show();
     }
