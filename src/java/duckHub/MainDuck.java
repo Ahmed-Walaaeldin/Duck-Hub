@@ -27,7 +27,7 @@ public class MainDuck extends Application {
         User zoz = BackendDuck.getUserByID("user-0");
         System.out.println(zoz.getUsername());
 
-        showFriendsPage(zoz); // Start with Login Page
+        showFriendsPage(zoz,"pending"); // Start with Login Page
 
         primaryStage.show();
     }
@@ -47,10 +47,10 @@ public class MainDuck extends Application {
         System.out.println("Switching to Newsfeed Page");
         // yalla ya nigo
     }
-    public void showFriendsPage(User user){
+    public void showFriendsPage(User user,String type){
         System.out.println("Switching to Friends Page");
         FriendsPage friendsPage = new FriendsPage();
-        Scene friendsScene = friendsPage.getScene(this,user);
+        Scene friendsScene = friendsPage.getScene(this, user, type);
         primaryStage.setScene(friendsScene);
     }
 }

@@ -18,6 +18,7 @@ public class FriendsBackend {
 public static boolean acceptFriendRequest(User user, String friendID) {
     if (user.getPendingReceived().contains(friendID)) {
         user.addFriend(friendID);
+        user.getPendingReceived().remove(friendID);
         User friend = BackendDuck.getUserByID(friendID);
         if (friend != null) {
             friend.getPendingSent().remove(user.getUserId());

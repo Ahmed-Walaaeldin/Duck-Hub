@@ -16,9 +16,11 @@ import javafx.stage.Screen;
 import java.util.Objects;
 
 public class FriendsPage {
-
-    public Scene getScene(MainDuck mainDuck, User user) {
-
+    private static MainDuck main;
+    private static User mainUser;
+    public Scene getScene(MainDuck mainDuck, User user, String type) {
+        main = mainDuck;
+        mainUser = user;
         //TODO find where we need to refresh the suggested List of friends
         //? when to user.suggestFriends()
 
@@ -41,44 +43,67 @@ public class FriendsPage {
 
         StackPane stackPane = new StackPane();
         ScrollPane friendsLayout = new ScrollPane();
-        friendsLayout.setContent(populateList(user.getFriends().toArray(new String[0]), "friends"));
+        friendsLayout.setContent(populateList(user, user.getFriends().toArray(new String[0]), "friends"));
         ScrollPane blockedLayout = new ScrollPane();
-        blockedLayout.setContent(populateList(user.getBlocked().toArray(new String[0]), "blocked"));
+        blockedLayout.setContent(populateList(user, user.getBlocked().toArray(new String[0]), "blocked"));
         ScrollPane receivedLayout = new ScrollPane();
-        receivedLayout.setContent(populateList(user.getPendingReceived().toArray(new String[0]), "pending"));
+        receivedLayout.setContent(populateList(user,user.getPendingReceived().toArray(new String[0]), "pending"));
         ScrollPane suggestedLayout = new ScrollPane();
-        suggestedLayout.setContent(populateList(user.getSuggestedFriends(), "suggested"));
+        suggestedLayout.setContent(populateList(user,user.getSuggestedFriends(), "suggested"));
         stackPane.getChildren().addAll(friendsLayout, blockedLayout, receivedLayout, suggestedLayout);
 
         // Initially, show received
-        receivedLayout.setVisible(true);
-        suggestedLayout.setVisible(false);
-        friendsLayout.setVisible(false);
-        blockedLayout.setVisible(false);
+        if (type.equals("pending")) {
+            listTitle.setText("Received Requests");
+            receivedLayout.setVisible(true);
+            suggestedLayout.setVisible(false);
+            friendsLayout.setVisible(false);
+            blockedLayout.setVisible(false);
+        } else if (type.equals("suggested")) {
+            listTitle.setText("Suggested Friends");
+            receivedLayout.setVisible(false);
+            suggestedLayout.setVisible(true);
+            friendsLayout.setVisible(false);
+            blockedLayout.setVisible(false);
+        } else if (type.equals("blocked")) {
+            listTitle.setText("Blocked List");
+            receivedLayout.setVisible(false);
+            suggestedLayout.setVisible(false);
+            friendsLayout.setVisible(false);
+            blockedLayout.setVisible(true);
+
+        } else if (type.equals("friends")) {
+            listTitle.setText("Friends List");
+            receivedLayout.setVisible(false);
+            suggestedLayout.setVisible(false);
+            friendsLayout.setVisible(true);
+            blockedLayout.setVisible(false);
+        }
+
 
         // navigation
-        receivedButton.setOnAction(e -> {
+        receivedButton.setOnAction(_ -> {
             listTitle.setText("Received Requests");
             receivedLayout.setVisible(true);
             suggestedLayout.setVisible(false);
             friendsLayout.setVisible(false);
             blockedLayout.setVisible(false);
         });
-        suggestedButton.setOnAction(e -> {
+        suggestedButton.setOnAction(_ -> {
             listTitle.setText("Suggested Friends");
             receivedLayout.setVisible(false);
             suggestedLayout.setVisible(true);
             friendsLayout.setVisible(false);
             blockedLayout.setVisible(false);
         });
-        friendsButton.setOnAction(e -> {
-            listTitle.setText("Friends");
+        friendsButton.setOnAction(_ -> {
+            listTitle.setText("Friends List");
             receivedLayout.setVisible(false);
             suggestedLayout.setVisible(false);
             friendsLayout.setVisible(true);
             blockedLayout.setVisible(false);
         });
-        blockedButton.setOnAction(e -> {
+        blockedButton.setOnAction(_ -> {
             listTitle.setText("Blocked List");
             receivedLayout.setVisible(false);
             suggestedLayout.setVisible(false);
@@ -115,15 +140,18 @@ public class FriendsPage {
         return scene;
     }
 
-    private VBox populateList(String[] ids, String type) {
+    private VBox populateList(User user,String[] ids, String type) {
         VBox contentBox = new VBox();
         contentBox.setSpacing(10);
         contentBox.setAlignment(Pos.CENTER);
         for (String id : ids) {
-            HBox banner = ListItem.createListItem(id,type);
+            HBox banner = ListItem.createListItem(user,id,type);
             contentBox.getChildren().add(banner);
         }
         return contentBox;
+    }
+    public static void refresh(String type){
+        main.showFriendsPage(mainUser, type);
     }
 
 }
