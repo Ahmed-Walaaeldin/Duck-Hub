@@ -44,10 +44,22 @@ public class MainScene {
     private VBox postVBox;
     private StackPane feedStackPane;
 
+    // Window buttons
     private Button newContentButton;
     private Button newPostButton;
     private Button newStoryButton;
+    private Button refreshButton;
 
+
+    // the specific reference of the user whose feed this is
+    private User user;
+
+    private void refreshWindow() {
+        allPostsVBox.getChildren().clear();
+        storiesHBox.getChildren().clear();
+        showPeopleWithStories(MainDuck.users);
+        showPosts(user);
+    }
 
     private void layoutsInitializer() {
         // posts layout
@@ -139,11 +151,11 @@ public class MainScene {
         newPostButton = new Button();
         newStoryButton = new Button();
 
-        Image newContentLogo = new Image("/duckhub/frontend/duck.png");
+        Image newContentLogo = new Image("/duckhub/frontend/duck.jpg");
         ImageView newContentLogoView = new ImageView(newContentLogo);
-        Image newPostLogo = new Image("/duckhub/frontend/duck.png");
+        Image newPostLogo = new Image("/duckhub/frontend/duck.jpg");
         ImageView newPostLogoView = new ImageView(newPostLogo);
-        Image newStoryLogo = new Image("/duckhub/frontend/duck.png");
+        Image newStoryLogo = new Image("/duckhub/frontend/duck.jpg");
         ImageView newStoryLogoView = new ImageView(newStoryLogo);
 
         ButtonCustomizer buttonCustomizer = new ButtonCustomizer();
@@ -177,19 +189,50 @@ public class MainScene {
         feedStackPane.getChildren().add(newContentVBox);
         StackPane.setAlignment(newContentVBox, Pos.BOTTOM_RIGHT);
 
+        // Call the new post window
+        newPostButton.setOnAction(_ -> {
+           NewContent newPost = new NewContent();
+           newPost.display(user,true);
+        });
+
+        newStoryButton.setOnAction(_ -> {
+           NewContent newStory = new NewContent();
+           newStory.display(user,false);
+        });
+
         // Ensure buttons still receive mouse events
         newContentButton.setMouseTransparent(false);
         newPostButton.setMouseTransparent(false);
         newStoryButton.setMouseTransparent(false);
     }
 
+    private void showRefreshButton() {
+        refreshButton = new Button();
+        Image refreshLogo = new Image("/duckhub/frontend/refresh.png");
+        ImageView refreshLogoView = new ImageView(refreshLogo);
+
+        ButtonCustomizer buttonCustomizer = new ButtonCustomizer();
+        buttonCustomizer.roundedButtonImage(refreshLogoView, refreshButton);
+
+        // Position refresh button
+        StackPane.setAlignment(refreshButton, Pos.TOP_RIGHT);
+        StackPane.setMargin(refreshButton, new Insets(10, 10, 0, 0));
+        feedStackPane.getChildren().add(refreshButton);
+
+        // Refresh button handler
+        refreshButton.setOnAction(_ -> refreshWindow());
+        refreshButton.setMouseTransparent(false);
+    }
+
     public void displayScene(User user) {
+        this.user = user;
         layoutsInitializer();
         layoutsOrganizer();
         setScene();
         showPeopleWithStories(MainDuck.users);
         showPosts(user);
         showContentButton();
+        showRefreshButton();
         stage.show();
     }
 }
