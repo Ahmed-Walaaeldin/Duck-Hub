@@ -22,7 +22,7 @@ public class User {
     private ArrayList<Story> stories;
 
     public User(){
-
+        initializeLists();
     }
     public User(String email, String username, String password, LocalDate dateOfBirth) {
         userId = generateId();
@@ -31,6 +31,9 @@ public class User {
         this.password = password;
         this.dateOfBirth = dateOfBirth;
         status = true;
+        initializeLists();
+    }
+    private void initializeLists() {
         friends = new ArrayList<>();
         blocked = new ArrayList<>();
         pendingSent = new ArrayList<>();
@@ -84,8 +87,22 @@ public class User {
         return pendingReceived;
     }
 
-    public ArrayList<String> getSuggestedFriends() {
-        return suggestedFriends;
+    public String[] getSuggestedFriends() {
+        suggestedFriends.clear();
+        User[] users = BackendDuck.getUsers();
+        for (User potentialFriend : users) {
+            String potentialFriendId = potentialFriend.getUserId();
+
+            if (!potentialFriendId.equals(this.getUserId()) &&
+                    !friends.contains(potentialFriendId) &&
+                    !blocked.contains(potentialFriendId) &&
+                    !pendingSent.contains(potentialFriendId) &&
+                    !pendingReceived.contains(potentialFriendId)) {
+
+                suggestedFriends.add(potentialFriendId);
+            }
+        }
+        return suggestedFriends.toArray(new String[0]);
     }
 
     public ArrayList<Post> getPosts() {
@@ -110,23 +127,7 @@ public class User {
     public void unblock(String blockedId) {
         blocked.remove(blockedId);
     }
-    public void suggestFriends() {
-        this.getSuggestedFriends().clear();
 
-        User[] users = BackendDuck.getUsers();
-        for (User potentialFriend : users) {
-            String potentialFriendId = potentialFriend.getUserId();
-
-            if (!potentialFriendId.equals(this.getUserId()) &&
-                    !this.getFriends().contains(potentialFriendId) &&
-                    !this.getBlocked().contains(potentialFriendId) &&
-                    !this.getPendingSent().contains(potentialFriendId) &&
-                    !this.getPendingReceived().contains(potentialFriendId)) {
-
-                this.getSuggestedFriends().add(potentialFriendId);
-            }
-        }
-    }
     public void createContent(boolean permanent,String contentText) {
         if(permanent) {
             Post post = Post.create(userId,contentText);

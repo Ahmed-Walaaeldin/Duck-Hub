@@ -1,6 +1,8 @@
 package duckHub;
 
+import duckHub.backend.BackendDuck;
 import duckHub.backend.User;
+import duckHub.backend.database.Load;
 import duckHub.frontend.FriendsPage;
 import duckHub.frontend.LoginPage;
 import duckHub.frontend.SignupPage;
@@ -11,15 +13,21 @@ import javafx.stage.Stage;
 public class MainDuck extends Application {
     private Stage primaryStage;
 
+
     public static void main(String[] args) {
         launch(args);
     }
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
-
+        Load load = new Load();
         primaryStage.setTitle("DuckHub");
-//TODO        showFriendsPage(); // Start with Login Page
+
+        load.loadFromFile();
+        User zoz = BackendDuck.getUserByID("user-0");
+        System.out.println(zoz.getUsername());
+
+        showFriendsPage(zoz); // Start with Login Page
 
         primaryStage.show();
     }
