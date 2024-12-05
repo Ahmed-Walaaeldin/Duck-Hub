@@ -31,23 +31,15 @@ public class MainScene implements SizeConstants {
     private Scene scene;
 
     // Layouts
-//    private FlowPane rootFlowPane;
     private BorderPane root;
     private ScrollPane postsScrollPane;
-    //    private FlowPane postsFlowPane;
     private ScrollPane storiesScrollPane;
     private HBox storiesHBox;
     private VBox allPostsVBox;
     private StackPane feedStackPane;
+
     // layout for both refresh button and stories hbox
     private HBox topContainer;
-
-    // Window buttons
-    private Button newContentButton;
-    private Button newPostButton;
-    private Button newStoryButton;
-    private Button refreshButton;
-    private Button profileButton;
 
 
     // the specific reference of the user whose feed this is
@@ -62,10 +54,12 @@ public class MainScene implements SizeConstants {
     }
 
     private void layoutsInitializer() {
+
         // posts layout
         root = new BorderPane();
         postsScrollPane = new ScrollPane();
         allPostsVBox = new VBox();
+
         // stories layouts
         storiesHBox = new HBox();
         storiesHBox.setSpacing(0);
@@ -101,6 +95,9 @@ public class MainScene implements SizeConstants {
     }
 
     private void convertPostsToNodes(ArrayList<Post> posts, VBox layout) {
+        // Sort posts by timestamp in descending order (most recent first)
+        posts.sort((post1, post2) -> post2.getTimestamp().compareTo(post1.getTimestamp()));
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         for (Post post : posts) {
             Label authorName = new Label(post.getAuthorId());
@@ -152,7 +149,7 @@ public class MainScene implements SizeConstants {
     // The method that will be used to show and always fix the user photo in the top left of the page whether he has a story or no.
     private void showUserPhoto(){
         // The button into the user photo
-        profileButton = new Button();
+        Button profileButton = new Button();
         Image userImage = user.getUserProfileImage();
         ImageView userImageView = new ImageView(userImage);
         ButtonCustomizer buttonCustomizer = new ButtonCustomizer();
@@ -169,9 +166,10 @@ public class MainScene implements SizeConstants {
     }
 
     private void showContentButton() {
-        newContentButton = new Button();
-        newPostButton = new Button();
-        newStoryButton = new Button();
+        // Window buttons
+        Button newContentButton = new Button();
+        Button newPostButton = new Button();
+        Button newStoryButton = new Button();
 
         Image newContentLogo = new Image("/duckhub/frontend/duck.jpg");
         ImageView newContentLogoView = new ImageView(newContentLogo);
@@ -229,7 +227,7 @@ public class MainScene implements SizeConstants {
     }
 
     private void showRefreshButton() {
-        refreshButton = new Button();
+        Button refreshButton = new Button();
         Image refreshLogo = new Image("/duckhub/frontend/refresh.png");
         ImageView refreshLogoView = new ImageView(refreshLogo);
 
@@ -241,7 +239,7 @@ public class MainScene implements SizeConstants {
         StackPane.setMargin(refreshButton, new Insets(10, 10, 0, 0));
 
         // add both refresh button and stories layout in one final top layout
-        topContainer.getChildren().addAll(storiesScrollPane,refreshButton);
+        topContainer.getChildren().addAll(storiesScrollPane, refreshButton);
         HBox.setHgrow(storiesScrollPane, Priority.ALWAYS);
 
         // Refresh button handler
@@ -254,7 +252,6 @@ public class MainScene implements SizeConstants {
         layoutsInitializer();
         layoutsOrganizer();
         setScene();
-//        createDuckTitleBar();
         showUserPhoto();
         showPeopleWithStories(MainDuck.users);
         showPosts(user);
