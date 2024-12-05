@@ -3,6 +3,7 @@ package duckHub.frontend.feed;
 import duckHub.MainDuck;
 import duckHub.backend.Post;
 import duckHub.backend.User;
+import duckHub.frontend.SizeConstants;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -10,28 +11,24 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class MainScene {
+public class MainScene implements SizeConstants {
     // to test
     private Stage stage;
 
     // Displayed Scene
     private Scene scene;
-
-    // ArrayList of all the posts that will be shown
-    private ArrayList<VBox> posts;
 
     // Layouts
 //    private FlowPane rootFlowPane;
@@ -41,8 +38,9 @@ public class MainScene {
     private ScrollPane storiesScrollPane;
     private HBox storiesHBox;
     private VBox allPostsVBox;
-    private VBox postVBox;
     private StackPane feedStackPane;
+    // layout for both refresh button and stories hbox
+    private HBox topContainer;
 
     // Window buttons
     private Button newContentButton;
@@ -58,6 +56,7 @@ public class MainScene {
     private void refreshWindow() {
         allPostsVBox.getChildren().clear();
         storiesHBox.getChildren().clear();
+        showUserPhoto();
         showPeopleWithStories(MainDuck.users);
         showPosts(user);
     }
@@ -72,6 +71,7 @@ public class MainScene {
         storiesHBox.setSpacing(0);
         storiesScrollPane = new ScrollPane();
         feedStackPane = new StackPane();
+        topContainer = new HBox();
 
         storiesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         storiesScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -85,8 +85,9 @@ public class MainScene {
         postsScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         postsScrollPane.setContent(allPostsVBox);
         feedStackPane.getChildren().add(postsScrollPane);
+
         root.setLeft(feedStackPane);
-        root.setTop(storiesScrollPane);
+        root.setTop(topContainer);
     }
 
     private void setScene() {
@@ -155,7 +156,7 @@ public class MainScene {
         Image userImage = user.getUserProfileImage();
         ImageView userImageView = new ImageView(userImage);
         ButtonCustomizer buttonCustomizer = new ButtonCustomizer();
-        buttonCustomizer.roundedButtonImage(userImageView, profileButton);
+        buttonCustomizer.roundedButtonImage(userImageView, profileButton,PROFILE_IMAGE_RADIUS);
 
         // add the button to the stories HBox
         storiesHBox.getChildren().add(profileButton);
@@ -180,9 +181,9 @@ public class MainScene {
         ImageView newStoryLogoView = new ImageView(newStoryLogo);
 
         ButtonCustomizer buttonCustomizer = new ButtonCustomizer();
-        buttonCustomizer.roundedButtonImage(newContentLogoView, newContentButton);
-        buttonCustomizer.roundedButtonImage(newPostLogoView, newPostButton);
-        buttonCustomizer.roundedButtonImage(newStoryLogoView, newStoryButton);
+        buttonCustomizer.roundedButtonImage(newContentLogoView, newContentButton,ROUNDED_BUTTON_RADIUS);
+        buttonCustomizer.roundedButtonImage(newPostLogoView, newPostButton,ROUNDED_BUTTON_RADIUS);
+        buttonCustomizer.roundedButtonImage(newStoryLogoView, newStoryButton,ROUNDED_BUTTON_RADIUS);
 
         Rectangle overlay = new Rectangle(65, 120, Color.rgb(190, 190, 190));
         overlay.setArcHeight(15);
@@ -233,12 +234,15 @@ public class MainScene {
         ImageView refreshLogoView = new ImageView(refreshLogo);
 
         ButtonCustomizer buttonCustomizer = new ButtonCustomizer();
-        buttonCustomizer.roundedButtonImage(refreshLogoView, refreshButton);
+        buttonCustomizer.rectangleButtonImage(refreshLogoView, refreshButton);
 
         // Position refresh button
         StackPane.setAlignment(refreshButton, Pos.TOP_RIGHT);
         StackPane.setMargin(refreshButton, new Insets(10, 10, 0, 0));
-        feedStackPane.getChildren().add(refreshButton);
+
+        // add both refresh button and stories layout in one final top layout
+        topContainer.getChildren().addAll(storiesScrollPane,refreshButton);
+        HBox.setHgrow(storiesScrollPane, Priority.ALWAYS);
 
         // Refresh button handler
         refreshButton.setOnAction(_ -> refreshWindow());
@@ -250,6 +254,7 @@ public class MainScene {
         layoutsInitializer();
         layoutsOrganizer();
         setScene();
+//        createDuckTitleBar();
         showUserPhoto();
         showPeopleWithStories(MainDuck.users);
         showPosts(user);
