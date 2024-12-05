@@ -1,14 +1,13 @@
 package duckHub.frontend.feed;
 
-import duckHub.MainDuck;
 import duckHub.backend.User;
-import duckHub.frontend.PopUp;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -37,7 +36,7 @@ public class NewContent {
     private Button addImageButton;
 
     // Post Elements (Text and image)
-    private TextField newContentTextField;
+    private TextArea newContentTextField;
     private Image newContentImage;
 
     // flag to know if story or post
@@ -48,14 +47,14 @@ public class NewContent {
         width = 300;
         height = 250;
 
+        // initialize
         root = new VBox();
         buttonsLayout = new HBox();
+
         // Configure buttons layout
         buttonsLayout.setSpacing(10);
         buttonsLayout.setPrefWidth(width);
         buttonsLayout.setAlignment(Pos.CENTER);
-
-//        buttonsLayout.setSpacing(30);
     }
 
     private void setStage() {
@@ -67,15 +66,22 @@ public class NewContent {
     }
 
     private void elementsInitializer() {
-        postButton = new Button("Post");
+        postButton = new Button("Quack");
         backButton = new Button();
+
+        // Make and customize the back button
         String imagePath = getClass().getResource("/duckhub/frontend/back-button.png").toExternalForm();
         Image backImage = new Image(imagePath);
         ImageView backImageView = new ImageView(backImage);
         ButtonCustomizer buttonCustomizer = new ButtonCustomizer();
-        buttonCustomizer.roundedButtonImage(backImageView, backButton);
-        addImageButton = new Button("Add Image");
+        buttonCustomizer.rectangleButtonImage(backImageView, backButton);
 
+        // Make and customize the add image button
+        addImageButton = new Button("Add Image");
+        String addImagePath = getClass().getResource("/duckhub/frontend/add-image.png").toExternalForm();
+        Image addImage = new Image(addImagePath);
+        ImageView addImageView = new ImageView(addImage);
+        buttonCustomizer.rectangleButtonImage(addImageView, addImageButton);
     }
 
     private void addElementsToLayout() {
@@ -85,9 +91,20 @@ public class NewContent {
         root.getChildren().addAll(backButton);
 
         // Text Field to add content text
-        newContentTextField = new TextField();
+        newContentTextField = new TextArea();
         newContentTextField.setPromptText("What's on your mind?");
         newContentTextField.setPrefSize(width, height-50);
+        newContentTextField.setWrapText(true); // Enable text wrapping
+        newContentTextField.setPrefRowCount(3); // Set visible number of rows
+        newContentTextField.setPrefColumnCount(20);
+
+        // Enter key handler for the text area
+        newContentTextField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER && !event.isShiftDown()) {
+                event.consume(); // Prevent new line
+                postButton.fire(); // Trigger post button
+            }
+        });
 
         root.getChildren().add(newContentTextField);
 
@@ -113,11 +130,11 @@ public class NewContent {
             stage.close();
         });
         addImageButton.setOnAction(e -> {
-            setContentImage();
+            loadContentImage();
         });
     }
 
-    private void setContentImage() {
+    private void loadContentImage() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Upload Image");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image", "*.png", "*.jpg", "*.jpeg"));
@@ -153,6 +170,6 @@ public class NewContent {
         elementsInitializer();
         addElementsToLayout();
         setStage();
-        stage.show();
+        stage.showAndWait();
     }
 }
