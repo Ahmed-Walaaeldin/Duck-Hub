@@ -100,27 +100,60 @@ public class MainScene implements SizeConstants {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         for (Post post : posts) {
+            HBox nameAndPhotoLayout = new HBox();
+
+            StackPane userPhotoRounded = user.roundedProfileImage(15,false);
+            nameAndPhotoLayout.getChildren().add(userPhotoRounded);
+
+            VBox postVBox = new VBox();
             Label authorName = new Label(post.getAuthorId());
-            TextArea textArea = new TextArea(post.getContentText());
-            textArea.setEditable(false);
-            textArea.setWrapText(true);
-            textArea.setPrefWidth(postsScrollPane.getPrefViewportWidth() - 20); // for padding
+            nameAndPhotoLayout.getChildren().add(authorName);
+            postVBox.getChildren().addAll(nameAndPhotoLayout);
 
-            // Calculate the preferred height based on the content
-            int lines = textArea.getText().split("\n").length;
-            double lineHeight = 20; // Approximate height of a line in pixels
-            textArea.setPrefHeight(lines * lineHeight);
+            if (!post.getContentText().isEmpty()) {
+                TextArea textArea = new TextArea(post.getContentText());
+                textArea.setEditable(false);
+                textArea.setWrapText(true);
+                textArea.setPrefWidth(postsScrollPane.getPrefViewportWidth() - 20); // for padding
 
+                // Calculate the preferred height based on the content
+                int lines = textArea.getText().split("\n").length;
+                double lineHeight = 20; // Approximate height of a line in pixels
+                textArea.setPrefHeight(lines * lineHeight);
+                postVBox.getChildren().add(textArea);
+            }
             Image imageContent = post.getContentImage();
             ImageView imageView = new ImageView(imageContent);
-            // ###########################
-            // TODO: set size for the image
-            imageView.setFitHeight(100);
-            imageView.setFitWidth(100);
-            // ###########################
+            if (imageContent != null) {
+//                ImageView imageView = new ImageView(imageContent);
+
+                //original image dimensions
+                double originalWidth = imageContent.getWidth();
+                double originalHeight = imageContent.getHeight();
+                double aspectRatio = originalWidth / originalHeight;
+
+                // Set maximum dimensions
+                double maxWidth = postsScrollPane.getPrefViewportWidth() - 40;
+                double maxHeight = 400;
+
+                // Calculate new dimensions
+                double newWidth = maxWidth;
+                double newHeight = maxWidth / aspectRatio;
+
+                // If height exceeds maximum, scale based on height instead
+                if (newHeight > maxHeight) {
+                    newHeight = maxHeight;
+                    newWidth = maxHeight * aspectRatio;
+                }
+
+                imageView.setFitWidth(newWidth);
+                imageView.setFitHeight(newHeight);
+                imageView.setPreserveRatio(true);
+                imageView.setSmooth(true);
+            }
             Label timeStampLabel = new Label(formatter.format(post.getTimestamp()));
-            VBox postVBox = new VBox();
-            postVBox.getChildren().addAll(authorName, textArea);
+//            timeStampLabel.setAlignment(Pos.CENTER_RIGHT);
+
             if (imageContent != null) {
                 postVBox.getChildren().add(imageView);
             }
@@ -132,34 +165,34 @@ public class MainScene implements SizeConstants {
     private void showPeopleWithStories(ArrayList<User> users) {
         for (User user : users) {
             if (!user.getStories().isEmpty()) {
-            StackPane stackPane = user.roundedProfileImage(25);
-            Button userStoryButton = new Button();
-            userStoryButton.setGraphic(stackPane);
-            userStoryButton.getStyleClass().add("story-button");
-            userStoryButton.setStyle("-fx-background-color: transparent;");
-            userStoryButton.setOnAction(_ -> {
-                StoryWindow storyWindow = new StoryWindow();
-                storyWindow.display(user);
-            });
-            storiesHBox.getChildren().add(userStoryButton);
+                StackPane stackPane = user.roundedProfileImage(25,true);
+                Button userStoryButton = new Button();
+                userStoryButton.setGraphic(stackPane);
+                userStoryButton.getStyleClass().add("story-button");
+                userStoryButton.setStyle("-fx-background-color: transparent;");
+                userStoryButton.setOnAction(_ -> {
+                    StoryWindow storyWindow = new StoryWindow();
+                    storyWindow.display(user);
+                });
+                storiesHBox.getChildren().add(userStoryButton);
             }
         }
     }
 
     // The method that will be used to show and always fix the user photo in the top left of the page whether he has a story or no.
-    private void showUserPhoto(){
+    private void showUserPhoto() {
         // The button into the user photo
         Button profileButton = new Button();
         Image userImage = user.getUserProfileImage();
         ImageView userImageView = new ImageView(userImage);
         ButtonCustomizer buttonCustomizer = new ButtonCustomizer();
-        buttonCustomizer.roundedButtonImage(userImageView, profileButton,PROFILE_IMAGE_RADIUS);
+        buttonCustomizer.roundedButtonImage(userImageView, profileButton, PROFILE_IMAGE_RADIUS);
 
         // add the button to the stories HBox
         storiesHBox.getChildren().add(profileButton);
 
         // the button handler
-        profileButton.setOnAction(_ ->{
+        profileButton.setOnAction(_ -> {
             // TODO: call the profile scene (Roupha's)
 
         });
@@ -179,9 +212,9 @@ public class MainScene implements SizeConstants {
         ImageView newStoryLogoView = new ImageView(newStoryLogo);
 
         ButtonCustomizer buttonCustomizer = new ButtonCustomizer();
-        buttonCustomizer.roundedButtonImage(newContentLogoView, newContentButton,ROUNDED_BUTTON_RADIUS);
-        buttonCustomizer.roundedButtonImage(newPostLogoView, newPostButton,ROUNDED_BUTTON_RADIUS);
-        buttonCustomizer.roundedButtonImage(newStoryLogoView, newStoryButton,ROUNDED_BUTTON_RADIUS);
+        buttonCustomizer.roundedButtonImage(newContentLogoView, newContentButton, ROUNDED_BUTTON_RADIUS);
+        buttonCustomizer.roundedButtonImage(newPostLogoView, newPostButton, ROUNDED_BUTTON_RADIUS);
+        buttonCustomizer.roundedButtonImage(newStoryLogoView, newStoryButton, ROUNDED_BUTTON_RADIUS);
 
         Rectangle overlay = new Rectangle(65, 120, Color.rgb(190, 190, 190));
         overlay.setArcHeight(15);
@@ -211,13 +244,13 @@ public class MainScene implements SizeConstants {
 
         // Call the new post window
         newPostButton.setOnAction(_ -> {
-           NewContent newPost = new NewContent();
-           newPost.display(user,true);
+            NewContent newPost = new NewContent();
+            newPost.display(user, true);
         });
 
         newStoryButton.setOnAction(_ -> {
-           NewContent newStory = new NewContent();
-           newStory.display(user,false);
+            NewContent newStory = new NewContent();
+            newStory.display(user, false);
         });
 
         // Ensure buttons still receive mouse events
