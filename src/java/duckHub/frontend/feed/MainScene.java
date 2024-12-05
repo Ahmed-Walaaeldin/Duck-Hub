@@ -49,6 +49,7 @@ public class MainScene {
     private Button newPostButton;
     private Button newStoryButton;
     private Button refreshButton;
+    private Button profileButton;
 
 
     // the specific reference of the user whose feed this is
@@ -105,6 +106,7 @@ public class MainScene {
             TextArea textArea = new TextArea(post.getContentText());
             textArea.setEditable(false);
             textArea.setWrapText(true);
+            textArea.setPrefWidth(postsScrollPane.getPrefViewportWidth() - 20); // for padding
 
             // Calculate the preferred height based on the content
             int lines = textArea.getText().split("\n").length;
@@ -144,6 +146,25 @@ public class MainScene {
             storiesHBox.getChildren().add(userStoryButton);
             }
         }
+    }
+
+    // The method that will be used to show and always fix the user photo in the top left of the page whether he has a story or no.
+    private void showUserPhoto(){
+        // The button into the user photo
+        profileButton = new Button();
+        Image userImage = user.getUserProfileImage();
+        ImageView userImageView = new ImageView(userImage);
+        ButtonCustomizer buttonCustomizer = new ButtonCustomizer();
+        buttonCustomizer.roundedButtonImage(userImageView, profileButton);
+
+        // add the button to the stories HBox
+        storiesHBox.getChildren().add(profileButton);
+
+        // the button handler
+        profileButton.setOnAction(_ ->{
+            // TODO: call the profile scene (Roupha's)
+
+        });
     }
 
     private void showContentButton() {
@@ -229,6 +250,7 @@ public class MainScene {
         layoutsInitializer();
         layoutsOrganizer();
         setScene();
+        showUserPhoto();
         showPeopleWithStories(MainDuck.users);
         showPosts(user);
         showContentButton();
