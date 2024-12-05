@@ -171,11 +171,11 @@ public class MainScene implements SizeConstants {
         Button newPostButton = new Button();
         Button newStoryButton = new Button();
 
-        Image newContentLogo = new Image("/duckhub/frontend/duck.jpg");
+        Image newContentLogo = new Image("/duckhub/frontend/duck.png");
         ImageView newContentLogoView = new ImageView(newContentLogo);
-        Image newPostLogo = new Image("/duckhub/frontend/duck.jpg");
+        Image newPostLogo = new Image("/duckhub/frontend/duck.png");
         ImageView newPostLogoView = new ImageView(newPostLogo);
-        Image newStoryLogo = new Image("/duckhub/frontend/duck.jpg");
+        Image newStoryLogo = new Image("/duckhub/frontend/duck.png");
         ImageView newStoryLogoView = new ImageView(newStoryLogo);
 
         ButtonCustomizer buttonCustomizer = new ButtonCustomizer();
