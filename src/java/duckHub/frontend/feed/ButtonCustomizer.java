@@ -8,11 +8,10 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
 public class ButtonCustomizer {
-    public void roundedButtonImage(ImageView newContentImgView, Button newContentButton) {
-        double radius = 25;
+    public void roundedButtonImage(ImageView newContentImgView, Button newContentButton,double radius) {
         newContentImgView.setFitHeight(radius*2);
         newContentImgView.setFitWidth(radius*2);
-        Circle newContentButtonShape = new Circle(radius, radius, radius, Color.PALEGOLDENROD);
+        Circle newContentButtonShape = new Circle(radius, radius, radius, Color.BLACK);
 
         newContentImgView.setClip(newContentButtonShape);
         StackPane stackPane = new StackPane();
@@ -23,17 +22,28 @@ public class ButtonCustomizer {
     }
 
     public void rectangleButtonImage(ImageView newContentImgView, Button newContentButton) {
-        double width = 15;
-        double height = 15;
+        double width = 30;
+        double height = 30;
         newContentImgView.setFitWidth(width);
         newContentImgView.setFitHeight(height);
+        newContentImgView.setPreserveRatio(true);
 
-        Rectangle newContentButtonShape = new Rectangle(width, height, width/2, height/2);
+        Rectangle newContentButtonShape = new Rectangle(width, height);
+        newContentButtonShape.setArcWidth(10);  // Rounded corners
+        newContentButtonShape.setArcHeight(10);
         newContentImgView.setClip(newContentButtonShape);
 
-        StackPane stackPane = new StackPane();
-        stackPane.getChildren().addAll(newContentImgView);
-        newContentButton.setGraphic(newContentImgView);
-        newContentButton.setStyle("-fx-background-color: transparent;");
+        StackPane stackPane = new StackPane(newContentImgView);
+        stackPane.setMaxSize(width, height);
+        stackPane.setMinSize(width, height);
+
+
+        // Configure button
+        newContentButton.setGraphic(stackPane);
+        newContentButton.setStyle("-fx-background-color: transparent; -fx-padding: 0;");
+        newContentButton.setMaxSize(width, height);
+        newContentButton.setMinSize(width, height);
+//        newContentButton.setGraphic(newContentImgView);
+//        newContentButton.setStyle("-fx-background-color: transparent;");
     }
 }
