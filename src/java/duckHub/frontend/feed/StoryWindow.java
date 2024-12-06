@@ -46,6 +46,10 @@ public class StoryWindow {
         storyPane.getChildren().clear();
         userDataLayout.getChildren().clear();
 
+        // 24 hours check
+        if (story.isExpired()) {
+            return;
+        }
 
         Label userName = new Label(user.getUsername());
         userName.setMinHeight(5);

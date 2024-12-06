@@ -14,6 +14,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
+import java.util.Objects;
+
 public class MainDuck extends Application {
     private Stage primaryStage;
     private User user;
@@ -81,7 +83,6 @@ public class MainDuck extends Application {
     public void showNewsfeed(User user) {
         this.user = user;
         System.out.println("Switching to Newsfeed Page");
-
         // Create new stage for the main application
         if (mainStage == null) {
             mainStage = new Stage();
@@ -91,6 +92,8 @@ public class MainDuck extends Application {
 
         feedPage = new FeedPage();
         Scene feedScene = feedPage.getScene(this, user);
+        String styles = Objects.requireNonNull(getClass().getResource("/duckHub/Styles.css")).toExternalForm();
+        feedScene.getStylesheets().add(styles);
         mainStage.setScene(feedScene);
         primaryStage.hide();
         mainStage.show();
@@ -101,6 +104,8 @@ public class MainDuck extends Application {
         friendsPage = new FriendsPage();
         friendsPage.display(this, user, type);
         Scene friendsScene = friendsPage.getScene();
+        String styles = Objects.requireNonNull(getClass().getResource("/duckHub/Styles.css")).toExternalForm();
+        friendsScene.getStylesheets().add(styles);
         mainStage.setScene(friendsScene);
     }
 
@@ -108,6 +113,8 @@ public class MainDuck extends Application {
         System.out.println("Switching to Profile Page");
         Profile profile = new Profile();
         Scene profileScene = profile.displayScene(this, user);
+        String styles = Objects.requireNonNull(getClass().getResource("/duckHub/Styles.css")).toExternalForm();
+        profileScene.getStylesheets().add(styles);
         mainStage.setScene(profileScene);
     }
 
