@@ -27,9 +27,6 @@ public class MainDuck extends Application {
         Load load = new Load();
         load.loadFromFile();
 
-        // Start with Login Page
-        showLoginPage();
-
         primaryStage.show();
     }
     public void showLoginPage() {
@@ -50,10 +47,10 @@ public class MainDuck extends Application {
         Scene feedScene = feedPage.getScene(user);
         primaryStage.setScene(feedScene);
     }
-    public void showFriendsPage(User user){
+    public void showFriendsPage(User user,String type){
         System.out.println("Switching to Friends Page");
         FriendsPage friendsPage = new FriendsPage();
-        Scene friendsScene = friendsPage.getScene(this,user);
+        Scene friendsScene = friendsPage.getScene(this, user, type);
         primaryStage.setScene(friendsScene);
     }
 }

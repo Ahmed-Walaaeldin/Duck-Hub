@@ -16,9 +16,11 @@ import javafx.stage.Screen;
 import java.util.Objects;
 
 public class FriendsPage {
-
-    public Scene getScene(MainDuck mainDuck, User user) {
-
+    private static MainDuck main;
+    private static User mainUser;
+    public Scene getScene(MainDuck mainDuck, User user, String type) {
+        main = mainDuck;
+        mainUser = user;
         //TODO find where we need to refresh the suggested List of friends
         //? when to user.suggestFriends()
 
@@ -52,34 +54,57 @@ public class FriendsPage {
         stackPane.getChildren().addAll(friendsLayout, blockedLayout, receivedLayout, suggestedLayout);
 
         // Initially, show received
-        receivedLayout.setVisible(true);
-        suggestedLayout.setVisible(false);
-        friendsLayout.setVisible(false);
-        blockedLayout.setVisible(false);
+        if (type.equals("pending")) {
+            listTitle.setText("Received Requests");
+            receivedLayout.setVisible(true);
+            suggestedLayout.setVisible(false);
+            friendsLayout.setVisible(false);
+            blockedLayout.setVisible(false);
+        } else if (type.equals("suggested")) {
+            listTitle.setText("Suggested Friends");
+            receivedLayout.setVisible(false);
+            suggestedLayout.setVisible(true);
+            friendsLayout.setVisible(false);
+            blockedLayout.setVisible(false);
+        } else if (type.equals("blocked")) {
+            listTitle.setText("Blocked List");
+            receivedLayout.setVisible(false);
+            suggestedLayout.setVisible(false);
+            friendsLayout.setVisible(false);
+            blockedLayout.setVisible(true);
+
+        } else if (type.equals("friends")) {
+            listTitle.setText("Friends List");
+            receivedLayout.setVisible(false);
+            suggestedLayout.setVisible(false);
+            friendsLayout.setVisible(true);
+            blockedLayout.setVisible(false);
+        }
+
 
         // navigation
-        receivedButton.setOnAction(e -> {
+        receivedButton.setOnAction(_ -> {
             listTitle.setText("Received Requests");
             receivedLayout.setVisible(true);
             suggestedLayout.setVisible(false);
             friendsLayout.setVisible(false);
             blockedLayout.setVisible(false);
         });
-        suggestedButton.setOnAction(e -> {
+        suggestedButton.setOnAction(_ -> {
             listTitle.setText("Suggested Friends");
             receivedLayout.setVisible(false);
             suggestedLayout.setVisible(true);
             friendsLayout.setVisible(false);
             blockedLayout.setVisible(false);
         });
-        friendsButton.setOnAction(e -> {
-            listTitle.setText("Friends");
+        friendsButton.setOnAction(_ -> {
+            listTitle.setText("Friends List");
             receivedLayout.setVisible(false);
             suggestedLayout.setVisible(false);
             friendsLayout.setVisible(true);
             blockedLayout.setVisible(false);
         });
-        blockedButton.setOnAction(e -> {
+        blockedButton.setOnAction(_ -> {
             listTitle.setText("Blocked List");
             receivedLayout.setVisible(false);
             suggestedLayout.setVisible(false);
@@ -115,4 +140,5 @@ public class FriendsPage {
         }
         return scene;
     }
+
 }
