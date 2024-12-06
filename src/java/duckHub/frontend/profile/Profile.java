@@ -105,7 +105,7 @@ public class Profile implements Constants {
         coverPhoto = user.getUserCoverImage();
         coverPhotoView = new ImageView(coverPhoto);
         coverPhotoView.fitWidthProperty().bind(profileScene.widthProperty());
-        coverPhotoView.setFitHeight(70);
+        coverPhotoView.setFitHeight(120);
     }
 
     private void showBioContent(User user) {

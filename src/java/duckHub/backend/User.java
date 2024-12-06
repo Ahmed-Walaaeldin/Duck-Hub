@@ -5,17 +5,20 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import duckHub.backend.database.ImageDeserializer;
 import duckHub.backend.database.ImageSerializer;
+import duckHub.backend.database.Save;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import duckHub.frontend.Constants;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.UUID;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class User {
+public class User implements Constants {
 
     private String userId;
     private String email;
@@ -50,8 +53,18 @@ public class User {
         this.password = password;
         this.dateOfBirth = dateOfBirth;
         status = true;
+        try {
+            this.userProfileImage = new Image(DEFAULT_PROFILE_IMAGE_PATH);
+            Save save = new Save();
+            save.saveImageToDirectory(this.userProfileImage, this);
+            this.userCoverImage = new Image(DEFAULT_COVER_IMAGE_PATH);
+            save.saveImageToDirectory(this.userCoverImage, this);
+        } catch (Exception e) {
+            System.out.println("Default image not found");
+        }
         initializeLists();
     }
+
     private void initializeLists() {
         friends = new ArrayList<>();
         blocked = new ArrayList<>();
@@ -62,7 +75,7 @@ public class User {
         stories = new ArrayList<>();
     }
 
-    private static String generateId(){
+    private static String generateId() {
         return UUID.randomUUID().toString();
     }
 
@@ -118,9 +131,11 @@ public class User {
     public ArrayList<String> getBlocked() {
         return blocked;
     }
+
     public ArrayList<String> getPendingSent() {
         return pendingSent;
     }
+
     public ArrayList<String> getPendingReceived() {
         return pendingReceived;
     }
@@ -183,6 +198,7 @@ public class User {
         friends.remove(blockedId);
         blocked.add(blockedId);
     }
+
     public void unblock(String blockedId) {
         blocked.remove(blockedId);
     }
@@ -192,8 +208,8 @@ public class User {
         if (permanent) {
             Post post = Post.create(userId, contentText);
             posts.add(post);
-        }else{
-            Story story = Story.create(userId,contentText);
+        } else {
+            Story story = Story.create(userId, contentText);
             stories.add(story);
         }
     }
