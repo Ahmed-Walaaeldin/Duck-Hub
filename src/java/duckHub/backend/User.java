@@ -19,11 +19,13 @@ public class User {
     private String email;
     private String username;
     private String password;
+    private String bioContent;
     private LocalDate dateOfBirth;
 
     @JsonSerialize(using = ImageSerializer.class)
     @JsonDeserialize(using = ImageDeserializer.class)
     private Image userProfileImage;
+    private Image userCoverImage;
     private boolean status;
     private ArrayList<String> friends;
     private ArrayList<String> blocked;
@@ -76,6 +78,14 @@ public class User {
         this.password = password;
     }
 
+    public String getBioContent() {
+        return bioContent;
+    }
+
+    public void setBioContent(String bioContent) {
+        this.bioContent = bioContent;
+    }
+
     public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
@@ -110,6 +120,14 @@ public class User {
 
     public Image getUserProfileImage() {
         return userProfileImage;
+    }
+
+    public Image getUserCoverImage() {
+        return userCoverImage;
+    }
+
+    public void setUserCoverImage(Image userCoverImage) {
+        this.userCoverImage = userCoverImage;
     }
 
     // helper methods
