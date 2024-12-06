@@ -16,7 +16,7 @@ import javafx.stage.Screen;
 import java.util.Objects;
 
 public class FriendsPage {
-    private static MainDuck main;
+    private static MainDuck main = null;
     private static User mainUser;
     public Scene getScene(MainDuck mainDuck, User user, String type) {
         main = mainDuck;
@@ -44,13 +44,13 @@ public class FriendsPage {
         ContentConvertor convertor = new ContentConvertor();
         StackPane stackPane = new StackPane();
         ScrollPane friendsLayout = new ScrollPane();
-        friendsLayout.setContent(convertor.populateList(user.getFriends().toArray(new String[0]), "friends"));
+        friendsLayout.setContent(convertor.populateList(user, user.getFriends().toArray(new String[0]), "friends"));
         ScrollPane blockedLayout = new ScrollPane();
-        blockedLayout.setContent(convertor.populateList(user.getBlocked().toArray(new String[0]), "blocked"));
+        blockedLayout.setContent(convertor.populateList(user, user.getBlocked().toArray(new String[0]), "blocked"));
         ScrollPane receivedLayout = new ScrollPane();
-        receivedLayout.setContent(convertor.populateList(user.getPendingReceived().toArray(new String[0]), "pending"));
+        receivedLayout.setContent(convertor.populateList(user, user.getPendingReceived().toArray(new String[0]), "pending"));
         ScrollPane suggestedLayout = new ScrollPane();
-        suggestedLayout.setContent(convertor.populateList(user.getSuggestedFriends(), "suggested"));
+        suggestedLayout.setContent(convertor.populateList(user, user.getSuggestedFriends(), "suggested"));
         stackPane.getChildren().addAll(friendsLayout, blockedLayout, receivedLayout, suggestedLayout);
 
         // Initially, show received
@@ -141,4 +141,8 @@ public class FriendsPage {
         return scene;
     }
 
+    public static void refresh(String type){
+        if (main != null)
+            main.showFriendsPage(mainUser, type);
+    }
 }

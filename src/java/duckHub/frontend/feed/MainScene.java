@@ -215,8 +215,7 @@ public class MainScene implements SizeConstants {
 
     private void showSuggestedFriends(){
         ContentConvertor convertor = new ContentConvertor();
-        suggestedFriendScrollPane.setContent(convertor.populateList(user.getSuggestedFriends(), "suggested"));
-
+        suggestedFriendScrollPane.setContent(convertor.populateList(user, user.getSuggestedFriends(), "suggested"));
     }
 
     public Scene getScene(User user) {

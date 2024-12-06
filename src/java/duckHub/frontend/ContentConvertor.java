@@ -4,6 +4,7 @@ import duckHub.backend.BackendDuck;
 import duckHub.backend.Post;
 import duckHub.backend.User;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
@@ -90,12 +91,12 @@ public class ContentConvertor {
         }
     }
 
-    public VBox populateList(String[] ids, String type) {
+    public VBox populateList(User user, String[] ids, String type) {
         VBox contentBox = new VBox();
         contentBox.setSpacing(10);
         contentBox.setAlignment(Pos.CENTER);
         for (String id : ids) {
-            HBox banner = ListItem.createListItem(id,type);
+            HBox banner = ListItem.createListItem(user, id, type);
             contentBox.getChildren().add(banner);
         }
         return contentBox;

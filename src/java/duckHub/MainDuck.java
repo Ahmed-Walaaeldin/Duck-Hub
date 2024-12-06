@@ -27,6 +27,8 @@ public class MainDuck extends Application {
         Load load = new Load();
         load.loadFromFile();
 
+        showLoginPage();
+
         primaryStage.show();
     }
     public void showLoginPage() {
