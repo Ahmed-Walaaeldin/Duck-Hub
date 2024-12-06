@@ -1,13 +1,14 @@
 package duckHub.frontend.feed;
 
 import duckHub.backend.User;
+import duckHub.frontend.common.ButtonCustomizer;
+import duckHub.frontend.common.ImageLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -123,15 +124,18 @@ public class NewContent {
         root.getChildren().add(buttonsLayout);
 
         // Buttons Handlers
-        postButton.setOnAction(e -> {
-            addContent();
-        });
-        backButton.setOnAction(e -> {
-            stage.close();
-        });
-        addImageButton.setOnAction(e -> {
-            loadContentImage();
-        });
+        postButton.setOnAction(_ -> addContent());
+        backButton.setOnAction(_ -> stage.close());
+        addImageButton.setOnAction(_ -> loadContentImage());
+
+
+//        ImageLoader imageLoader = new ImageLoader();
+//        addImageButton.setOnAction(_->{
+//            Image newImage = imageLoader.loadContentImage();
+//            if (newImage != null) {
+//                newContentImage = newImage;
+//            }
+//        });
     }
 
     private void loadContentImage() {
