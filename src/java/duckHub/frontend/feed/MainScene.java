@@ -38,6 +38,7 @@ public class MainScene implements SizeConstants {
     private HBox storiesHBox;
     private VBox allPostsVBox;
     private StackPane feedStackPane;
+    private ScrollPane suggestedFriendScrollPane;
 
     // layout for both refresh button and stories hbox
     private HBox topContainer;
@@ -68,6 +69,9 @@ public class MainScene implements SizeConstants {
         feedStackPane = new StackPane();
         topContainer = new HBox();
 
+        // suggested friends layout
+        suggestedFriendScrollPane = new ScrollPane();
+
         storiesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         storiesScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         storiesScrollPane.setFitToHeight(true);
@@ -81,8 +85,9 @@ public class MainScene implements SizeConstants {
         postsScrollPane.setContent(allPostsVBox);
         feedStackPane.getChildren().add(postsScrollPane);
 
-        root.setLeft(feedStackPane);
+        root.setCenter(feedStackPane);
         root.setTop(topContainer);
+        root.setRight(suggestedFriendScrollPane);
     }
 
     private void setScene() {
