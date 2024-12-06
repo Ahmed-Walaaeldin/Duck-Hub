@@ -1,7 +1,9 @@
 package duckHub.frontend;
 
+import duckHub.backend.BackendDuck;
 import duckHub.backend.LoginBackend;
 import duckHub.MainDuck;
+import duckHub.backend.User;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -57,10 +59,10 @@ public class LoginPage {
 
         // log-in button
         Button loginButton = new Button("Login");
-        loginButton.setOnAction(e -> {
-            boolean state = login(usernameField.getText(),passwordField.getText());
-            if(state) {
-                mainDuck.showNewsfeed(); // need to pass username ?
+        loginButton.setOnAction(_ -> {
+            User user = login(usernameField.getText(),passwordField.getText());
+            if(user != null) {
+                mainDuck.showNewsfeed(user);
             }
             else{
                 PopUp.display(true,"Error","Something went wrong");
@@ -68,7 +70,7 @@ public class LoginPage {
         });
         // sign-up button
         Button signupButton = new Button("Don't have account? Sign up");
-        signupButton.setOnAction(e -> mainDuck.showSignupPage());
+        signupButton.setOnAction(_ -> mainDuck.showSignupPage());
 
         mainLayout.setAlignment(Pos.TOP_CENTER);
 
@@ -101,10 +103,10 @@ public class LoginPage {
 
         return scene;
     }
-    private boolean login(String username, String password) {
+    private User login(String username, String password) {
         if(username.isEmpty() || password.isEmpty()) {
             PopUp.display(true,"Login Error","All fields are required");
-            return false;
+            return null;
         }
         return LoginBackend.login(username,password);
     }

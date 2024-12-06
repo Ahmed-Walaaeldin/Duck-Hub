@@ -33,9 +33,7 @@ public class User {
     private ArrayList<Post> posts;
     private ArrayList<Story> stories;
 
-    public User() {
-
-    }
+    public User() {}
     public User(String email, String username, String password, LocalDate dateOfBirth) {
         userId = generateId();
         this.email = email;
@@ -54,6 +52,7 @@ public class User {
         posts = new ArrayList<>();
         stories = new ArrayList<>();
     }
+
     private static String generateId(){
         return "user-" + userCounter++;
     }
@@ -101,7 +100,7 @@ public class User {
 
     public String[] getSuggestedFriends() {
         suggestedFriends.clear();
-        User[] users = BackendDuck.getUsers();
+        ArrayList<User> users = BackendDuck.getUsers();
         for (User potentialFriend : users) {
             String potentialFriendId = potentialFriend.getUserId();
 

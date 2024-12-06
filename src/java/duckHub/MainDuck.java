@@ -6,6 +6,7 @@ import duckHub.backend.database.Load;
 import duckHub.frontend.FriendsPage;
 import duckHub.frontend.LoginPage;
 import duckHub.frontend.SignupPage;
+import duckHub.frontend.feed.MainScene;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -43,9 +44,11 @@ public class MainDuck extends Application {
         Scene signupScene = signupPage.getScene(this);
         primaryStage.setScene(signupScene);
     }
-    public void showNewsfeed(){
+    public void showNewsfeed(User user){
         System.out.println("Switching to Newsfeed Page");
-        // yalla ya nigo
+        MainScene feedPage = new MainScene();
+        Scene feedScene = feedPage.getScene(user);
+        primaryStage.setScene(feedScene);
     }
     public void showFriendsPage(User user){
         System.out.println("Switching to Friends Page");
