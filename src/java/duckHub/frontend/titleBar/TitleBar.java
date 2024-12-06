@@ -29,26 +29,26 @@ public class TitleBar implements Constants {
         titleBar.setSpacing(10);
 
         // Home button
-        Image homeImage = new Image("/duckhub/frontend/home-button.png");
+        Image homeImage = new Image("/duckhub/frontend/home.png");
         Button homeButton = createNavigationButton(homeImage,
-                e -> mainDuck.showNewsfeed(user));
+                _ -> mainDuck.showNewsfeed(user));
 
         // Profile button
-        Image profileImage = new Image("/duckhub/frontend/profile-button.png");
+        Image profileImage = new Image("/duckhub/frontend/profile.png");
         Button profileButton = createNavigationButton(profileImage,
-                e -> mainDuck.showProfilePage());
+                _ -> mainDuck.showProfilePage());
 
         // Friends button
-        Image friendsImage = new Image("/duckhub/frontend/friends-button.png");
+        Image friendsImage = new Image("/duckhub/frontend/friends.png");
         Button friendsButton = createNavigationButton(friendsImage,
-                e -> mainDuck.showFriendsPage(user, "friends"));
+                _ -> mainDuck.showFriendsPage(user, "friends"));
 
         // Logout button
-        Image logoutImage = new Image("/duckhub/frontend/images/logout-button.png");
-        Button logoutButton = createNavigationButton(logoutImage, e -> mainDuck.showLoginPage());
+        Image logoutImage = new Image("/duckhub/frontend/images/logout.png");
+        Button logoutButton = createNavigationButton(logoutImage, _ -> mainDuck.showLoginPage());
 
         Image refreshImage = new Image("/duckhub/frontend/images/refresh-button.png");
-        Button refreshButton = createNavigationButton(refreshImage, e -> mainDuck.refresh());
+        Button refreshButton = createNavigationButton(refreshImage, _ -> mainDuck.refresh());
         // Spacer to push logout to the right
         HBox spacer = new HBox();
         HBox.setHgrow(spacer, Priority.ALWAYS);
