@@ -16,6 +16,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
@@ -79,6 +80,7 @@ public class Profile implements Constants {
 
     private void layoutOrganizer() {
         // hold title bar and other main layout
+        VBox.setVgrow(profileRootScrollPane, Priority.ALWAYS);
         mainContainer.getChildren().addAll(titleBar.getTitleBar(), profileRootScrollPane);
 
         profileRootVBox.getChildren().addAll(coverPhotoView, bioLayout, editButtonsHBoxLayout, allFriendsScrollPane, allPostsScrollPane);

@@ -6,6 +6,7 @@ import duckHub.backend.User;
 import duckHub.frontend.common.ButtonCustomizer;
 import duckHub.frontend.common.ContentConvertor;
 import duckHub.frontend.Constants;
+import duckHub.frontend.common.Refreshable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -19,7 +20,7 @@ import javafx.scene.shape.Rectangle;
 import duckHub.frontend.titleBar.TitleBar;
 import java.util.ArrayList;
 
-public class MainScene implements Constants {
+public class FeedPage implements Constants, Refreshable {
     // Displayed Scene
     private Scene scene;
 
@@ -31,9 +32,6 @@ public class MainScene implements Constants {
     private VBox allPostsVBox;
     private StackPane feedStackPane;
     private ScrollPane suggestedFriendScrollPane;
-
-    // layout for both refresh button and stories hbox
-    private HBox topContainer;
 
     // layout to hold the title bar and all the other content
     private VBox mainContainer;
@@ -47,7 +45,8 @@ public class MainScene implements Constants {
     // add the title bar
     private TitleBar titleBar;
 
-    private void refreshWindow() {
+    @Override
+    public void refreshWindow() {
         allPostsVBox.getChildren().clear();
         storiesHBox.getChildren().clear();
         showUserPhoto();
@@ -70,7 +69,6 @@ public class MainScene implements Constants {
         storiesHBox.setSpacing(0);
         storiesScrollPane = new ScrollPane();
         feedStackPane = new StackPane();
-        topContainer = new HBox();
 
         // suggested friends layout
         suggestedFriendScrollPane = new ScrollPane();
@@ -84,6 +82,7 @@ public class MainScene implements Constants {
 
     private void layoutsOrganizer() {
         // add title bar and all others
+        VBox.setVgrow(root, Priority.ALWAYS);
         mainContainer.getChildren().addAll(titleBar.getTitleBar(), root);
 
         postsScrollPane.setFitToWidth(true);
@@ -94,7 +93,7 @@ public class MainScene implements Constants {
         storiesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
         root.setCenter(feedStackPane);
-        root.setTop(topContainer);
+        root.setTop(storiesScrollPane);
         root.setRight(suggestedFriendScrollPane);
     }
 
@@ -213,27 +212,6 @@ public class MainScene implements Constants {
         newStoryButton.setMouseTransparent(false);
     }
 
-    private void showRefreshButton() {
-        Button refreshButton = new Button();
-        Image refreshLogo = new Image("/duckhub/frontend/refresh.png");
-        ImageView refreshLogoView = new ImageView(refreshLogo);
-
-        ButtonCustomizer buttonCustomizer = new ButtonCustomizer();
-        buttonCustomizer.rectangleButtonImage(refreshLogoView, refreshButton);
-
-        // Position refresh button
-        StackPane.setAlignment(refreshButton, Pos.TOP_RIGHT);
-        StackPane.setMargin(refreshButton, new Insets(10, 10, 0, 0));
-
-        // add both refresh button and stories layout in one final top layout
-        topContainer.getChildren().addAll(storiesScrollPane, refreshButton);
-        HBox.setHgrow(storiesScrollPane, Priority.ALWAYS);
-
-        // Refresh button handler
-        refreshButton.setOnAction(_ -> refreshWindow());
-        refreshButton.setMouseTransparent(false);
-    }
-
     private void showSuggestedFriends(){
         ContentConvertor convertor = new ContentConvertor();
         suggestedFriendScrollPane.setContent(convertor.populateList(user, user.getSuggestedFriends(), "suggested"));
@@ -250,7 +228,6 @@ public class MainScene implements Constants {
         showPosts(user);
         showSuggestedFriends();
         showContentButton();
-        showRefreshButton();
         return scene;
     }
 }

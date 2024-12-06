@@ -3,6 +3,7 @@ package duckHub.frontend;
 import duckHub.MainDuck;
 import duckHub.backend.User;
 import duckHub.frontend.common.ContentConvertor;
+import duckHub.frontend.titleBar.TitleBar;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -16,12 +17,18 @@ import javafx.stage.Screen;
 
 import java.util.Objects;
 
-public class FriendsPage {
+public class FriendsPage implements Constants{
     private static MainDuck main = null;
     private static User mainUser;
+
     public Scene getScene(MainDuck mainDuck, User user, String type) {
         main = mainDuck;
         mainUser = user;
+
+        TitleBar titleBar = new TitleBar(mainDuck,user);
+        VBox mainContainer = new VBox();
+
+
         //TODO find where we need to refresh the suggested List of friends
         //? when to user.suggestFriends()
 
@@ -120,7 +127,7 @@ public class FriendsPage {
 
         buttonLayout.setPrefWidth(300);
         listLayout.setPrefWidth(900);
-        stackPane.setPrefWidth(1000);
+//        stackPane.setPrefWidth(1000);
         HBox.setHgrow(friendsLayout, Priority.ALWAYS);
         HBox.setHgrow(stackPane, Priority.ALWAYS);
 
@@ -130,13 +137,11 @@ public class FriendsPage {
         mainLayout.getChildren().addAll(buttonLayout, listLayout);
 
 
+        // The main container where the title bar and the main layout exist
+        VBox.setVgrow(mainLayout, Priority.ALWAYS);
+        mainContainer.getChildren().addAll(titleBar.getTitleBar(), mainLayout);
 
-        // full screen window
-        double screenWidth = Screen.getPrimary().getBounds().getWidth();
-        double screenHeight = Screen.getPrimary().getBounds().getHeight();
-
-
-        Scene scene = new Scene(mainLayout, screenWidth, screenHeight);
+        Scene scene = new Scene(mainContainer, SCENE_WIDTH, SCENE_HEIGHT);
         try{
             String styles = Objects.requireNonNull(getClass().getResource("/duckHub/frontend/FriendsPageStyles.css")).toExternalForm();
             scene.getStylesheets().add(styles);

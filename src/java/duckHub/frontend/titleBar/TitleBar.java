@@ -1,5 +1,6 @@
 package duckHub.frontend.titleBar;
 
+import duckHub.backend.database.Save;
 import duckHub.frontend.Constants;
 import duckHub.MainDuck;
 import duckHub.backend.User;
@@ -10,6 +11,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class TitleBar implements Constants {
     private final HBox titleBar;
@@ -29,8 +32,8 @@ public class TitleBar implements Constants {
         titleBar.setSpacing(10);
 
         // Home button
-        Image homeImage = new Image("/duckhub/frontend/home.png");
-        Button homeButton = createNavigationButton(homeImage,
+        Image feedImage = new Image("/duckhub/frontend/feed2.png");
+        Button feedButton = createNavigationButton(feedImage,
                 _ -> mainDuck.showNewsfeed(user));
 
         // Profile button
@@ -44,16 +47,32 @@ public class TitleBar implements Constants {
                 _ -> mainDuck.showFriendsPage(user, "friends"));
 
         // Logout button
-        Image logoutImage = new Image("/duckhub/frontend/images/logout.png");
-        Button logoutButton = createNavigationButton(logoutImage, _ -> mainDuck.showLoginPage());
+        Image logoutImage = new Image("/duckhub/frontend/logout.png");
+        Button logoutButton = createNavigationButton(logoutImage, _ -> {
+            mainDuck.showLoginPage();
+            // Set the user as offline
+            user.setStatus(false);
 
-        Image refreshImage = new Image("/duckhub/frontend/images/refresh-button.png");
+            // Save all users data
+            Save save = new Save();
+            save.saveAllUsers();
+        });
+
+        Image refreshImage = new Image("/duckhub/frontend/refresh.png");
         Button refreshButton = createNavigationButton(refreshImage, _ -> mainDuck.refresh());
+
+        // Close button
+        Image closeImage = new Image("/duckhub/frontend/close.png");
+        Button closeButton = createNavigationButton(closeImage, e -> {
+            Stage stage = (Stage) titleBar.getScene().getWindow();
+            stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
+        });
+
         // Spacer to push logout to the right
         HBox spacer = new HBox();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        titleBar.getChildren().addAll(homeButton, profileButton, friendsButton, spacer, logoutButton, refreshButton);
+        titleBar.getChildren().addAll(feedButton, profileButton, friendsButton, spacer, logoutButton, refreshButton, closeButton);
     }
 
     private Button createNavigationButton(Image logo, javafx.event.EventHandler<javafx.event.ActionEvent> handler) {
