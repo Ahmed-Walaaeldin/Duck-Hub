@@ -51,7 +51,7 @@ public class StoryWindow {
         userDataLayout.getChildren().clear();
         Label userName = new Label(user.getUsername());
         userName.setMinHeight(5);
-        userPane = user.roundedProfileImage(10);
+        userPane = user.roundedProfileImage(10,false);
         userPane.setMaxWidth(20);
         userPane.setMaxHeight(20);
         userDataLayout.getChildren().addAll(userPane, userName);

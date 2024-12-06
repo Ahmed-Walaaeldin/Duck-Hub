@@ -98,13 +98,13 @@ public class NewContent {
         newContentTextField.setPrefRowCount(3); // Set visible number of rows
         newContentTextField.setPrefColumnCount(20);
 
-        // Enter key handler for the text area
-        newContentTextField.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER && !event.isShiftDown()) {
-                event.consume(); // Prevent new line
-                postButton.fire(); // Trigger post button
-            }
-        });
+//        // Enter key handler for the text area
+//        newContentTextField.setOnKeyPressed(event -> {
+//            if (event.getCode() == KeyCode.ENTER && !event.isShiftDown()) {
+//                event.consume(); // Prevent new line
+//                postButton.fire(); // Trigger post button
+//            }
+//        });
 
         root.getChildren().add(newContentTextField);
 

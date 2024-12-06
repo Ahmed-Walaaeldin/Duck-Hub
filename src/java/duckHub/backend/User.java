@@ -30,9 +30,10 @@ public class User {
     private ArrayList<Post> posts;
     private ArrayList<Story> stories;
 
-    public User(){
+    public User() {
 
     }
+
     public User(String email, String username, String password, LocalDate dateOfBirth) {
         userId = generateId();
         this.email = email;
@@ -45,7 +46,8 @@ public class User {
         posts = new ArrayList<>();
         stories = new ArrayList<>();
     }
-    private static String generateId(){
+
+    private static String generateId() {
         return "user-" + userCounter++;
     }
 
@@ -53,96 +55,119 @@ public class User {
     public String getUserId() {
         return userId;
     }
+
     public String getEmail() {
         return email;
     }
+
     public String getUsername() {
         return username;
     }
+
     public void setUsername(String username) {
         this.username = username;
     }
+
     public String getPassword() {
         return password;
     }
+
     public void setPassword(String password) {
         this.password = password;
     }
+
     public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
+
     public boolean getStatus() {
         return status;
     }
+
     public void setStatus(boolean status) {
         this.status = status;
     }
+
     public ArrayList<String> getFriends() {
         return friends;
     }
+
     public ArrayList<String> getBlocked() {
         return blocked;
     }
+
     public ArrayList<Post> getPosts() {
         return posts;
     }
+
     public ArrayList<Story> getStories() {
         return stories;
     }
+
     public void setUserProfileImage(Image userProfileImage) {
         this.userProfileImage = userProfileImage;
     }
+
     public Image getUserProfileImage() {
         return userProfileImage;
     }
 
     // helper methods
     public void addFriend(String friendId) {
-       friends.add(friendId);
+        friends.add(friendId);
     }
+
     public void removeFriend(String friendId) {
         friends.remove(friendId);
     }
+
     public void block(String blockedId) {
         friends.remove(blockedId);
         blocked.add(blockedId);
     }
-    public void createContent(boolean permanent,String contentText) {
-        if(permanent) {
-            Post post = Post.create(userId,contentText);
+
+    public void createContent(boolean permanent, String contentText) {
+        if (permanent) {
+            Post post = Post.create(userId, contentText);
             posts.add(post);
-        }else{
-            Story story = Story.create(userId,contentText);
+        } else {
+            Story story = Story.create(userId, contentText);
             stories.add(story);
         }
     }
-    public void createContent(boolean permanent,String contentText, Image contentImage) {
-        if(permanent) {
-            Post post = Post.create(userId,contentText,contentImage);
+
+    public void createContent(boolean permanent, String contentText, Image contentImage) {
+        if (permanent) {
+            Post post = Post.create(userId, contentText, contentImage);
             posts.add(post);
-        }else{
-            Story story = Story.create(userId,contentText,contentImage);
+        } else {
+            Story story = Story.create(userId, contentText, contentImage);
             stories.add(story);
         }
     }
-    public StackPane roundedProfileImage(double radius) {
+
+    public StackPane roundedProfileImage(double radius, boolean framed) {
         Image userImage = userProfileImage;
         ImageView userImageView = new ImageView(userImage);
 
-        userImageView.setFitHeight(radius*2);
-        userImageView.setFitWidth(radius*2);
+        userImageView.setFitHeight(radius * 2);
+        userImageView.setFitWidth(radius * 2);
 
-        Circle userImageClip = new Circle(radius,radius,radius);
+        Circle userImageClip = new Circle(radius, radius, radius);
         userImageView.setClip(userImageClip);
 
-        // create the border
-        Circle userImageBorder = new Circle(radius +2);
-        userImageBorder.setStroke(Color.PURPLE);
-        userImageBorder.setStrokeWidth(3);
-        userImageBorder.setFill(null);
-
         StackPane stackPane = new StackPane();
-        stackPane.getChildren().addAll(userImageBorder,userImageView);
+
+        // create the border
+        if (framed) {
+            Circle userImageBorder = new Circle(radius + 2);
+            userImageBorder.setStroke(Color.PURPLE);
+            userImageBorder.setStrokeWidth(3);
+            userImageBorder.setFill(null);
+            stackPane.getChildren().add(userImageBorder);
+        }
+
+        stackPane.getChildren().add(userImageView);
         return stackPane;
     }
 
