@@ -3,6 +3,7 @@ package duckHub.frontend.feed;
 import duckHub.MainDuck;
 import duckHub.backend.Post;
 import duckHub.backend.User;
+import duckHub.frontend.ContentConvertor;
 import duckHub.frontend.SizeConstants;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -91,75 +92,8 @@ public class MainScene implements SizeConstants {
     }
 
     private void showPosts(User user) {
-        convertPostsToNodes(user.getPosts(), allPostsVBox);
-    }
-
-    private void convertPostsToNodes(ArrayList<Post> posts, VBox layout) {
-        // Sort posts by timestamp in descending order (most recent first)
-        posts.sort((post1, post2) -> post2.getTimestamp().compareTo(post1.getTimestamp()));
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        for (Post post : posts) {
-            HBox nameAndPhotoLayout = new HBox();
-
-            StackPane userPhotoRounded = user.roundedProfileImage(15, false);
-            nameAndPhotoLayout.getChildren().add(userPhotoRounded);
-
-            VBox postVBox = new VBox();
-            Label authorName = new Label(post.getAuthorId());
-            nameAndPhotoLayout.getChildren().add(authorName);
-            postVBox.getChildren().addAll(nameAndPhotoLayout);
-
-            if (!post.getContentText().isEmpty()) {
-                TextArea textArea = new TextArea(post.getContentText());
-                textArea.setEditable(false);
-                textArea.setWrapText(true);
-                textArea.setPrefWidth(postsScrollPane.getPrefViewportWidth() - 20); // for padding
-
-                // Calculate the preferred height based on the content
-                int lines = textArea.getText().split("\n").length;
-                double lineHeight = 20; // Approximate height of a line in pixels
-                textArea.setPrefHeight(lines * lineHeight);
-                postVBox.getChildren().add(textArea);
-            }
-            Image imageContent = post.getContentImage();
-            ImageView imageView = new ImageView(imageContent);
-            if (imageContent != null) {
-//                ImageView imageView = new ImageView(imageContent);
-
-                //original image dimensions
-                double originalWidth = imageContent.getWidth();
-                double originalHeight = imageContent.getHeight();
-                double aspectRatio = originalWidth / originalHeight;
-
-                // Set maximum dimensions
-                double maxWidth = postsScrollPane.getPrefViewportWidth() - 40;
-                double maxHeight = 400;
-
-                // Calculate new dimensions
-                double newWidth = maxWidth;
-                double newHeight = maxWidth / aspectRatio;
-
-                // If height exceeds maximum, scale based on height instead
-                if (newHeight > maxHeight) {
-                    newHeight = maxHeight;
-                    newWidth = maxHeight * aspectRatio;
-                }
-
-                imageView.setFitWidth(newWidth);
-                imageView.setFitHeight(newHeight);
-                imageView.setPreserveRatio(true);
-                imageView.setSmooth(true);
-            }
-            Label timeStampLabel = new Label(formatter.format(post.getTimestamp()));
-//            timeStampLabel.setAlignment(Pos.CENTER_RIGHT);
-
-            if (imageContent != null) {
-                postVBox.getChildren().add(imageView);
-            }
-            postVBox.getChildren().add(timeStampLabel);
-            layout.getChildren().add(postVBox);
-        }
+        ContentConvertor contentConvertor = new ContentConvertor();
+        contentConvertor.convertPostsToNodes(user,postsScrollPane ,allPostsVBox);
     }
 
     private void showPeopleWithStories(ArrayList<User> users) {
