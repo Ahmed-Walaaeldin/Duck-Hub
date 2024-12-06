@@ -1,6 +1,7 @@
 package duckHub.frontend.feed;
 
 import duckHub.backend.User;
+import duckHub.backend.database.Save;
 import duckHub.frontend.common.ButtonCustomizer;
 import duckHub.frontend.common.ImageLoader;
 import javafx.geometry.Pos;
@@ -127,30 +128,17 @@ public class NewContent {
         // Buttons Handlers
         postButton.setOnAction(_ -> addContent());
         backButton.setOnAction(_ -> stage.close());
-        addImageButton.setOnAction(_ -> loadContentImage());
 
 
-//        ImageLoader imageLoader = new ImageLoader();
-//        addImageButton.setOnAction(_->{
-//            Image newImage = imageLoader.loadContentImage();
-//            if (newImage != null) {
-//                newContentImage = newImage;
-//            }
-//        });
-    }
-
-    private void loadContentImage() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Upload Image");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image", "*.png", "*.jpg", "*.jpeg"));
-        File selectedFile = fileChooser.showOpenDialog(null);
-        if (selectedFile != null) {
-            try {
-                newContentImage = new Image(selectedFile.toURI().toString());
-            } catch (Exception e) {
-                System.out.println("Unable to load image" + e.getMessage());
+        ImageLoader imageLoader = new ImageLoader();
+        addImageButton.setOnAction(_->{
+            Image newImage = imageLoader.loadContentImage();
+            if (newImage != null) {
+                newContentImage = newImage;
+                Save save = new Save();
+                save.saveImageToDirectory(newContentImage,user);
             }
-        }
+        });
     }
 
     // Will handle both stories and posts based on the flag passed.

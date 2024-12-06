@@ -27,6 +27,8 @@ public class User {
     @JsonSerialize(using = ImageSerializer.class)
     @JsonDeserialize(using = ImageDeserializer.class)
     private Image userProfileImage;
+    @JsonSerialize(using = ImageSerializer.class)
+    @JsonDeserialize(using = ImageDeserializer.class)
     private Image userCoverImage;
     private boolean status;
     private transient ArrayList<String> suggestedFriends;

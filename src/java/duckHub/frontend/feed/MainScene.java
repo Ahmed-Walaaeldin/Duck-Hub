@@ -5,7 +5,7 @@ import duckHub.backend.BackendDuck;
 import duckHub.backend.User;
 import duckHub.frontend.common.ButtonCustomizer;
 import duckHub.frontend.common.ContentConvertor;
-import duckHub.frontend.SizeConstants;
+import duckHub.frontend.Constants;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -19,7 +19,7 @@ import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 
-public class MainScene implements SizeConstants {
+public class MainScene implements Constants {
     // Displayed Scene
     private Scene scene;
 
@@ -39,11 +39,14 @@ public class MainScene implements SizeConstants {
     // the specific reference of the user whose feed this is
     private User user;
 
+    // MainDuck to call the profile
+    private MainDuck mainDuck;
+
     private void refreshWindow() {
         allPostsVBox.getChildren().clear();
         storiesHBox.getChildren().clear();
         showUserPhoto();
-        showPeopleWithStories(BackendDuck.getUsers());
+        showPeopleWithStories(user.getFriends());
         showPosts(user);
         showSuggestedFriends();
     }
@@ -90,10 +93,19 @@ public class MainScene implements SizeConstants {
     private void showPosts(User user) {
         ContentConvertor contentConvertor = new ContentConvertor();
         contentConvertor.convertPostsToNodes(user,postsScrollPane ,allPostsVBox);
+
+        ArrayList<String> friendIds = user.getFriends();
+        for (String id : friendIds){
+            User friend = BackendDuck.getUserByID(id);
+            contentConvertor.convertPostsToNodes(friend,postsScrollPane,allPostsVBox);
+        }
+
     }
 
-    private void showPeopleWithStories(ArrayList<User> users) {
-        for (User user : users) {
+    private void showPeopleWithStories(ArrayList<String> friendsIds) {
+        for (String id : friendsIds) {
+            User user = BackendDuck.getUserByID(id);
+//            assert user != null;
             if (!user.getStories().isEmpty()) {
                 StackPane stackPane = user.roundedProfileImage(25, true);
                 Button userStoryButton = new Button();
@@ -124,7 +136,7 @@ public class MainScene implements SizeConstants {
         // the button handler
         profileButton.setOnAction(_ -> {
             // TODO: call the profile scene (Roupha's)
-
+            mainDuck.showProfilePage();
         });
     }
 
@@ -215,13 +227,14 @@ public class MainScene implements SizeConstants {
         suggestedFriendScrollPane.setContent(convertor.populateList(user, user.getSuggestedFriends(), "suggested"));
     }
 
-    public Scene getScene(User user) {
+    public Scene getScene(MainDuck mainDuck,User user) {
+        this.mainDuck = mainDuck;
         this.user = user;
         layoutsInitializer();
         layoutsOrganizer();
         setScene();
         showUserPhoto();
-        showPeopleWithStories(BackendDuck.getUsers());
+        showPeopleWithStories(user.getFriends());
         showPosts(user);
         showSuggestedFriends();
         showContentButton();

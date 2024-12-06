@@ -33,8 +33,6 @@ public class MainDuck extends Application {
         this.primaryStage = primaryStage;
 
         primaryStage.setTitle("DuckHub");
-//        showLoginPage(); // Start with Login Page
-        showProfilePage();
 
         Load load = new Load();
         load.loadFromFile();
@@ -62,20 +60,23 @@ public class MainDuck extends Application {
         Scene loginScene = loginPage.getScene(this);
         primaryStage.setScene(loginScene);
     }
+
     public void showSignupPage() {
         System.out.println("Switching to Signup Page");
         SignupPage signupPage = new SignupPage();
         Scene signupScene = signupPage.getScene(this);
         primaryStage.setScene(signupScene);
     }
-    public void showNewsfeed(User user){
+
+    public void showNewsfeed(User user) {
         this.user = user;
         System.out.println("Switching to Newsfeed Page");
         MainScene feedPage = new MainScene();
-        Scene feedScene = feedPage.getScene(user);
+        Scene feedScene = feedPage.getScene(this, user);
         primaryStage.setScene(feedScene);
     }
-    public void showFriendsPage(User user,String type){
+
+    public void showFriendsPage(User user, String type) {
         System.out.println("Switching to Friends Page");
         FriendsPage friendsPage = new FriendsPage();
         Scene friendsScene = friendsPage.getScene(this, user, type);
@@ -84,19 +85,18 @@ public class MainDuck extends Application {
 
     public void showProfilePage() {
         System.out.println("Switching to Profile Page");
-        User user = new User("email", "username", "password", LocalDate.now());
-        File imageFile = new File("src/Resources/duckHub/frontend/duckStory1.jpeg");
-        Image profileImage = new Image(imageFile.toURI().toString());
-        user.setUserProfileImage(profileImage);
-        user.createContent(true, "enta al kbir ya walaa");
-        user.createContent(true, "enta al kbir ya walaa");
-        user.createContent(true, "enta al kbir ya walaa");
-        user.createContent(true, "enta al kbir ya walaa");
-        user.createContent(true, "enta al kbir ya walaa");
-        user.createContent(true, "enta al kbir ya walaa");
-        user.createContent(true, "enta al kbir ya walaa");
-        user.createContent(true, "enta al kbir ya walaa");
-        user.setBioContent("hello asfadsf\nhello walaa");
+//        File imageFile = new File("src/Resources/duckHub/frontend/duckStory1.jpeg");
+//        Image profileImage = new Image(imageFile.toURI().toString());
+//        user.setUserProfileImage(profileImage);
+//        user.createContent(true, "enta al kbir ya walaa");
+//        user.createContent(true, "enta al kbir ya walaa");
+//        user.createContent(true, "enta al kbir ya walaa");
+//        user.createContent(true, "enta al kbir ya walaa");
+//        user.createContent(true, "enta al kbir ya walaa");
+//        user.createContent(true, "enta al kbir ya walaa");
+//        user.createContent(true, "enta al kbir ya walaa");
+//        user.createContent(true, "enta al kbir ya walaa");
+//        user.setBioContent("hello asfadsf\nhello walaa");
         Profile profile = new Profile();
         Scene profileScene = profile.displayScene(user);
         primaryStage.setScene(profileScene);

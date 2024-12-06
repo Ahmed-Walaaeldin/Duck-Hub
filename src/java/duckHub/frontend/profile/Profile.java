@@ -1,6 +1,7 @@
 package duckHub.frontend.profile;
 
 import duckHub.backend.User;
+import duckHub.backend.database.Save;
 import duckHub.frontend.common.ContentConvertor;
 import duckHub.frontend.common.ImageLoader;
 import javafx.geometry.Insets;
@@ -75,7 +76,7 @@ public class Profile {
     }
 
     private void showCoverPhoto(User user) {
-        coverPhoto = user.getUserProfileImage();
+        coverPhoto = user.getUserCoverImage();
         coverPhotoView = new ImageView(coverPhoto);
         coverPhotoView.fitWidthProperty().bind(profileScene.widthProperty());
         coverPhotoView.setFitHeight(70);
@@ -112,6 +113,8 @@ public class Profile {
         changeCoverButton.setOnAction(_ -> {
             Image newImage = imageLoader.loadContentImage();
             if (newImage != null) {
+                Save save = new Save();
+                save.saveImageToDirectory(newImage,user);
                 user.setUserCoverImage(newImage);
                 coverPhotoView.setImage(newImage);
             }
@@ -122,6 +125,8 @@ public class Profile {
         changeProfileButton.setOnAction(_ -> {
             Image newImage = imageLoader.loadContentImage();
             if (newImage != null) {
+                Save save = new Save();
+                save.saveImageToDirectory(newImage,user);
                 user.setUserProfileImage(newImage);
                 bioLayout.getChildren().clear();
                 showBioContent(user);

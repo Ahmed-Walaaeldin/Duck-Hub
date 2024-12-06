@@ -19,7 +19,7 @@ import javafx.scene.layout.VBox;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class SignupPage implements SizeConstants {
+public class SignupPage implements Constants {
     public Scene getScene(MainDuck mainDuck) {
         VBox mainLayout = new VBox();
 

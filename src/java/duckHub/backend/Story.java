@@ -1,11 +1,13 @@
 package duckHub.backend;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javafx.scene.image.Image;
 
 import java.time.LocalDateTime;
-
+import java.util.UUID;
+//@JsonIgnoreProperties(ignoreUnknown = true)
 public class Story extends Content {
-    private static int storyCounter = 0;
+    private boolean isExpired;
 
     public Story(){
 
@@ -28,12 +30,20 @@ public class Story extends Content {
     }
 
     private static String generateId() {
-        return "story-" + storyCounter++;
+        return UUID.randomUUID().toString();
     }
 
     // deleting the story after 24h
     public boolean isExpired() {
         return LocalDateTime.now().isAfter(getTimestamp().plusHours(24));
+    }
+
+    public boolean getExpired() {
+        return isExpired;
+    }
+
+    public void setExpired(boolean expired) {
+        this.isExpired = expired;
     }
 }
 

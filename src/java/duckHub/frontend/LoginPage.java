@@ -1,6 +1,5 @@
 package duckHub.frontend;
 
-import duckHub.backend.BackendDuck;
 import duckHub.backend.LoginBackend;
 import duckHub.MainDuck;
 import duckHub.backend.User;
@@ -9,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,7 +18,7 @@ import javafx.scene.layout.VBox;
 
 import java.util.Objects;
 
-public class LoginPage implements SizeConstants {
+public class LoginPage implements Constants {
     public Scene getScene(MainDuck mainDuck) {
         VBox mainLayout = new VBox();
 
@@ -50,7 +50,7 @@ public class LoginPage implements SizeConstants {
 
         Label passwordLabel = new Label("Password:");
         grid.add(passwordLabel, 0, 1);
-        TextField passwordField = new TextField();
+        PasswordField passwordField = new PasswordField();
         grid.add(passwordField, 1, 1);
 
         // log-in button
