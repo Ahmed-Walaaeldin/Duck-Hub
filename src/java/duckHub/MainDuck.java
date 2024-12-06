@@ -2,19 +2,27 @@ package duckHub;
 
 import duckHub.backend.BackendDuck;
 import duckHub.backend.User;
+import duckHub.backend.database.Load;
+import duckHub.backend.database.Save;
+import duckHub.frontend.FriendsPage;
+import duckHub.backend.BackendDuck;
+import duckHub.backend.User;
 import duckHub.frontend.LoginPage;
 import duckHub.frontend.SignupPage;
+import duckHub.frontend.feed.MainScene;
 import duckHub.frontend.profile.Profile;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.File;
 import java.time.LocalDate;
 
 public class MainDuck extends Application {
     private Stage primaryStage;
+    private User user;
 
     public static void main(String[] args) {
         launch(args);
@@ -27,7 +35,25 @@ public class MainDuck extends Application {
         primaryStage.setTitle("DuckHub");
 //        showLoginPage(); // Start with Login Page
         showProfilePage();
+
+        Load load = new Load();
+        load.loadFromFile();
+
+        showLoginPage();
+
+        // close button handler
+        primaryStage.setOnCloseRequest(this::handleCloseRequest);
+
         primaryStage.show();
+    }
+
+    public void handleCloseRequest(WindowEvent event) {
+        if (user != null) {
+            // set the status to offline and save the data.
+            user.setStatus(false);
+        }
+        Save save = new Save();
+        save.saveAllUsers();
     }
 
     public void showLoginPage() {
@@ -36,17 +62,24 @@ public class MainDuck extends Application {
         Scene loginScene = loginPage.getScene(this);
         primaryStage.setScene(loginScene);
     }
-
     public void showSignupPage() {
         System.out.println("Switching to Signup Page");
         SignupPage signupPage = new SignupPage();
         Scene signupScene = signupPage.getScene(this);
         primaryStage.setScene(signupScene);
     }
-
-    public void showNewsfeed() {
+    public void showNewsfeed(User user){
+        this.user = user;
         System.out.println("Switching to Newsfeed Page");
-        // yalla ya nigo
+        MainScene feedPage = new MainScene();
+        Scene feedScene = feedPage.getScene(user);
+        primaryStage.setScene(feedScene);
+    }
+    public void showFriendsPage(User user,String type){
+        System.out.println("Switching to Friends Page");
+        FriendsPage friendsPage = new FriendsPage();
+        Scene friendsScene = friendsPage.getScene(this, user, type);
+        primaryStage.setScene(friendsScene);
     }
 
     public void showProfilePage() {

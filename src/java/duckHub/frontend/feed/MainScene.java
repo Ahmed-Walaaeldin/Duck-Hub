@@ -1,7 +1,7 @@
 package duckHub.frontend.feed;
 
 import duckHub.MainDuck;
-import duckHub.backend.Post;
+import duckHub.backend.BackendDuck;
 import duckHub.backend.User;
 import duckHub.frontend.ContentConvertor;
 import duckHub.frontend.SizeConstants;
@@ -9,24 +9,19 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class MainScene implements SizeConstants {
     // to test
-    private Stage stage;
+//    private Stage stage;
 
     // Displayed Scene
     private Scene scene;
@@ -51,8 +46,9 @@ public class MainScene implements SizeConstants {
         allPostsVBox.getChildren().clear();
         storiesHBox.getChildren().clear();
         showUserPhoto();
-        showPeopleWithStories(MainDuck.users);
+        showPeopleWithStories(BackendDuck.getUsers());
         showPosts(user);
+        showSuggestedFriends();
     }
 
     private void layoutsInitializer() {
@@ -91,9 +87,7 @@ public class MainScene implements SizeConstants {
     }
 
     private void setScene() {
-        stage = new Stage();
         scene = new Scene(root, 600, 500);
-        stage.setScene(scene);
     }
 
     private void showPosts(User user) {
@@ -219,16 +213,22 @@ public class MainScene implements SizeConstants {
         refreshButton.setMouseTransparent(false);
     }
 
-    public void displayScene(User user) {
+    private void showSuggestedFriends(){
+        ContentConvertor convertor = new ContentConvertor();
+        suggestedFriendScrollPane.setContent(convertor.populateList(user, user.getSuggestedFriends(), "suggested"));
+    }
+
+    public Scene getScene(User user) {
         this.user = user;
         layoutsInitializer();
         layoutsOrganizer();
         setScene();
         showUserPhoto();
-        showPeopleWithStories(MainDuck.users);
+        showPeopleWithStories(BackendDuck.getUsers());
         showPosts(user);
+        showSuggestedFriends();
         showContentButton();
         showRefreshButton();
-        stage.show();
+        return scene;
     }
 }

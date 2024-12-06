@@ -12,9 +12,10 @@ import javafx.scene.shape.Circle;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-
+import java.util.UUID;
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
-    private static int userCounter = 0;
+
     private String userId;
     private String email;
     private String username;
@@ -27,8 +28,11 @@ public class User {
     private Image userProfileImage;
     private Image userCoverImage;
     private boolean status;
+    private transient ArrayList<String> suggestedFriends;
     private ArrayList<String> friends;
     private ArrayList<String> blocked;
+    private ArrayList<String> pendingSent;
+    private ArrayList<String> pendingReceived;
     private ArrayList<Post> posts;
     private ArrayList<Story> stories;
 
@@ -43,14 +47,20 @@ public class User {
         this.password = password;
         this.dateOfBirth = dateOfBirth;
         status = true;
+        initializeLists();
+    }
+    private void initializeLists() {
         friends = new ArrayList<>();
         blocked = new ArrayList<>();
+        pendingSent = new ArrayList<>();
+        pendingReceived = new ArrayList<>();
+        suggestedFriends = new ArrayList<>();
         posts = new ArrayList<>();
         stories = new ArrayList<>();
     }
 
-    private static String generateId() {
-        return "user-" + userCounter++;
+    private static String generateId(){
+        return UUID.randomUUID().toString();
     }
 
     // setters & getters ( as needed )
@@ -105,6 +115,33 @@ public class User {
     public ArrayList<String> getBlocked() {
         return blocked;
     }
+    public ArrayList<String> getPendingSent() {
+        return pendingSent;
+    }
+    public ArrayList<String> getPendingReceived() {
+        return pendingReceived;
+    }
+
+    public String[] getSuggestedFriends() {
+        if (suggestedFriends == null) {
+            suggestedFriends = new ArrayList<>();
+        }
+        suggestedFriends.clear();
+        ArrayList<User> users = BackendDuck.getUsers();
+        for (User potentialFriend : users) {
+            String potentialFriendId = potentialFriend.getUserId();
+
+            if (!potentialFriendId.equals(this.getUserId()) &&
+                    !friends.contains(potentialFriendId) &&
+                    !blocked.contains(potentialFriendId) &&
+                    !pendingSent.contains(potentialFriendId) &&
+                    !pendingReceived.contains(potentialFriendId)) {
+
+                suggestedFriends.add(potentialFriendId);
+            }
+        }
+        return suggestedFriends.toArray(new String[0]);
+    }
 
     public ArrayList<Post> getPosts() {
         return posts;
@@ -143,13 +180,17 @@ public class User {
         friends.remove(blockedId);
         blocked.add(blockedId);
     }
+    public void unblock(String blockedId) {
+        blocked.remove(blockedId);
+    }
+
 
     public void createContent(boolean permanent, String contentText) {
         if (permanent) {
             Post post = Post.create(userId, contentText);
             posts.add(post);
-        } else {
-            Story story = Story.create(userId, contentText);
+        }else{
+            Story story = Story.create(userId,contentText);
             stories.add(story);
         }
     }
