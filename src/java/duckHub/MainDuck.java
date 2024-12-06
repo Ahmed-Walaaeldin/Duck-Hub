@@ -19,6 +19,7 @@ public class MainDuck extends Application {
     private User user;
     private Stage mainStage;
     private FeedPage feedPage;
+    private FriendsPage friendsPage;
 
     public static void main(String[] args) {
         launch(args);
@@ -84,7 +85,7 @@ public class MainDuck extends Application {
         // Create new stage for the main application
         if (mainStage == null) {
             mainStage = new Stage();
-            mainStage.initStyle(StageStyle.UNDECORATED);
+            // mainStage.initStyle(StageStyle.UNDECORATED);
             mainStage.setOnCloseRequest(this::handleCloseRequest);
         }
 
@@ -97,8 +98,9 @@ public class MainDuck extends Application {
 
     public void showFriendsPage(User user, String type) {
         System.out.println("Switching to Friends Page");
-        FriendsPage friendsPage = new FriendsPage();
-        Scene friendsScene = friendsPage.getScene(this, user, type);
+        friendsPage = new FriendsPage();
+        friendsPage.display(this, user, type);
+        Scene friendsScene = friendsPage.getScene();
         mainStage.setScene(friendsScene);
     }
 
@@ -110,6 +112,9 @@ public class MainDuck extends Application {
     }
 
     public void refresh() {
+        Load load = new Load();
+        load.loadFromFile();
         feedPage.refreshWindow();
+        friendsPage.refreshWindow();
     }
 }

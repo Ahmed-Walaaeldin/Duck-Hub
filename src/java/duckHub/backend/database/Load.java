@@ -17,7 +17,7 @@ public class Load implements Paths, Constants {
     public void loadFromFile() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-
+        BackendDuck.clearAllUsers();
         File directory = new File(USERS_DATABASE_PATH);
         File[] userDirectories = directory.listFiles(File::isDirectory);
 

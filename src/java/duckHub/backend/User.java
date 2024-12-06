@@ -13,6 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import duckHub.frontend.Constants;
 
+import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -54,10 +55,18 @@ public class User implements Constants {
         this.dateOfBirth = dateOfBirth;
         status = true;
         try {
-            this.userProfileImage = new Image(DEFAULT_PROFILE_IMAGE_PATH);
+            URL profileImageUrl = getClass().getResource(Constants.DEFAULT_PROFILE_IMAGE_PATH);
+            if(profileImageUrl != null) {
+                this.userProfileImage = new Image(profileImageUrl.toString());
+            }
+
             Save save = new Save();
             save.saveImageToDirectory(this.userProfileImage, this);
-            this.userCoverImage = new Image(DEFAULT_COVER_IMAGE_PATH);
+
+            URL coverImageUrl = getClass().getResource(Constants.DEFAULT_COVER_IMAGE_PATH);
+            if(coverImageUrl != null) {
+                this.userCoverImage = new Image(coverImageUrl.toString());
+            }
             save.saveImageToDirectory(this.userCoverImage, this);
         } catch (Exception e) {
             System.out.println("Default image not found");
@@ -151,9 +160,11 @@ public class User implements Constants {
 
             if (!potentialFriendId.equals(this.getUserId()) &&
                     !friends.contains(potentialFriendId) &&
+                    !potentialFriend.getBlocked().contains(userId) &&
                     !blocked.contains(potentialFriendId) &&
                     !pendingSent.contains(potentialFriendId) &&
-                    !pendingReceived.contains(potentialFriendId)) {
+                    !pendingReceived.contains(potentialFriendId)&&
+                    !suggestedFriends.contains(potentialFriendId)) {
 
                 suggestedFriends.add(potentialFriendId);
             }
@@ -192,10 +203,13 @@ public class User implements Constants {
 
     public void removeFriend(String friendId) {
         friends.remove(friendId);
+        BackendDuck.getUserByID(friendId).removeFriend(userId);
     }
 
     public void block(String blockedId) {
         friends.remove(blockedId);
+        User blockedFriend = BackendDuck.getUserByID(blockedId);
+        blockedFriend.removeFriend(userId);
         blocked.add(blockedId);
     }
 

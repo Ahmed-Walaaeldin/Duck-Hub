@@ -1,5 +1,6 @@
 package duckHub.backend;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 
 public class BackendDuck {
@@ -17,5 +18,8 @@ public class BackendDuck {
             }
         }
         return null;
+    }
+    public static void clearAllUsers(){
+        users.clear();
     }
 }

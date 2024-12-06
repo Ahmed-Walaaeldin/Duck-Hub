@@ -2,6 +2,8 @@ package duckHub.frontend;
 
 import duckHub.MainDuck;
 import duckHub.backend.User;
+import duckHub.backend.database.Load;
+import duckHub.backend.database.Save;
 import duckHub.frontend.common.ContentConvertor;
 import duckHub.frontend.titleBar.TitleBar;
 import javafx.geometry.Pos;
@@ -20,19 +22,24 @@ import java.util.Objects;
 public class FriendsPage implements Constants{
     private static MainDuck main = null;
     private static User mainUser;
+    Scene scene;
+    HBox mainLayout;
+    VBox mainContainer;
 
-    public Scene getScene(MainDuck mainDuck, User user, String type) {
+    public void init(){
+
+        mainContainer = new VBox();
+        scene = new Scene(mainContainer, SCENE_WIDTH, SCENE_HEIGHT);
+
+    }
+
+    public void displayScene(MainDuck mainDuck, User user, String type) {
         main = mainDuck;
         mainUser = user;
 
         TitleBar titleBar = new TitleBar(mainDuck,user);
-        VBox mainContainer = new VBox();
 
-
-        //TODO find where we need to refresh the suggested List of friends
-        //? when to user.suggestFriends()
-
-        HBox mainLayout = new HBox();
+        mainLayout = new HBox();
         mainLayout.setAlignment(Pos.CENTER);
 
         VBox buttonLayout = new VBox();
@@ -93,35 +100,23 @@ public class FriendsPage implements Constants{
             }
         }
 
-
+        Load load = new Load();
         // navigation
         receivedButton.setOnAction(_ -> {
-            listTitle.setText("Received Requests");
-            receivedLayout.setVisible(true);
-            suggestedLayout.setVisible(false);
-            friendsLayout.setVisible(false);
-            blockedLayout.setVisible(false);
+            load.loadFromFile();
+            mainDuck.showFriendsPage(user,"pending");
         });
         suggestedButton.setOnAction(_ -> {
-            listTitle.setText("Suggested Friends");
-            receivedLayout.setVisible(false);
-            suggestedLayout.setVisible(true);
-            friendsLayout.setVisible(false);
-            blockedLayout.setVisible(false);
+            load.loadFromFile();
+            mainDuck.showFriendsPage(user,"suggested");
         });
         friendsButton.setOnAction(_ -> {
-            listTitle.setText("Friends List");
-            receivedLayout.setVisible(false);
-            suggestedLayout.setVisible(false);
-            friendsLayout.setVisible(true);
-            blockedLayout.setVisible(false);
+            load.loadFromFile();
+            mainDuck.showFriendsPage(user,"friends");
         });
         blockedButton.setOnAction(_ -> {
-            listTitle.setText("Blocked List");
-            receivedLayout.setVisible(false);
-            suggestedLayout.setVisible(false);
-            friendsLayout.setVisible(false);
-            blockedLayout.setVisible(true);
+            load.loadFromFile();
+            mainDuck.showFriendsPage(user,"blocked");
         });
 
 
@@ -141,18 +136,29 @@ public class FriendsPage implements Constants{
         VBox.setVgrow(mainLayout, Priority.ALWAYS);
         mainContainer.getChildren().addAll(titleBar.getTitleBar(), mainLayout);
 
-        Scene scene = new Scene(mainContainer, SCENE_WIDTH, SCENE_HEIGHT);
         try{
             String styles = Objects.requireNonNull(getClass().getResource("/duckHub/frontend/FriendsPageStyles.css")).toExternalForm();
             scene.getStylesheets().add(styles);
         }catch (Exception e){
             System.out.println("StylesSheet unavailable");
         }
+    }
+    public Scene getScene() {
         return scene;
     }
 
     public static void refresh(String type){
         if (main != null)
             main.showFriendsPage(mainUser, type);
+    }
+    public void display(MainDuck mainDuck,User user,String type){
+        init();
+        displayScene(mainDuck,user,type);
+    }
+    public void refreshWindow(){
+        mainContainer.getChildren().clear();
+        mainLayout.getChildren().clear();
+        displayScene(main,mainUser,"friends");
+
     }
 }

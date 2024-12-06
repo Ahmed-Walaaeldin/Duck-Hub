@@ -64,8 +64,12 @@ public class TitleBar implements Constants {
         // Close button
         Image closeImage = new Image("/duckhub/frontend/close.png");
         Button closeButton = createNavigationButton(closeImage, e -> {
+            user.setStatus(false);
+            Save save = new Save();
+            save.saveAllUsers();
             Stage stage = (Stage) titleBar.getScene().getWindow();
             stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
+
         });
 
         // Spacer to push logout to the right

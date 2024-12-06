@@ -69,10 +69,14 @@ public class Save implements Paths, Constants {
 
             // Write image to file
             BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
-            ImageIO.write(bufferedImage, "png", imageFile);
+            if (bufferedImage == null) {
+                System.out.println("Failed to convert JavaFX Image to BufferedImage");
+                return null;
+            }
+            ImageIO.write(bufferedImage, format, imageFile);
 
             System.out.println("Successfully saved image: " + imageFile.getAbsolutePath());
-            return fileName; // Return filename to be stored in user data
+            return fileName;
 
         } catch (IOException e) {
             System.out.println("Error while saving image");

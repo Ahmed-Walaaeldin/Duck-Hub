@@ -3,6 +3,7 @@ package duckHub.frontend;
 import duckHub.backend.BackendDuck;
 import duckHub.backend.FriendsBackend;
 import duckHub.backend.User;
+import duckHub.backend.database.Save;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -49,15 +50,22 @@ public class ListItem {
                 acceptButton.setOnAction(_ -> {
                     if (!FriendsBackend.acceptFriendRequest(user, friendId)) {
                         PopUp.display(true, "Error", "Error accepting friend request");
-                    } else
+                    } else{
                         FriendsPage.refresh(type);
+                        Save save = new Save();
+                        save.saveAllUsers();
+                    }
+
 
                 });
                 declineButton.setOnAction(_ -> {
                     if (!FriendsBackend.declineFriendRequest(user, friendId)) {
                         PopUp.display(true, "Error", "Error declining friend request");
-                    } else
+                    } else{
                         FriendsPage.refresh(type);
+                        Save save = new Save();
+                        save.saveAllUsers();
+                    }
                 });
                 banner.getChildren().addAll(spacer, acceptButton, declineButton);
             }
@@ -67,14 +75,20 @@ public class ListItem {
                 removeButton.setOnAction(_ -> {
                     if (!FriendsBackend.removeFriend(user, friendId))
                         PopUp.display(true, "Error", "Error removing friend");
-                    else
+                    else{
                         FriendsPage.refresh(type);
+                        Save save = new Save();
+                        save.saveAllUsers();
+                    }
                 });
                 blockButton.setOnAction(_ -> {
                     if (!FriendsBackend.block(user, friendId))
                         PopUp.display(true, "Error", "Error blocking friend");
-                    else
+                    else{
                         FriendsPage.refresh(type);
+                        Save save = new Save();
+                        save.saveAllUsers();
+                    }
                 });
 
                 ImageView statusImageView = new ImageView();
@@ -89,14 +103,19 @@ public class ListItem {
                 statusImageView.setFitHeight(20);
 
                 banner.getChildren().addAll(statusImageView, spacer, removeButton, blockButton);
+                Save save = new Save();
+                save.saveAllUsers();
             }
             case "suggested" -> {
                 Button addButton = new Button("Add");
                 addButton.setOnAction(_ -> {
                     if (!FriendsBackend.sendFriendRequest(user, friendId))
                         PopUp.display(true, "Error", "Error sending friend request");
-                    else
+                    else{
                         FriendsPage.refresh(type);
+                        Save save = new Save();
+                        save.saveAllUsers();
+                    }
                 });
 
                 banner.getChildren().addAll(spacer, addButton);
@@ -106,8 +125,11 @@ public class ListItem {
                 unblockButton.setOnAction(_ -> {
                     if (!FriendsBackend.unblock(user, friendId))
                         PopUp.display(true, "Error", "Error unblocking user");
-                    else
+                    else{
                         FriendsPage.refresh(type);
+                        Save save = new Save();
+                        save.saveAllUsers();
+                    }
                 });
                 banner.getChildren().addAll(spacer, unblockButton);
             }
