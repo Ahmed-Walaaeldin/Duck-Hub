@@ -17,25 +17,20 @@ import java.util.ArrayList;
 
 public class StoryWindow {
     private Stage stage;
-    private Scene scene;
     private int sceneWidth;
     private int sceneHeight;
     private StackPane storyPane;
-    private StackPane userPane;
     private ArrayList<Story> stories;
     private HBox userDataLayout;
     private User user;
     private int storyCounter;
-    private Button nextStoryButton;
-    private Button previousStoryButton;
-    private ImageView imageView;
 
     private void setStage() {
         sceneWidth = 600;
         sceneHeight = 500;
         stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
-        scene = new Scene(storyPane, sceneWidth, sceneHeight);
+        Scene scene = new Scene(storyPane, sceneWidth, sceneHeight);
         stage.setScene(scene);
     }
 
@@ -47,23 +42,50 @@ public class StoryWindow {
     }
 
     private void showStoryContent(Story story) {
+        // clear old
         storyPane.getChildren().clear();
         userDataLayout.getChildren().clear();
+
+
         Label userName = new Label(user.getUsername());
         userName.setMinHeight(5);
-        userPane = user.roundedProfileImage(10,false);
+        StackPane userPane = user.roundedProfileImage(10, false);
         userPane.setMaxWidth(20);
         userPane.setMaxHeight(20);
         userDataLayout.getChildren().addAll(userPane, userName);
         userDataLayout.setAlignment(Pos.TOP_LEFT);
         Image image = story.getContentImage();
-        imageView = new ImageView(image);
+        ImageView imageView = new ImageView(image);
+
+        //original image dimensions
+        double originalWidth = image.getWidth();
+        double originalHeight = image.getHeight();
+        double aspectRatio = originalWidth / originalHeight;
+
+        // Set the width to match the scene width
+        double newWidth = sceneWidth;
+        double newHeight = sceneWidth / aspectRatio;
+
+        // If height exceeds scene height, scale based on height instead
+        if (newHeight > sceneHeight) {
+            newHeight = sceneHeight;
+            newWidth = sceneHeight * aspectRatio;
+        }
+
+        imageView.setFitWidth(newWidth);
+        imageView.setFitHeight(newHeight);
+        imageView.setPreserveRatio(true);
+        imageView.setSmooth(true);
+
+        // Center the image in the stack pane
+        StackPane.setAlignment(imageView, Pos.CENTER);
+
         storyPane.getChildren().addAll(imageView, userDataLayout);
         navigateStoriesButtons();
     }
 
     private void navigateStoriesButtons() {
-        nextStoryButton = new Button("Next");
+        Button nextStoryButton = new Button("Next");
         storyPane.getChildren().add(nextStoryButton);
         StackPane.setAlignment(nextStoryButton, Pos.CENTER_RIGHT);
         nextStoryButton.setOnAction(_ -> {
@@ -74,7 +96,7 @@ public class StoryWindow {
             }
         });
 
-        previousStoryButton = new Button("Previous");
+        Button previousStoryButton = new Button("Previous");
         if(storyCounter > 0)
             storyPane.getChildren().add(previousStoryButton);
         StackPane.setAlignment(previousStoryButton, Pos.CENTER_LEFT);
