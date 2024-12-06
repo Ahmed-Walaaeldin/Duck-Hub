@@ -1,0 +1,42 @@
+.root{
+    -fx-background-color: rgb(166,166,166);
+}
+
+.button{
+    -fx-background-color: rgb(166,166,166);
+    -fx-border-width: 1px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f3f3f3;
+}
+.button:hover{
+    -fx-background-color: rgb(166,166,166);
+}
+.label{
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-padding: 10;
+    -fx-text-fill: #f3f3f3;
+}
+.Menu-Button{
+    -fx-pref-width: 130;
+    -fx-pref-height: 50;
+}
+.Action-Button {
+    -fx-padding: 10px 20px;           /* Adds padding around the text for size */
+    -fx-start-margin: 40px;
+    -fx-end-margin: 40px;
+    -fx-border-width: 1px;
+    -fx-border-color: #f3f3f3;
+    -fx-background-color: #002030;    /* Optional: sets background color */
+    -fx-border-radius: 10px;          /* Adds rounded corners to the border */
+    -fx-background-radius: 10px;      /* Adds rounded corners to the background */
+    -fx-font-size: 16px;              /* Adjusts font size to make button bigger */
+}
+
+.gym-title {
+    -fx-text-fill: #f3f3f3;
+    -fx-font-size: 32px;
+}
+.main-button {
+    -fx-font-size: 20px;
+}
