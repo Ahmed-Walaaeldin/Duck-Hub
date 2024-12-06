@@ -1,4 +1,4 @@
-package duckHub.frontend.feed;
+package duckHub.frontend.profile;
 
 import duckHub.backend.User;
 import duckHub.frontend.common.ButtonCustomizer;

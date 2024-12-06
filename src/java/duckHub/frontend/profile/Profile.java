@@ -3,7 +3,6 @@ package duckHub.frontend.profile;
 import duckHub.backend.User;
 import duckHub.frontend.common.ContentConvertor;
 import duckHub.frontend.common.ImageLoader;
-import duckHub.frontend.feed.ChangeBio;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
