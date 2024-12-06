@@ -1,6 +1,14 @@
 package duckHub.backend;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import duckHub.backend.database.ImageDeserializer;
+import duckHub.backend.database.ImageSerializer;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,6 +20,10 @@ public class User {
     private String username;
     private String password;
     private LocalDate dateOfBirth;
+
+    @JsonSerialize(using = ImageSerializer.class)
+    @JsonDeserialize(using = ImageDeserializer.class)
+    private Image userProfileImage;
     private boolean status;
     private ArrayList<String> friends;
     private ArrayList<String> blocked;
@@ -21,8 +33,8 @@ public class User {
     private ArrayList<Post> posts;
     private ArrayList<Story> stories;
 
-    public User(){
-        initializeLists();
+    public User() {
+
     }
     public User(String email, String username, String password, LocalDate dateOfBirth) {
         userId = generateId();
@@ -112,6 +124,13 @@ public class User {
         return stories;
     }
 
+    public void setUserProfileImage(Image userProfileImage) {
+        this.userProfileImage = userProfileImage;
+    }
+
+    public Image getUserProfileImage() {
+        return userProfileImage;
+    }
 
     // helper methods
     public void addFriend(String friendId) {
@@ -128,9 +147,10 @@ public class User {
         blocked.remove(blockedId);
     }
 
-    public void createContent(boolean permanent,String contentText) {
-        if(permanent) {
-            Post post = Post.create(userId,contentText);
+
+    public void createContent(boolean permanent, String contentText) {
+        if (permanent) {
+            Post post = Post.create(userId, contentText);
             posts.add(post);
         }else{
             Story story = Story.create(userId,contentText);
@@ -145,6 +165,31 @@ public class User {
             Story story = Story.create(userId,contentText,contentImage);
             stories.add(story);
         }
+    }
+
+    public StackPane roundedProfileImage(double radius, boolean framed) {
+        Image userImage = userProfileImage;
+        ImageView userImageView = new ImageView(userImage);
+
+        userImageView.setFitHeight(radius * 2);
+        userImageView.setFitWidth(radius * 2);
+
+        Circle userImageClip = new Circle(radius, radius, radius);
+        userImageView.setClip(userImageClip);
+
+        StackPane stackPane = new StackPane();
+
+        // create the border
+        if (framed) {
+            Circle userImageBorder = new Circle(radius + 2);
+            userImageBorder.setStroke(Color.PURPLE);
+            userImageBorder.setStrokeWidth(3);
+            userImageBorder.setFill(null);
+            stackPane.getChildren().add(userImageBorder);
+        }
+
+        stackPane.getChildren().add(userImageView);
+        return stackPane;
     }
 
 }
