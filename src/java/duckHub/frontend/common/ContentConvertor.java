@@ -1,4 +1,4 @@
-package duckHub.frontend;
+package duckHub.frontend.common;
 
 import duckHub.backend.Post;
 import duckHub.backend.User;
