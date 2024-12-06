@@ -48,6 +48,7 @@ public class MainScene implements SizeConstants {
         showUserPhoto();
         showPeopleWithStories(BackendDuck.getUsers());
         showPosts(user);
+        showSuggestedFriends();
     }
 
     private void layoutsInitializer() {
@@ -212,6 +213,12 @@ public class MainScene implements SizeConstants {
         refreshButton.setMouseTransparent(false);
     }
 
+    private void showSuggestedFriends(){
+        ContentConvertor convertor = new ContentConvertor();
+        suggestedFriendScrollPane.setContent(convertor.populateList(user.getSuggestedFriends(), "suggested"));
+
+    }
+
     public Scene getScene(User user) {
         this.user = user;
         layoutsInitializer();
@@ -220,6 +227,7 @@ public class MainScene implements SizeConstants {
         showUserPhoto();
         showPeopleWithStories(BackendDuck.getUsers());
         showPosts(user);
+        showSuggestedFriends();
         showContentButton();
         showRefreshButton();
         return scene;

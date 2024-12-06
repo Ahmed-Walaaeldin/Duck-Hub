@@ -1,7 +1,9 @@
 package duckHub.frontend;
 
+import duckHub.backend.BackendDuck;
 import duckHub.backend.Post;
 import duckHub.backend.User;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
@@ -29,7 +31,8 @@ public class ContentConvertor {
             nameAndPhotoLayout.getChildren().add(userPhotoRounded);
 
             VBox postVBox = new VBox();
-            Label authorName = new Label(post.getAuthorId());
+            String username = BackendDuck.getUserByID(post.getAuthorId()).getUsername();
+            Label authorName = new Label(username);
             nameAndPhotoLayout.getChildren().add(authorName);
             postVBox.getChildren().addAll(nameAndPhotoLayout);
 
@@ -85,5 +88,16 @@ public class ContentConvertor {
             postVBox.getChildren().add(timeStampLabel);
             layout.getChildren().add(postVBox);
         }
+    }
+
+    public VBox populateList(String[] ids, String type) {
+        VBox contentBox = new VBox();
+        contentBox.setSpacing(10);
+        contentBox.setAlignment(Pos.CENTER);
+        for (String id : ids) {
+            HBox banner = ListItem.createListItem(id,type);
+            contentBox.getChildren().add(banner);
+        }
+        return contentBox;
     }
 }
