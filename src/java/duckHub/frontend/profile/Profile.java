@@ -1,10 +1,9 @@
 package duckHub.frontend.profile;
 
-import duckHub.MainDuck;
 import duckHub.backend.User;
-import duckHub.frontend.ContentConvertor;
-import duckHub.frontend.SizeConstants;
-import duckHub.frontend.feed.ButtonCustomizer;
+import duckHub.frontend.common.ContentConvertor;
+import duckHub.frontend.common.ImageLoader;
+import duckHub.frontend.feed.ChangeBio;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -15,7 +14,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
@@ -37,14 +35,10 @@ public class Profile {
     private VBox postsVBoxLayout;
     private HBox editButtonsHBoxLayout;
 
-    private TextArea bioContent;
+    private Image coverPhoto;
+    private ImageView coverPhotoView;
 
-    Button changeCoverButton;
-    Button changeProfileButton;
-    Button changeBioButton;
-
-    private User user;
-
+    private Image profilePhoto;
 
     private void layoutInitializer() {
         // root layout
@@ -63,6 +57,8 @@ public class Profile {
     }
 
     private void layoutOrganizer() {
+        profileRootVBox.getChildren().addAll(coverPhotoView, bioLayout, editButtonsHBoxLayout, allFriendsScrollPane, allPostsScrollPane);
+
         profileRootScrollPane.setContent(profileRootVBox);
 
         allPostsScrollPane.setFitToWidth(true);
@@ -80,18 +76,16 @@ public class Profile {
     }
 
     private void showCoverPhoto(User user) {
-        Image coverPhoto = user.getUserProfileImage();
-        ImageView coverPhotoView = new ImageView(coverPhoto);
+        coverPhoto = user.getUserProfileImage();
+        coverPhotoView = new ImageView(coverPhoto);
         coverPhotoView.fitWidthProperty().bind(profileScene.widthProperty());
         coverPhotoView.setFitHeight(70);
-
-        profileRootVBox.getChildren().add(coverPhotoView);
     }
 
     private void showBioContent(User user) {
         // profile photo
         double radius = 70;
-        Image profilePhoto = user.getUserProfileImage();
+        profilePhoto = user.getUserProfileImage();
         ImageView profilePhotoView = new ImageView(profilePhoto);
         profilePhotoView.setFitHeight(radius*2);
         profilePhotoView.setFitWidth(radius*2);
@@ -99,48 +93,72 @@ public class Profile {
         profilePhotoView.setClip(newContentButtonShape);
 
         // bio content
-        bioContent = new TextArea();
+        TextArea bioContent = new TextArea();
         bioContent.setEditable(Boolean.FALSE);
         bioContent.setWrapText(true);
         bioContent.setPrefHeight(2 * radius);
         bioContent.prefWidthProperty().bind(profileScene.widthProperty().subtract(2 * radius + 70));
-//        bioContent.setText(user.get);
+        bioContent.setText(user.getBioContent());
 
-        bioLayout.getChildren().addAll(profilePhotoView, bioContent);
         bioLayout.setPadding(new Insets(0, 10, 0, 10));
-
-        profileRootVBox.getChildren().add(bioLayout);
+        bioLayout.getChildren().addAll(profilePhotoView, bioContent);
     }
 
-    private void showProfileEdits(){
-        changeCoverButton = new Button("Change Cover Photo");
-        changeProfileButton = new Button("Change Profile Photo");
-        changeBioButton = new Button("Change Bio Content");
+    private void showProfileEdits(User user) {
+        ImageLoader imageLoader = new ImageLoader();
+        ChangeBio changeBio = new ChangeBio();
+
+        // change Cover Picture Button
+        Button changeCoverButton = new Button("Change Cover Photo");
+        changeCoverButton.setOnAction(_ -> {
+            Image newImage = imageLoader.loadContentImage();
+            if (newImage != null) {
+                user.setUserCoverImage(newImage);
+                coverPhotoView.setImage(newImage);
+            }
+        });
+
+        // change Profile Picture Button
+        Button changeProfileButton = new Button("Change Profile Photo");
+        changeProfileButton.setOnAction(_ -> {
+            Image newImage = imageLoader.loadContentImage();
+            if (newImage != null) {
+                user.setUserProfileImage(newImage);
+                bioLayout.getChildren().clear();
+                showBioContent(user);
+            }
+        });
+
+        // change Bio Button
+        Button changeBioButton = new Button("Change Bio Content");
+        changeBioButton.setOnAction(_ -> {
+            changeBio.display(user);
+            bioLayout.getChildren().clear();
+            showBioContent(user);
+        });
+
         editButtonsHBoxLayout.getChildren().addAll(changeCoverButton, changeProfileButton, changeBioButton);
         editButtonsHBoxLayout.setAlignment(Pos.CENTER);
-        profileRootVBox.getChildren().add(editButtonsHBoxLayout);
     }
 
     private void showFriends() {
         // yala ya zoz
-        profileRootVBox.getChildren().add(allFriendsScrollPane);
     }
 
     private void showPosts(User user) {
         ContentConvertor contentConvertor = new ContentConvertor();
         contentConvertor.convertPostsToNodes(user,allPostsScrollPane , postsVBoxLayout);
         allPostsScrollPane.setPadding(new Insets(0, 10, 0, 10));
-        profileRootVBox.getChildren().add(allPostsScrollPane);
+//        profileRootVBox.getChildren().add(allPostsScrollPane);
     }
 
-    public Scene displayScene(MainDuck mainDuck, User user) {
-        this.user = user;
+    public Scene displayScene(User user) {
         layoutInitializer();
-        layoutOrganizer();
         setScene();
         showCoverPhoto(user);
+        layoutOrganizer();
         showBioContent(user);
-        showProfileEdits();
+        showProfileEdits(user);
         showFriends();
         showPosts(user);
         return profileScene;
