@@ -98,7 +98,11 @@ public class MainDuck extends Application {
 //        user.createContent(true, "enta al kbir ya walaa");
 //        user.setBioContent("hello asfadsf\nhello walaa");
         Profile profile = new Profile();
-        Scene profileScene = profile.displayScene(user);
+        Scene profileScene = profile.displayScene(this,user);
         primaryStage.setScene(profileScene);
+    }
+
+    public void refresh(){
+
     }
 }

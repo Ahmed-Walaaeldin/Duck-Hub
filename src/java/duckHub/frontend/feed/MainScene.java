@@ -16,7 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-
+import duckHub.frontend.titleBar.TitleBar;
 import java.util.ArrayList;
 
 public class MainScene implements Constants {
@@ -35,12 +35,17 @@ public class MainScene implements Constants {
     // layout for both refresh button and stories hbox
     private HBox topContainer;
 
+    // layout to hold the title bar and all the other content
+    private VBox mainContainer;
 
     // the specific reference of the user whose feed this is
     private User user;
 
     // MainDuck to call the profile
     private MainDuck mainDuck;
+
+    // add the title bar
+    private TitleBar titleBar;
 
     private void refreshWindow() {
         allPostsVBox.getChildren().clear();
@@ -52,6 +57,8 @@ public class MainScene implements Constants {
     }
 
     private void layoutsInitializer() {
+        // main container
+        mainContainer = new VBox();
 
         // posts layout
         root = new BorderPane();
@@ -68,18 +75,23 @@ public class MainScene implements Constants {
         // suggested friends layout
         suggestedFriendScrollPane = new ScrollPane();
 
-        storiesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        storiesScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         storiesScrollPane.setFitToHeight(true);
         storiesScrollPane.setContent(storiesHBox);
+
+        // initialize title bar
+        titleBar = new TitleBar(mainDuck,user);
     }
 
     private void layoutsOrganizer() {
+        // add title bar and all others
+        mainContainer.getChildren().addAll(titleBar.getTitleBar(), root);
+
         postsScrollPane.setFitToWidth(true);
         postsScrollPane.setPrefViewportWidth(400);
         postsScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         postsScrollPane.setContent(allPostsVBox);
         feedStackPane.getChildren().add(postsScrollPane);
+        storiesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
         root.setCenter(feedStackPane);
         root.setTop(topContainer);
@@ -87,7 +99,7 @@ public class MainScene implements Constants {
     }
 
     private void setScene() {
-        scene = new Scene(root, 600, 500);
+        scene = new Scene(mainContainer, SCENE_WIDTH, SCENE_HEIGHT);
     }
 
     private void showPosts(User user) {

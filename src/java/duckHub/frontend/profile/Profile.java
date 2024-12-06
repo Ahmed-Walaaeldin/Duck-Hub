@@ -1,9 +1,12 @@
 package duckHub.frontend.profile;
 
+import duckHub.MainDuck;
 import duckHub.backend.User;
 import duckHub.backend.database.Save;
+import duckHub.frontend.Constants;
 import duckHub.frontend.common.ContentConvertor;
 import duckHub.frontend.common.ImageLoader;
+import duckHub.frontend.titleBar.TitleBar;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -18,7 +21,13 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 
-public class Profile {
+public class Profile implements Constants {
+    // Main Duck
+    private MainDuck mainDuck;
+
+    // Current user profile
+    private User user;
+
     // to test
     private Stage stage;
 
@@ -40,7 +49,17 @@ public class Profile {
 
     private Image profilePhoto;
 
+    // Title bar
+    private TitleBar titleBar;
+
+    // main container to store title bar and all other layouts
+    private VBox mainContainer;
+
+
     private void layoutInitializer() {
+        // mainContainer
+        mainContainer = new VBox();
+
         // root layout
         profileRootScrollPane = new ScrollPane();
         profileRootVBox = new VBox(20);
@@ -54,9 +73,14 @@ public class Profile {
         // posts layout
         allPostsScrollPane = new ScrollPane();
         postsVBoxLayout = new VBox();
+        // title bar
+        titleBar = new TitleBar(mainDuck,user);
     }
 
     private void layoutOrganizer() {
+        // hold title bar and other main layout
+        mainContainer.getChildren().addAll(titleBar.getTitleBar(), profileRootScrollPane);
+
         profileRootVBox.getChildren().addAll(coverPhotoView, bioLayout, editButtonsHBoxLayout, allFriendsScrollPane, allPostsScrollPane);
 
         profileRootScrollPane.setContent(profileRootVBox);
@@ -69,7 +93,7 @@ public class Profile {
     }
 
     private void setScene() {
-        profileScene = new Scene(profileRootScrollPane, 600, 500);
+        profileScene = new Scene(mainContainer, SCENE_WIDTH, SCENE_HEIGHT);
         stage = new Stage();
         stage.setScene(profileScene);
         profileRootScrollPane.setFitToWidth(true);
@@ -156,7 +180,9 @@ public class Profile {
 //        profileRootVBox.getChildren().add(allPostsScrollPane);
     }
 
-    public Scene displayScene(User user) {
+    public Scene displayScene(MainDuck mainDuck,User user) {
+        this.user = user;
+        this.mainDuck = mainDuck;
         layoutInitializer();
         setScene();
         showCoverPhoto(user);
