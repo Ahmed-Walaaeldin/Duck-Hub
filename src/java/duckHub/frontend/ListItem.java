@@ -6,7 +6,6 @@ import duckHub.backend.User;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableRow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -17,7 +16,7 @@ import java.util.Objects;
 
 public class ListItem {
 
-    public static HBox createListItem(User user, String friendId, String type){
+    public static HBox createListItem(User user, String friendId, String type) {
         User friend = BackendDuck.getUserByID(friendId);
         HBox banner = new HBox();
         banner.setAlignment(Pos.CENTER);
@@ -35,19 +34,11 @@ public class ListItem {
         imageView.setFitWidth(50);
         imageView.setFitHeight(50);
 
-        Label statusLabel = new Label();
-        if(friend.getStatus()){
-            statusLabel.setText("(Active)");
-            statusLabel.setStyle("-fx-text-fill: green;");
-        }else {
-            statusLabel.setText("(Offline)");
-            statusLabel.setStyle("-fx-text-fill: red;");
-        }
 
         Region spacer = new Region();
         spacer.setPrefWidth(70);
         HBox.setHgrow(spacer, Priority.ALWAYS); // Allow the spacer to grow
-        banner.getChildren().addAll(imageView, username, statusLabel, spacer);
+        banner.getChildren().addAll(imageView, username);
         banner.setAlignment(Pos.CENTER); // definitely it will need styling more than this
 
         // adding buttons
@@ -56,19 +47,19 @@ public class ListItem {
                 Button acceptButton = new Button("Accept");
                 Button declineButton = new Button("Decline");
                 acceptButton.setOnAction(_ -> {
-                   if (!FriendsBackend.acceptFriendRequest(user, friendId)){
-                       PopUp.display(true, "Error", "Error accepting friend request");
-                   } else
+                    if (!FriendsBackend.acceptFriendRequest(user, friendId)) {
+                        PopUp.display(true, "Error", "Error accepting friend request");
+                    } else
                         FriendsPage.refresh(type);
 
                 });
                 declineButton.setOnAction(_ -> {
-                    if(!FriendsBackend.declineFriendRequest(user, friendId)){
-                        PopUp.display(true,"Error", "Error declining friend request");
+                    if (!FriendsBackend.declineFriendRequest(user, friendId)) {
+                        PopUp.display(true, "Error", "Error declining friend request");
                     } else
                         FriendsPage.refresh(type);
                 });
-                banner.getChildren().addAll(acceptButton, declineButton);
+                banner.getChildren().addAll(spacer, acceptButton, declineButton);
             }
             case "friends" -> {
                 Button removeButton = new Button("Remove");
@@ -85,7 +76,19 @@ public class ListItem {
                     else
                         FriendsPage.refresh(type);
                 });
-                banner.getChildren().addAll(removeButton, blockButton);
+
+                ImageView statusImageView = new ImageView();
+                if (friend.getStatus()) {
+                    Image onlineImage = new Image(Objects.requireNonNull(ListItem.class.getResource("/duckHub/frontend/online.png")).toString());
+                    statusImageView.setImage(onlineImage);
+                } else {
+                    Image offlineImage = new Image(Objects.requireNonNull(ListItem.class.getResource("/duckHub/frontend/offline.png")).toString());
+                    statusImageView.setImage(offlineImage);
+                }
+                statusImageView.setFitWidth(20);
+                statusImageView.setFitHeight(20);
+
+                banner.getChildren().addAll(statusImageView, spacer, removeButton, blockButton);
             }
             case "suggested" -> {
                 Button addButton = new Button("Add");
@@ -96,7 +99,7 @@ public class ListItem {
                         FriendsPage.refresh(type);
                 });
 
-                banner.getChildren().add(addButton);
+                banner.getChildren().addAll(spacer, addButton);
             }
             case "blocked" -> {
                 Button unblockButton = new Button("Unblock");
@@ -106,7 +109,7 @@ public class ListItem {
                     else
                         FriendsPage.refresh(type);
                 });
-                banner.getChildren().addAll(unblockButton);
+                banner.getChildren().addAll(spacer, unblockButton);
             }
         }
         return banner;

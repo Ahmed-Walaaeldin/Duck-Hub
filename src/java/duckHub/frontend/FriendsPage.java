@@ -12,18 +12,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Screen;
 
 import java.util.Objects;
 
-public class FriendsPage {
+public class FriendsPage implements Constants {
     private static MainDuck main = null;
     private static User mainUser;
     public Scene getScene(MainDuck mainDuck, User user, String type) {
         main = mainDuck;
         mainUser = user;
-        //TODO find where we need to refresh the suggested List of friends
-        //? when to user.suggestFriends()
 
         HBox mainLayout = new HBox();
         mainLayout.setAlignment(Pos.CENTER);
@@ -130,13 +127,7 @@ public class FriendsPage {
         mainLayout.getChildren().addAll(buttonLayout, listLayout);
 
 
-
-        // full screen window
-        double screenWidth = Screen.getPrimary().getBounds().getWidth();
-        double screenHeight = Screen.getPrimary().getBounds().getHeight();
-
-
-        Scene scene = new Scene(mainLayout, screenWidth, screenHeight);
+        Scene scene = new Scene(mainLayout, SCENE_WIDTH, SCENE_HEIGHT);
         try{
             String styles = Objects.requireNonNull(getClass().getResource("/duckHub/frontend/FriendsPageStyles.css")).toExternalForm();
             scene.getStylesheets().add(styles);
