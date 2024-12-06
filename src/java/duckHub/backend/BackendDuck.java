@@ -3,7 +3,7 @@ package duckHub.backend;
 import java.util.ArrayList;
 
 public class BackendDuck {
-    private static final ArrayList<User> users = new ArrayList<>();
+    private static ArrayList<User> users = new ArrayList<>();
     public static void addUser(User user){users.add(user);}
 
     public static ArrayList<User> getUsers() {

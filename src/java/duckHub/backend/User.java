@@ -1,5 +1,6 @@
 package duckHub.backend;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import duckHub.backend.database.ImageDeserializer;
@@ -12,6 +13,7 @@ import javafx.scene.shape.Circle;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class User {
     private static int userCounter = 0;
@@ -29,9 +31,9 @@ public class User {
     private ArrayList<String> blocked;
     private ArrayList<String> pendingSent;
     private ArrayList<String> pendingReceived;
-    private ArrayList<String> suggestedFriends;
     private ArrayList<Post> posts;
     private ArrayList<Story> stories;
+    private transient ArrayList<String> suggestedFriends;
 
     public User() {}
     public User(String email, String username, String password, LocalDate dateOfBirth) {
@@ -54,7 +56,7 @@ public class User {
     }
 
     private static String generateId(){
-        return "user-" + userCounter++;
+        return UUID.randomUUID().toString();
     }
 
     // setters & getters ( as needed )

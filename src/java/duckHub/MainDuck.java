@@ -3,6 +3,7 @@ package duckHub;
 import duckHub.backend.BackendDuck;
 import duckHub.backend.User;
 import duckHub.backend.database.Load;
+import duckHub.backend.database.Save;
 import duckHub.frontend.FriendsPage;
 import duckHub.frontend.LoginPage;
 import duckHub.frontend.SignupPage;
@@ -10,10 +11,11 @@ import duckHub.frontend.feed.MainScene;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class MainDuck extends Application {
     private Stage primaryStage;
-
+    private User user;
 
     public static void main(String[] args) {
         launch(args);
@@ -29,8 +31,21 @@ public class MainDuck extends Application {
 
         showLoginPage();
 
+        // close button handler
+        primaryStage.setOnCloseRequest(this::handleCloseRequest);
+
         primaryStage.show();
     }
+
+    public void handleCloseRequest(WindowEvent event) {
+        if (user != null) {
+            // set the status to offline and save the data.
+            user.setStatus(false);
+        }
+        Save save = new Save();
+        save.saveToFile(BackendDuck.getUsers());
+    }
+
     public void showLoginPage() {
         System.out.println("Switching to Login Page");
         LoginPage loginPage = new LoginPage();
@@ -44,6 +59,7 @@ public class MainDuck extends Application {
         primaryStage.setScene(signupScene);
     }
     public void showNewsfeed(User user){
+        this.user = user;
         System.out.println("Switching to Newsfeed Page");
         MainScene feedPage = new MainScene();
         Scene feedScene = feedPage.getScene(user);
