@@ -1,6 +1,7 @@
 package duckHub.backend;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import duckHub.backend.database.ImageDeserializer;
@@ -14,9 +15,9 @@ import javafx.scene.shape.Circle;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.UUID;
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
-    private static int userCounter = 0;
+
     private String userId;
     private String email;
     private String username;
@@ -27,13 +28,13 @@ public class User {
     @JsonDeserialize(using = ImageDeserializer.class)
     private Image userProfileImage;
     private boolean status;
+    private transient ArrayList<String> suggestedFriends;
     private ArrayList<String> friends;
     private ArrayList<String> blocked;
     private ArrayList<String> pendingSent;
     private ArrayList<String> pendingReceived;
     private ArrayList<Post> posts;
     private ArrayList<Story> stories;
-    private transient ArrayList<String> suggestedFriends;
 
     public User() {}
     public User(String email, String username, String password, LocalDate dateOfBirth) {
@@ -101,6 +102,9 @@ public class User {
     }
 
     public String[] getSuggestedFriends() {
+        if (suggestedFriends == null) {
+            suggestedFriends = new ArrayList<>();
+        }
         suggestedFriends.clear();
         ArrayList<User> users = BackendDuck.getUsers();
         for (User potentialFriend : users) {

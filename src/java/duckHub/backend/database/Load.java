@@ -31,6 +31,7 @@ public class Load implements Paths{
                 } catch (IOException e) {
                     System.out.println("IO Exception while reading file " + file.getName());
                     System.out.println(e.getMessage());
+                    file.delete();
                 }
             }
         }

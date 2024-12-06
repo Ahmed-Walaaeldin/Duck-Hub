@@ -43,7 +43,7 @@ public class MainDuck extends Application {
             user.setStatus(false);
         }
         Save save = new Save();
-        save.saveToFile(BackendDuck.getUsers());
+        save.saveAllUsers();
     }
 
     public void showLoginPage() {
