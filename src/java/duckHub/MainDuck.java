@@ -25,7 +25,8 @@ public class MainDuck extends Application {
         this.primaryStage = primaryStage;
 
         primaryStage.setTitle("DuckHub");
-        showLoginPage(); // Start with Login Page
+//        showLoginPage(); // Start with Login Page
+        showProfilePage();
         primaryStage.show();
     }
 
@@ -50,8 +51,21 @@ public class MainDuck extends Application {
 
     public void showProfilePage() {
         System.out.println("Switching to Profile Page");
+        User user = new User("email", "username", "password", LocalDate.now());
+        File imageFile = new File("src/Resources/duckHub/frontend/duckStory1.jpeg");
+        Image profileImage = new Image(imageFile.toURI().toString());
+        user.setUserProfileImage(profileImage);
+        user.createContent(true, "enta al kbir ya walaa");
+        user.createContent(true, "enta al kbir ya walaa");
+        user.createContent(true, "enta al kbir ya walaa");
+        user.createContent(true, "enta al kbir ya walaa");
+        user.createContent(true, "enta al kbir ya walaa");
+        user.createContent(true, "enta al kbir ya walaa");
+        user.createContent(true, "enta al kbir ya walaa");
+        user.createContent(true, "enta al kbir ya walaa");
+        user.setBioContent("hello asfadsf\nhello walaa");
         Profile profile = new Profile();
-        Scene profileScene = profile.displayScene(this, user);
+        Scene profileScene = profile.displayScene(user);
         primaryStage.setScene(profileScene);
     }
 }
