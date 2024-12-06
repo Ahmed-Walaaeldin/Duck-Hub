@@ -6,6 +6,7 @@ import duckHub.backend.User;
 import duckHub.frontend.common.ButtonCustomizer;
 import duckHub.frontend.common.ContentConvertor;
 import duckHub.frontend.Constants;
+import duckHub.frontend.common.Refreshable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,10 +17,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-
+import duckHub.frontend.titleBar.TitleBar;
 import java.util.ArrayList;
 
-public class MainScene implements Constants {
+public class FeedPage implements Constants, Refreshable {
     // Displayed Scene
     private Scene scene;
 
@@ -32,9 +33,8 @@ public class MainScene implements Constants {
     private StackPane feedStackPane;
     private ScrollPane suggestedFriendScrollPane;
 
-    // layout for both refresh button and stories hbox
-    private HBox topContainer;
-
+    // layout to hold the title bar and all the other content
+    private VBox mainContainer;
 
     // the specific reference of the user whose feed this is
     private User user;
@@ -42,7 +42,11 @@ public class MainScene implements Constants {
     // MainDuck to call the profile
     private MainDuck mainDuck;
 
-    private void refreshWindow() {
+    // add the title bar
+    private TitleBar titleBar;
+
+    @Override
+    public void refreshWindow() {
         allPostsVBox.getChildren().clear();
         storiesHBox.getChildren().clear();
         showUserPhoto();
@@ -52,6 +56,8 @@ public class MainScene implements Constants {
     }
 
     private void layoutsInitializer() {
+        // main container
+        mainContainer = new VBox();
 
         // posts layout
         root = new BorderPane();
@@ -63,31 +69,36 @@ public class MainScene implements Constants {
         storiesHBox.setSpacing(0);
         storiesScrollPane = new ScrollPane();
         feedStackPane = new StackPane();
-        topContainer = new HBox();
 
         // suggested friends layout
         suggestedFriendScrollPane = new ScrollPane();
 
-        storiesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        storiesScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         storiesScrollPane.setFitToHeight(true);
         storiesScrollPane.setContent(storiesHBox);
+
+        // initialize title bar
+        titleBar = new TitleBar(mainDuck,user);
     }
 
     private void layoutsOrganizer() {
+        // add title bar and all others
+        VBox.setVgrow(root, Priority.ALWAYS);
+        mainContainer.getChildren().addAll(titleBar.getTitleBar(), root);
+
         postsScrollPane.setFitToWidth(true);
         postsScrollPane.setPrefViewportWidth(400);
         postsScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         postsScrollPane.setContent(allPostsVBox);
         feedStackPane.getChildren().add(postsScrollPane);
+        storiesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
         root.setCenter(feedStackPane);
-        root.setTop(topContainer);
+        root.setTop(storiesScrollPane);
         root.setRight(suggestedFriendScrollPane);
     }
 
     private void setScene() {
-        scene = new Scene(root, 600, 500);
+        scene = new Scene(mainContainer, SCENE_WIDTH, SCENE_HEIGHT);
     }
 
     private void showPosts(User user) {
@@ -201,27 +212,6 @@ public class MainScene implements Constants {
         newStoryButton.setMouseTransparent(false);
     }
 
-    private void showRefreshButton() {
-        Button refreshButton = new Button();
-        Image refreshLogo = new Image("/duckhub/frontend/refresh.png");
-        ImageView refreshLogoView = new ImageView(refreshLogo);
-
-        ButtonCustomizer buttonCustomizer = new ButtonCustomizer();
-        buttonCustomizer.rectangleButtonImage(refreshLogoView, refreshButton);
-
-        // Position refresh button
-        StackPane.setAlignment(refreshButton, Pos.TOP_RIGHT);
-        StackPane.setMargin(refreshButton, new Insets(10, 10, 0, 0));
-
-        // add both refresh button and stories layout in one final top layout
-        topContainer.getChildren().addAll(storiesScrollPane, refreshButton);
-        HBox.setHgrow(storiesScrollPane, Priority.ALWAYS);
-
-        // Refresh button handler
-        refreshButton.setOnAction(_ -> refreshWindow());
-        refreshButton.setMouseTransparent(false);
-    }
-
     private void showSuggestedFriends(){
         ContentConvertor convertor = new ContentConvertor();
         suggestedFriendScrollPane.setContent(convertor.populateList(user, user.getSuggestedFriends(), "suggested"));
@@ -238,7 +228,6 @@ public class MainScene implements Constants {
         showPosts(user);
         showSuggestedFriends();
         showContentButton();
-        showRefreshButton();
         return scene;
     }
 }
