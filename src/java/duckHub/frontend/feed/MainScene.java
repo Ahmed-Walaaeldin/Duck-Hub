@@ -102,7 +102,7 @@ public class MainScene implements SizeConstants {
         for (Post post : posts) {
             HBox nameAndPhotoLayout = new HBox();
 
-            StackPane userPhotoRounded = user.roundedProfileImage(15,false);
+            StackPane userPhotoRounded = user.roundedProfileImage(15, false);
             nameAndPhotoLayout.getChildren().add(userPhotoRounded);
 
             VBox postVBox = new VBox();
@@ -165,7 +165,7 @@ public class MainScene implements SizeConstants {
     private void showPeopleWithStories(ArrayList<User> users) {
         for (User user : users) {
             if (!user.getStories().isEmpty()) {
-                StackPane stackPane = user.roundedProfileImage(25,true);
+                StackPane stackPane = user.roundedProfileImage(25, true);
                 Button userStoryButton = new Button();
                 userStoryButton.setGraphic(stackPane);
                 userStoryButton.getStyleClass().add("story-button");
@@ -204,11 +204,11 @@ public class MainScene implements SizeConstants {
         Button newPostButton = new Button();
         Button newStoryButton = new Button();
 
-        Image newContentLogo = new Image("/duckhub/frontend/duck.png");
+        Image newContentLogo = new Image("/duckhub/frontend/add-content.png");
         ImageView newContentLogoView = new ImageView(newContentLogo);
-        Image newPostLogo = new Image("/duckhub/frontend/duck.png");
+        Image newPostLogo = new Image("/duckhub/frontend/add-post.png");
         ImageView newPostLogoView = new ImageView(newPostLogo);
-        Image newStoryLogo = new Image("/duckhub/frontend/duck.png");
+        Image newStoryLogo = new Image("/duckhub/frontend/add-story.png");
         ImageView newStoryLogoView = new ImageView(newStoryLogo);
 
         ButtonCustomizer buttonCustomizer = new ButtonCustomizer();
