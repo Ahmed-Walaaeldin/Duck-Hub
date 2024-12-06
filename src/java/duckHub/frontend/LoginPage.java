@@ -19,12 +19,9 @@ import javafx.stage.Screen;
 
 import java.util.Objects;
 
-public class LoginPage {
+public class LoginPage implements SizeConstants {
     public Scene getScene(MainDuck mainDuck) {
         VBox mainLayout = new VBox();
-        // full screen window
-        double screenWidth = Screen.getPrimary().getBounds().getWidth();
-        double screenHeight = Screen.getPrimary().getBounds().getHeight();
 
         // image
         Image logo = new Image("file:duck.png");
@@ -93,7 +90,7 @@ public class LoginPage {
         mainLayout.getChildren().add(loginButton);
         mainLayout.getChildren().add(signupButton);
 
-        Scene scene = new Scene(mainLayout, screenWidth, screenHeight);
+        Scene scene = new Scene(mainLayout, SCENE_WIDTH, SCENE_HEIGHT);
         try{
             String styles = Objects.requireNonNull(getClass().getResource("/duckHub/Styles.css")).toExternalForm();
             scene.getStylesheets().add(styles);

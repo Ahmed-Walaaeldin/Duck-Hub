@@ -21,14 +21,13 @@ public class MainDuck extends Application {
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        Load load = new Load();
         primaryStage.setTitle("DuckHub");
 
+        Load load = new Load();
         load.loadFromFile();
-        User zoz = BackendDuck.getUserByID("user-0");
-        System.out.println(zoz.getUsername());
 
-        showFriendsPage(zoz); // Start with Login Page
+        // Start with Login Page
+        showLoginPage();
 
         primaryStage.show();
     }
