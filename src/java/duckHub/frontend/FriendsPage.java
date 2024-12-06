@@ -41,15 +41,16 @@ public class FriendsPage {
         Label listTitle = new Label("Received Requests");
         listTitle.setId("listTitleLabel");
 
+        ContentConvertor convertor = new ContentConvertor();
         StackPane stackPane = new StackPane();
         ScrollPane friendsLayout = new ScrollPane();
-        friendsLayout.setContent(populateList(user, user.getFriends().toArray(new String[0]), "friends"));
+        friendsLayout.setContent(convertor.populateList(user.getFriends().toArray(new String[0]), "friends"));
         ScrollPane blockedLayout = new ScrollPane();
-        blockedLayout.setContent(populateList(user, user.getBlocked().toArray(new String[0]), "blocked"));
+        blockedLayout.setContent(convertor.populateList(user.getBlocked().toArray(new String[0]), "blocked"));
         ScrollPane receivedLayout = new ScrollPane();
-        receivedLayout.setContent(populateList(user,user.getPendingReceived().toArray(new String[0]), "pending"));
+        receivedLayout.setContent(convertor.populateList(user.getPendingReceived().toArray(new String[0]), "pending"));
         ScrollPane suggestedLayout = new ScrollPane();
-        suggestedLayout.setContent(populateList(user,user.getSuggestedFriends(), "suggested"));
+        suggestedLayout.setContent(convertor.populateList(user.getSuggestedFriends(), "suggested"));
         stackPane.getChildren().addAll(friendsLayout, blockedLayout, receivedLayout, suggestedLayout);
 
         // Initially, show received
@@ -138,20 +139,6 @@ public class FriendsPage {
             System.out.println("StylesSheet unavailable");
         }
         return scene;
-    }
-
-    private VBox populateList(User user,String[] ids, String type) {
-        VBox contentBox = new VBox();
-        contentBox.setSpacing(10);
-        contentBox.setAlignment(Pos.CENTER);
-        for (String id : ids) {
-            HBox banner = ListItem.createListItem(user,id,type);
-            contentBox.getChildren().add(banner);
-        }
-        return contentBox;
-    }
-    public static void refresh(String type){
-        main.showFriendsPage(mainUser, type);
     }
 
 }

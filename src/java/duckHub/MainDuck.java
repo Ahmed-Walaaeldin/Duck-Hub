@@ -6,6 +6,7 @@ import duckHub.backend.database.Load;
 import duckHub.frontend.FriendsPage;
 import duckHub.frontend.LoginPage;
 import duckHub.frontend.SignupPage;
+import duckHub.frontend.feed.MainScene;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -17,17 +18,14 @@ public class MainDuck extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        Load load = new Load();
         primaryStage.setTitle("DuckHub");
 
+        Load load = new Load();
         load.loadFromFile();
-        User zoz = BackendDuck.getUserByID("user-0");
-        System.out.println(zoz.getUsername());
-
-        showFriendsPage(zoz,"pending"); // Start with Login Page
 
         primaryStage.show();
     }
@@ -43,9 +41,11 @@ public class MainDuck extends Application {
         Scene signupScene = signupPage.getScene(this);
         primaryStage.setScene(signupScene);
     }
-    public void showNewsfeed(){
+    public void showNewsfeed(User user){
         System.out.println("Switching to Newsfeed Page");
-        // yalla ya nigo
+        MainScene feedPage = new MainScene();
+        Scene feedScene = feedPage.getScene(user);
+        primaryStage.setScene(feedScene);
     }
     public void showFriendsPage(User user,String type){
         System.out.println("Switching to Friends Page");

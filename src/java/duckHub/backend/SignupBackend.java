@@ -6,15 +6,15 @@ import java.time.LocalDate;
 
 public class SignupBackend {
 
-    public static boolean signup(String email, LocalDate dateOfBirth, String username, String password) {
-        if(!LoginBackend.login(username, password)){ // it's not already a member
+    public static User signup(String email, LocalDate dateOfBirth, String username, String password) {
+        if(LoginBackend.login(username, password) == null){ // it's not already a member
             User user = new User(email,username,hashPassword(password),dateOfBirth);
             BackendDuck.addUser(user);
             System.out.println("User created");
-            return true;
+            return user;
         }
         System.out.println("User already exists");
-        return false;
+        return null;
     }
 
     // Hashing a password

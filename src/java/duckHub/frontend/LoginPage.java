@@ -1,7 +1,9 @@
 package duckHub.frontend;
 
+import duckHub.backend.BackendDuck;
 import duckHub.backend.LoginBackend;
 import duckHub.MainDuck;
+import duckHub.backend.User;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -17,12 +19,9 @@ import javafx.stage.Screen;
 
 import java.util.Objects;
 
-public class LoginPage {
+public class LoginPage implements SizeConstants {
     public Scene getScene(MainDuck mainDuck) {
         VBox mainLayout = new VBox();
-        // full screen window
-        double screenWidth = Screen.getPrimary().getBounds().getWidth();
-        double screenHeight = Screen.getPrimary().getBounds().getHeight();
 
         // image
         Image logo = new Image("file:duck.png");
@@ -57,10 +56,10 @@ public class LoginPage {
 
         // log-in button
         Button loginButton = new Button("Login");
-        loginButton.setOnAction(e -> {
-            boolean state = login(usernameField.getText(),passwordField.getText());
-            if(state) {
-                mainDuck.showNewsfeed(); // need to pass username ?
+        loginButton.setOnAction(_ -> {
+            User user = login(usernameField.getText(),passwordField.getText());
+            if(user != null) {
+                mainDuck.showNewsfeed(user);
             }
             else{
                 PopUp.display(true,"Error","Something went wrong");
@@ -68,7 +67,7 @@ public class LoginPage {
         });
         // sign-up button
         Button signupButton = new Button("Don't have account? Sign up");
-        signupButton.setOnAction(e -> mainDuck.showSignupPage());
+        signupButton.setOnAction(_ -> mainDuck.showSignupPage());
 
         mainLayout.setAlignment(Pos.TOP_CENTER);
 
@@ -91,7 +90,7 @@ public class LoginPage {
         mainLayout.getChildren().add(loginButton);
         mainLayout.getChildren().add(signupButton);
 
-        Scene scene = new Scene(mainLayout, screenWidth, screenHeight);
+        Scene scene = new Scene(mainLayout, SCENE_WIDTH, SCENE_HEIGHT);
         try{
             String styles = Objects.requireNonNull(getClass().getResource("/duckHub/Styles.css")).toExternalForm();
             scene.getStylesheets().add(styles);
@@ -101,10 +100,10 @@ public class LoginPage {
 
         return scene;
     }
-    private boolean login(String username, String password) {
+    private User login(String username, String password) {
         if(username.isEmpty() || password.isEmpty()) {
             PopUp.display(true,"Login Error","All fields are required");
-            return false;
+            return null;
         }
         return LoginBackend.login(username,password);
     }

@@ -2,6 +2,7 @@ package duckHub.frontend;
 
 import duckHub.MainDuck;
 import duckHub.backend.SignupBackend;
+import duckHub.backend.User;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -21,12 +22,9 @@ import javafx.stage.Stage;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class SignupPage {
+public class SignupPage implements SizeConstants {
     public Scene getScene(MainDuck mainDuck) {
         VBox mainLayout = new VBox();
-        // full screen window
-        double screenWidth = Screen.getPrimary().getBounds().getWidth();
-        double screenHeight = Screen.getPrimary().getBounds().getHeight();
 
         // image
         Image logo = new Image("file:duck.png");
@@ -74,9 +72,9 @@ public class SignupPage {
         // sign-up button
         Button signupButton = new Button("Sign Up");
         signupButton.setOnAction(e -> {
-            boolean state = signup(emailField.getText(),datePicker.getValue(),usernameField.getText(),passwordField.getText());
-            if(state) {
-                mainDuck.showNewsfeed(); // need to pass username ?
+            User user = signup(emailField.getText(),datePicker.getValue(),usernameField.getText(),passwordField.getText());
+            if(user != null) {
+                mainDuck.showNewsfeed(user);
             }
             else{
                 PopUp.display(true,"Error","Something went wrong");
@@ -109,7 +107,7 @@ public class SignupPage {
         mainLayout.getChildren().add(signupButton);
         mainLayout.getChildren().add(backButton);
 
-        Scene scene = new Scene(mainLayout, screenWidth, screenHeight);
+        Scene scene = new Scene(mainLayout, SCENE_WIDTH, SCENE_HEIGHT);
         try{
             String styles = Objects.requireNonNull(getClass().getResource("/duckHub/Styles.css")).toExternalForm();
             scene.getStylesheets().add(styles);
@@ -119,18 +117,18 @@ public class SignupPage {
 
         return scene;
     }
-    private boolean signup(String email,LocalDate dateOfBirth,String username,String password) {
+    private User signup(String email,LocalDate dateOfBirth,String username,String password) {
         if(email.isEmpty()||username.isEmpty()||password.isEmpty()|| dateOfBirth == null) {
             PopUp.display(true,"Error","All fields are required");
-            return false;
+            return null;
         }
         if(!isEmailValid(email)) {
             PopUp.display(true,"Error","Email is invalid");
-            return false;
+            return null;
         }
         if(dateOfBirth.isAfter(LocalDate.now())) {
             PopUp.display(true,"Error","Date of birth is invalid");
-            return false;
+            return null;
         }
         return SignupBackend.signup(email,dateOfBirth,username,password);
     }
