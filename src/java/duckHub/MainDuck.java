@@ -5,13 +5,20 @@ import duckHub.backend.User;
 import duckHub.backend.database.Load;
 import duckHub.backend.database.Save;
 import duckHub.frontend.FriendsPage;
+import duckHub.backend.BackendDuck;
+import duckHub.backend.User;
 import duckHub.frontend.LoginPage;
 import duckHub.frontend.SignupPage;
 import duckHub.frontend.feed.MainScene;
+import duckHub.frontend.profile.Profile;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
+import java.io.File;
+import java.time.LocalDate;
 
 public class MainDuck extends Application {
     private Stage primaryStage;
@@ -24,7 +31,10 @@ public class MainDuck extends Application {
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
+
         primaryStage.setTitle("DuckHub");
+//        showLoginPage(); // Start with Login Page
+        showProfilePage();
 
         Load load = new Load();
         load.loadFromFile();
@@ -70,5 +80,25 @@ public class MainDuck extends Application {
         FriendsPage friendsPage = new FriendsPage();
         Scene friendsScene = friendsPage.getScene(this, user, type);
         primaryStage.setScene(friendsScene);
+    }
+
+    public void showProfilePage() {
+        System.out.println("Switching to Profile Page");
+        User user = new User("email", "username", "password", LocalDate.now());
+        File imageFile = new File("src/Resources/duckHub/frontend/duckStory1.jpeg");
+        Image profileImage = new Image(imageFile.toURI().toString());
+        user.setUserProfileImage(profileImage);
+        user.createContent(true, "enta al kbir ya walaa");
+        user.createContent(true, "enta al kbir ya walaa");
+        user.createContent(true, "enta al kbir ya walaa");
+        user.createContent(true, "enta al kbir ya walaa");
+        user.createContent(true, "enta al kbir ya walaa");
+        user.createContent(true, "enta al kbir ya walaa");
+        user.createContent(true, "enta al kbir ya walaa");
+        user.createContent(true, "enta al kbir ya walaa");
+        user.setBioContent("hello asfadsf\nhello walaa");
+        Profile profile = new Profile();
+        Scene profileScene = profile.displayScene(user);
+        primaryStage.setScene(profileScene);
     }
 }

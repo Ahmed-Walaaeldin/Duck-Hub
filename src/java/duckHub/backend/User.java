@@ -1,7 +1,5 @@
 package duckHub.backend;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import duckHub.backend.database.ImageDeserializer;
@@ -22,11 +20,13 @@ public class User {
     private String email;
     private String username;
     private String password;
+    private String bioContent;
     private LocalDate dateOfBirth;
 
     @JsonSerialize(using = ImageSerializer.class)
     @JsonDeserialize(using = ImageDeserializer.class)
     private Image userProfileImage;
+    private Image userCoverImage;
     private boolean status;
     private transient ArrayList<String> suggestedFriends;
     private ArrayList<String> friends;
@@ -36,7 +36,10 @@ public class User {
     private ArrayList<Post> posts;
     private ArrayList<Story> stories;
 
-    public User() {}
+    public User() {
+
+    }
+
     public User(String email, String username, String password, LocalDate dateOfBirth) {
         userId = generateId();
         this.email = email;
@@ -64,33 +67,51 @@ public class User {
     public String getUserId() {
         return userId;
     }
+
     public String getEmail() {
         return email;
     }
+
     public String getUsername() {
         return username;
     }
+
     public void setUsername(String username) {
         this.username = username;
     }
+
     public String getPassword() {
         return password;
     }
+
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public String getBioContent() {
+        return bioContent;
+    }
+
+    public void setBioContent(String bioContent) {
+        this.bioContent = bioContent;
+    }
+
     public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
+
     public boolean getStatus() {
         return status;
     }
+
     public void setStatus(boolean status) {
         this.status = status;
     }
+
     public ArrayList<String> getFriends() {
         return friends;
     }
+
     public ArrayList<String> getBlocked() {
         return blocked;
     }
@@ -125,6 +146,7 @@ public class User {
     public ArrayList<Post> getPosts() {
         return posts;
     }
+
     public ArrayList<Story> getStories() {
         return stories;
     }
@@ -137,13 +159,23 @@ public class User {
         return userProfileImage;
     }
 
+    public Image getUserCoverImage() {
+        return userCoverImage;
+    }
+
+    public void setUserCoverImage(Image userCoverImage) {
+        this.userCoverImage = userCoverImage;
+    }
+
     // helper methods
     public void addFriend(String friendId) {
-       friends.add(friendId);
+        friends.add(friendId);
     }
+
     public void removeFriend(String friendId) {
         friends.remove(friendId);
     }
+
     public void block(String blockedId) {
         friends.remove(blockedId);
         blocked.add(blockedId);
@@ -162,12 +194,13 @@ public class User {
             stories.add(story);
         }
     }
-    public void createContent(boolean permanent,String contentText, Image contentImage) {
-        if(permanent) {
-            Post post = Post.create(userId,contentText,contentImage);
+
+    public void createContent(boolean permanent, String contentText, Image contentImage) {
+        if (permanent) {
+            Post post = Post.create(userId, contentText, contentImage);
             posts.add(post);
-        }else{
-            Story story = Story.create(userId,contentText,contentImage);
+        } else {
+            Story story = Story.create(userId, contentText, contentImage);
             stories.add(story);
         }
     }
