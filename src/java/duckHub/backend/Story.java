@@ -3,7 +3,6 @@ package duckHub.backend;
 import javafx.scene.image.Image;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 public class Story extends Content {
     private static int storyCounter = 0;

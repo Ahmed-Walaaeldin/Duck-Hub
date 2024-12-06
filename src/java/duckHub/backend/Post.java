@@ -1,6 +1,5 @@
 package duckHub.backend;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javafx.scene.image.Image;
 import java.time.LocalDateTime;
 

@@ -14,6 +14,7 @@ module LAB.duckHub {
     requires jbcrypt;
     exports duckHub.backend.database;
     exports duckHub.backend;
+    exports duckHub;
     opens duckHub.backend to com.fasterxml.jackson.databind;
     opens duckHub;
 }

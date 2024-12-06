@@ -16,6 +16,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.util.Objects;
 
 public class NewContent {
     private Stage stage;
@@ -71,7 +72,7 @@ public class NewContent {
         backButton = new Button();
 
         // Make and customize the back button
-        String imagePath = getClass().getResource("/duckhub/frontend/back-button.png").toExternalForm();
+        String imagePath = Objects.requireNonNull(getClass().getResource("/duckhub/frontend/back-button.png")).toExternalForm();
         Image backImage = new Image(imagePath);
         ImageView backImageView = new ImageView(backImage);
         ButtonCustomizer buttonCustomizer = new ButtonCustomizer();
@@ -79,7 +80,7 @@ public class NewContent {
 
         // Make and customize the add image button
         addImageButton = new Button("Add Image");
-        String addImagePath = getClass().getResource("/duckhub/frontend/add-image.png").toExternalForm();
+        String addImagePath = Objects.requireNonNull(getClass().getResource("/duckhub/frontend/add-image.png")).toExternalForm();
         Image addImage = new Image(addImagePath);
         ImageView addImageView = new ImageView(addImage);
         buttonCustomizer.rectangleButtonImage(addImageView, addImageButton);

@@ -3,7 +3,6 @@ package duckHub.frontend;
 import duckHub.MainDuck;
 import duckHub.backend.SignupBackend;
 import duckHub.backend.User;
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,8 +15,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -71,7 +68,7 @@ public class SignupPage implements SizeConstants {
 
         // sign-up button
         Button signupButton = new Button("Sign Up");
-        signupButton.setOnAction(e -> {
+        signupButton.setOnAction(_ -> {
             User user = signup(emailField.getText(),datePicker.getValue(),usernameField.getText(),passwordField.getText());
             if(user != null) {
                 mainDuck.showNewsfeed(user);
@@ -79,13 +76,11 @@ public class SignupPage implements SizeConstants {
             else{
                 PopUp.display(true,"Error","Something went wrong");
             }
-;        });
+        });
 
         // back to login page
         Button backButton = new Button("Already have account? login");
-        backButton.setOnAction(e -> {
-            mainDuck.showLoginPage();
-        });
+        backButton.setOnAction(_ -> mainDuck.showLoginPage());
 
         mainLayout.setAlignment(Pos.TOP_CENTER);
 

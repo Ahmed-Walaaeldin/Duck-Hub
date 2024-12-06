@@ -3,7 +3,8 @@ package duckHub.frontend.feed;
 import duckHub.MainDuck;
 import duckHub.backend.BackendDuck;
 import duckHub.backend.User;
-import duckHub.frontend.ContentConvertor;
+import duckHub.frontend.common.ButtonCustomizer;
+import duckHub.frontend.common.ContentConvertor;
 import duckHub.frontend.SizeConstants;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -15,14 +16,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
 public class MainScene implements SizeConstants {
-    // to test
-//    private Stage stage;
-
     // Displayed Scene
     private Scene scene;
 

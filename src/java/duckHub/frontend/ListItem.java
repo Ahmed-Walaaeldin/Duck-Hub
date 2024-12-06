@@ -1,6 +1,5 @@
 package duckHub.frontend;
 
-import duckHub.MainDuck;
 import duckHub.backend.BackendDuck;
 import duckHub.backend.FriendsBackend;
 import duckHub.backend.User;

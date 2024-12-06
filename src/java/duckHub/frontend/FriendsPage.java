@@ -2,6 +2,7 @@ package duckHub.frontend;
 
 import duckHub.MainDuck;
 import duckHub.backend.User;
+import duckHub.frontend.common.ContentConvertor;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -54,31 +55,35 @@ public class FriendsPage {
         stackPane.getChildren().addAll(friendsLayout, blockedLayout, receivedLayout, suggestedLayout);
 
         // Initially, show received
-        if (type.equals("pending")) {
-            listTitle.setText("Received Requests");
-            receivedLayout.setVisible(true);
-            suggestedLayout.setVisible(false);
-            friendsLayout.setVisible(false);
-            blockedLayout.setVisible(false);
-        } else if (type.equals("suggested")) {
-            listTitle.setText("Suggested Friends");
-            receivedLayout.setVisible(false);
-            suggestedLayout.setVisible(true);
-            friendsLayout.setVisible(false);
-            blockedLayout.setVisible(false);
-        } else if (type.equals("blocked")) {
-            listTitle.setText("Blocked List");
-            receivedLayout.setVisible(false);
-            suggestedLayout.setVisible(false);
-            friendsLayout.setVisible(false);
-            blockedLayout.setVisible(true);
-
-        } else if (type.equals("friends")) {
-            listTitle.setText("Friends List");
-            receivedLayout.setVisible(false);
-            suggestedLayout.setVisible(false);
-            friendsLayout.setVisible(true);
-            blockedLayout.setVisible(false);
+        switch (type) {
+            case "pending" -> {
+                listTitle.setText("Received Requests");
+                receivedLayout.setVisible(true);
+                suggestedLayout.setVisible(false);
+                friendsLayout.setVisible(false);
+                blockedLayout.setVisible(false);
+            }
+            case "suggested" -> {
+                listTitle.setText("Suggested Friends");
+                receivedLayout.setVisible(false);
+                suggestedLayout.setVisible(true);
+                friendsLayout.setVisible(false);
+                blockedLayout.setVisible(false);
+            }
+            case "blocked" -> {
+                listTitle.setText("Blocked List");
+                receivedLayout.setVisible(false);
+                suggestedLayout.setVisible(false);
+                friendsLayout.setVisible(false);
+                blockedLayout.setVisible(true);
+            }
+            case "friends" -> {
+                listTitle.setText("Friends List");
+                receivedLayout.setVisible(false);
+                suggestedLayout.setVisible(false);
+                friendsLayout.setVisible(true);
+                blockedLayout.setVisible(false);
+            }
         }
 
 

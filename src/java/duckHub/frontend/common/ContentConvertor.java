@@ -3,6 +3,7 @@ package duckHub.frontend.common;
 import duckHub.backend.BackendDuck;
 import duckHub.backend.Post;
 import duckHub.backend.User;
+import duckHub.frontend.ListItem;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
