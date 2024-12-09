@@ -12,9 +12,12 @@ module LAB.duckHub {
     requires com.fasterxml.jackson.datatype.jsr310;
     requires com.fasterxml.jackson.databind;
     requires jbcrypt;
+    requires java.naming;
     exports duckHub.backend.database;
     exports duckHub.backend;
     exports duckHub;
     opens duckHub.backend to com.fasterxml.jackson.databind;
     opens duckHub;
+    exports duckHub.backend.search;
+    opens duckHub.backend.search to com.fasterxml.jackson.databind;
 }
