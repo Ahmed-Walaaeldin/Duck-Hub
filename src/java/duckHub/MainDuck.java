@@ -3,7 +3,7 @@ package duckHub;
 import duckHub.backend.User;
 import duckHub.backend.database.Load;
 import duckHub.backend.database.Save;
-import duckHub.frontend.FriendsPage;
+import duckHub.frontend.friends.FriendsPage;
 import duckHub.frontend.LoginPage;
 import duckHub.frontend.SignupPage;
 import duckHub.frontend.feed.FeedPage;
@@ -11,7 +11,6 @@ import duckHub.frontend.profile.Profile;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 public class MainDuck extends Application {
