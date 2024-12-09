@@ -1,16 +1,22 @@
 package duckHub.frontend.titleBar;
 
+import duckHub.backend.BackendDuck;
 import duckHub.backend.database.Save;
 import duckHub.frontend.Constants;
 import duckHub.MainDuck;
 import duckHub.backend.User;
 import duckHub.frontend.common.ButtonCustomizer;
+import duckHub.frontend.search.SearchPopup;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -46,6 +52,37 @@ public class TitleBar implements Constants {
         Button friendsButton = createNavigationButton(friendsImage,
                 _ -> mainDuck.showFriendsPage(user, "friends"));
 
+        // Search field and button
+        TextField searchField = new TextField();
+        searchField.setPromptText("Search...");
+
+        // Create a Popup to display the VBox
+        VBox searchResultsBox = new VBox();
+        searchResultsBox.setStyle("-fx-background-color: white; -fx-border-color: lightgray;");
+        searchResultsBox.setSpacing(5);
+        Popup searchPopup = new Popup();
+        searchPopup.getContent().add(searchResultsBox);
+
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            SearchPopup.getSearchResult(newValue,searchResultsBox);
+            // Show the popup if there are results
+            if (!searchResultsBox.getChildren().isEmpty()) {
+                if (!searchPopup.isShowing()) {
+                    searchPopup.show(searchField, searchField.localToScreen(searchField.getBoundsInLocal()).getMinX(),
+                            searchField.localToScreen(searchField.getBoundsInLocal()).getMaxY());
+                }
+            } else {
+                searchPopup.hide();
+            }
+
+        });
+
+        Image searchImage = new Image("/duckhub/frontend/search.png");
+        Button searchButton = createNavigationButton(searchImage, _ -> {
+            String query = searchField.getText();
+            // mainDuck.showSearch(query);
+        });
+
         // Logout button
         Image logoutImage = new Image("/duckhub/frontend/logout.png");
         Button logoutButton = createNavigationButton(logoutImage, _ -> {
@@ -72,11 +109,13 @@ public class TitleBar implements Constants {
 
         });
 
-        // Spacer to push logout to the right
+        // Spacer
         HBox spacer = new HBox();
         HBox.setHgrow(spacer, Priority.ALWAYS);
+        HBox spacer2 = new HBox();
+        HBox.setHgrow(spacer2, Priority.ALWAYS);
 
-        titleBar.getChildren().addAll(feedButton, profileButton, friendsButton, spacer, logoutButton, refreshButton, closeButton);
+        titleBar.getChildren().addAll(feedButton, profileButton, friendsButton,spacer,searchField,searchButton,spacer2,logoutButton, refreshButton, closeButton);
     }
 
     private Button createNavigationButton(Image logo, javafx.event.EventHandler<javafx.event.ActionEvent> handler) {
