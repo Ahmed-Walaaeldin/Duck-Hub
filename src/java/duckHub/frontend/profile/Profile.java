@@ -2,7 +2,6 @@ package duckHub.frontend.profile;
 
 import duckHub.MainDuck;
 import duckHub.backend.User;
-import duckHub.backend.database.Save;
 import duckHub.frontend.Constants;
 import duckHub.frontend.common.ContentConvertor;
 import duckHub.frontend.common.ImageLoader;
@@ -11,15 +10,19 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+
+import java.util.Objects;
 
 
 public class Profile implements Constants {
@@ -33,29 +36,25 @@ public class Profile implements Constants {
     private Stage stage;
 
     // Displayed Scene
-    private Scene profileScene;
+    private Scene scene;
 
     // layouts
     private ScrollPane profileRootScrollPane;
     private VBox profileRootVBox;
     private HBox bioLayout;
-    private ScrollPane allFriendsScrollPane;
-    private HBox friendsHBoxLayout;
+    private VBox profile_nameVBoxLayout;
+    private HBox editButtonsHBoxLayout;
     private ScrollPane allPostsScrollPane;
     private VBox postsVBoxLayout;
-    private HBox editButtonsHBoxLayout;
-
-    private Image coverPhoto;
+    private ScrollPane allFriendsScrollPane;
+    private BorderPane feedLayout;
     private ImageView coverPhotoView;
-
-    private Image profilePhoto;
 
     // Title bar
     private TitleBar titleBar;
 
     // main container to store title bar and all other layouts
     private VBox mainContainer;
-
 
     private void layoutInitializer() {
         // mainContainer
@@ -66,14 +65,18 @@ public class Profile implements Constants {
         profileRootVBox = new VBox(20);
         // bio layout
         bioLayout = new HBox(20);
+        // profile picture and username layout
+        profile_nameVBoxLayout = new VBox(20);
         // edit buttons layout
         editButtonsHBoxLayout = new HBox(20);
-        // friends layout
-        allFriendsScrollPane = new ScrollPane();
-        friendsHBoxLayout = new HBox();
         // posts layout
         allPostsScrollPane = new ScrollPane();
         postsVBoxLayout = new VBox();
+        // friends layout
+        allFriendsScrollPane = new ScrollPane();
+
+        feedLayout = new BorderPane();
+
         // title bar
         titleBar = new TitleBar(mainDuck,user);
     }
@@ -83,51 +86,66 @@ public class Profile implements Constants {
         VBox.setVgrow(profileRootScrollPane, Priority.ALWAYS);
         mainContainer.getChildren().addAll(titleBar.getTitleBar(), profileRootScrollPane);
 
-        profileRootVBox.getChildren().addAll(coverPhotoView, bioLayout, editButtonsHBoxLayout, allFriendsScrollPane, allPostsScrollPane);
+        feedLayout.setRight(allFriendsScrollPane);
+        feedLayout.setCenter(allPostsScrollPane);
+
+        profileRootVBox.getChildren().addAll(coverPhotoView, bioLayout, editButtonsHBoxLayout, feedLayout);
 
         profileRootScrollPane.setContent(profileRootVBox);
 
         allPostsScrollPane.setFitToWidth(true);
         allPostsScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         allPostsScrollPane.setContent(postsVBoxLayout);
-
-        allFriendsScrollPane.setContent(friendsHBoxLayout);
     }
 
     private void setScene() {
-        profileScene = new Scene(mainContainer, SCENE_WIDTH, SCENE_HEIGHT);
+        scene = new Scene(mainContainer, SCENE_WIDTH, SCENE_HEIGHT);
+        try{
+            String styles = Objects.requireNonNull(getClass().getResource("/duckHub/frontend/FriendsPageStyles.css")).toExternalForm();
+            scene.getStylesheets().add(styles);
+        }catch (Exception e){
+            System.out.println("StylesSheet unavailable");
+        }
         stage = new Stage();
-        stage.setScene(profileScene);
+        stage.setScene(scene);
         profileRootScrollPane.setFitToWidth(true);
     }
 
     private void showCoverPhoto(User user) {
-        coverPhoto = user.getUserCoverImage();
+        Image coverPhoto = user.getUserCoverImage();
         coverPhotoView = new ImageView(coverPhoto);
-        coverPhotoView.fitWidthProperty().bind(profileScene.widthProperty());
+        coverPhotoView.fitWidthProperty().bind(scene.widthProperty());
         coverPhotoView.setFitHeight(120);
     }
 
     private void showBioContent(User user) {
         // profile photo
         double radius = 70;
-        profilePhoto = user.getUserProfileImage();
+        Image profilePhoto = user.getUserProfileImage();
         ImageView profilePhotoView = new ImageView(profilePhoto);
         profilePhotoView.setFitHeight(radius*2);
         profilePhotoView.setFitWidth(radius*2);
         Circle newContentButtonShape = new Circle(radius, radius, radius);
         profilePhotoView.setClip(newContentButtonShape);
 
+        // user name
+        Label usernameLabel = new Label(user.getUsername());
+        usernameLabel.setStyle("-fx-font-weight: bold");
+
+        profile_nameVBoxLayout.getChildren().clear();
+        profile_nameVBoxLayout.getChildren().addAll(profilePhotoView, usernameLabel);
+        profile_nameVBoxLayout.setAlignment(Pos.CENTER);
+
         // bio content
         TextArea bioContent = new TextArea();
         bioContent.setEditable(Boolean.FALSE);
         bioContent.setWrapText(true);
         bioContent.setPrefHeight(2 * radius);
-        bioContent.prefWidthProperty().bind(profileScene.widthProperty().subtract(2 * radius + 70));
+        bioContent.prefWidthProperty().bind(scene.widthProperty().subtract(2 * radius + 70));
         bioContent.setText(user.getBioContent());
 
         bioLayout.setPadding(new Insets(0, 10, 0, 10));
-        bioLayout.getChildren().addAll(profilePhotoView, bioContent);
+        bioLayout.getChildren().addAll(profile_nameVBoxLayout, bioContent);
     }
 
     private void showProfileEdits(User user) {
@@ -139,8 +157,8 @@ public class Profile implements Constants {
         changeCoverButton.setOnAction(_ -> {
             Image newImage = imageLoader.loadContentImage();
             if (newImage != null) {
-                Save save = new Save();
-                save.saveImageToDirectory(newImage,user);
+//                Save save = new Save();
+//                save.saveImageToDirectory(newImage,user);
                 user.setUserCoverImage(newImage);
                 coverPhotoView.setImage(newImage);
             }
@@ -151,8 +169,8 @@ public class Profile implements Constants {
         changeProfileButton.setOnAction(_ -> {
             Image newImage = imageLoader.loadContentImage();
             if (newImage != null) {
-                Save save = new Save();
-                save.saveImageToDirectory(newImage,user);
+//                Save save = new Save();
+//                save.saveImageToDirectory(newImage,user);
                 user.setUserProfileImage(newImage);
                 bioLayout.getChildren().clear();
                 showBioContent(user);
@@ -172,15 +190,14 @@ public class Profile implements Constants {
     }
 
     private void showFriends() {
-        // yala ya zoz
-        
+        ContentConvertor convertor = new ContentConvertor();
+        allFriendsScrollPane.setContent(convertor.populateList(user, user.getFriends().toArray(new String[0]), "friends"));
     }
 
     private void showPosts(User user) {
         ContentConvertor contentConvertor = new ContentConvertor();
         contentConvertor.convertPostsToNodes(user,allPostsScrollPane , postsVBoxLayout);
         allPostsScrollPane.setPadding(new Insets(0, 10, 0, 10));
-//        profileRootVBox.getChildren().add(allPostsScrollPane);
     }
 
     public Scene displayScene(MainDuck mainDuck,User user) {
@@ -194,6 +211,6 @@ public class Profile implements Constants {
         showProfileEdits(user);
         showFriends();
         showPosts(user);
-        return profileScene;
+        return scene;
     }
 }
