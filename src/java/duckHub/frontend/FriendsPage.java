@@ -57,6 +57,7 @@ public class FriendsPage implements Constants{
         listTitle.setId("listTitleLabel");
 
         ContentConvertor convertor = new ContentConvertor();
+
         StackPane stackPane = new StackPane();
         ScrollPane friendsLayout = new ScrollPane();
         friendsLayout.setContent(convertor.populateList(user, user.getFriends().toArray(new String[0]), "friends"));
@@ -65,7 +66,7 @@ public class FriendsPage implements Constants{
         ScrollPane receivedLayout = new ScrollPane();
         receivedLayout.setContent(convertor.populateList(user, user.getPendingReceived().toArray(new String[0]), "pending"));
         ScrollPane suggestedLayout = new ScrollPane();
-        suggestedLayout.setContent(convertor.populateList(user, user.getSuggestedFriends(), "suggested"));
+        suggestedLayout.setContent(convertor.populateList(user, user.getSuggestedFriends().toArray(new String[0]), "suggested"));
         stackPane.getChildren().addAll(friendsLayout, blockedLayout, receivedLayout, suggestedLayout);
 
         // Initially, show received

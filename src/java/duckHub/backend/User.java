@@ -149,7 +149,7 @@ public class User implements Constants {
         return pendingReceived;
     }
 
-    public String[] getSuggestedFriends() {
+    public ArrayList<String> getSuggestedFriends() {
         if (suggestedFriends == null) {
             suggestedFriends = new ArrayList<>();
         }
@@ -169,7 +169,7 @@ public class User implements Constants {
                 suggestedFriends.add(potentialFriendId);
             }
         }
-        return suggestedFriends.toArray(new String[0]);
+        return suggestedFriends;
     }
 
     public ArrayList<Post> getPosts() {

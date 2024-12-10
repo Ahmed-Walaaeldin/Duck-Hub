@@ -214,7 +214,7 @@ public class FeedPage implements Constants, Refreshable {
 
     private void showSuggestedFriends(){
         ContentConvertor convertor = new ContentConvertor();
-        suggestedFriendScrollPane.setContent(convertor.populateList(user, user.getSuggestedFriends(), "suggested"));
+        suggestedFriendScrollPane.setContent(convertor.populateList(user, user.getSuggestedFriends().toArray(new String[0]), "suggested"));
     }
 
     public Scene getScene(MainDuck mainDuck,User user) {

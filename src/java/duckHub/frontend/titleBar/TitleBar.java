@@ -64,7 +64,7 @@ public class TitleBar implements Constants {
         searchPopup.getContent().add(searchResultsBox);
 
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            SearchPopup.getSearchResult(newValue,searchResultsBox);
+            SearchPopup.getSearchResult(user,newValue,searchResultsBox);
             // Show the popup if there are results
             if (!searchResultsBox.getChildren().isEmpty()) {
                 if (!searchPopup.isShowing()) {

@@ -1,57 +1,39 @@
 package duckHub.backend.search;
 
+import duckHub.backend.BackendDuck;
 import duckHub.backend.User;
 
 import java.util.ArrayList;
-//import duckHub.backend.Group;
-
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SearchBackend {
-    private static final SearchFacade searchFacade = new SearchFacade();
-
-    public static ArrayList<User> searchUser(User loggedInUser, String query, String type) {
-//*        ArrayList<User> searchResults = searchFacade.search(query, loggedInUser).getUsers();
-        ArrayList<User> filteredResults = new ArrayList<>();
-
-//        for (User user : searchResults) {
-//            String userId = user.getUserId();
-//            switch(type) {
-//                case "friends" -> {
-//                    if (loggedInUser.getFriends().contains(userId))
-//                        filteredResults.add(user);
-//                }
-//                case "blocked" -> {
-//                    if (loggedInUser.getBlocked().contains(userId))
-//                        filteredResults.add(user);
-//                }
-//                case "pending" -> {
-//                    if (loggedInUser.getPendingReceived().contains(userId))
-//                        filteredResults.add(user);
-//                }
-//                case "suggested" -> {
-//                    if (!loggedInUser.getFriends().contains(userId) &&
-//                            !loggedInUser.getBlocked().contains(userId) &&
-//                            !loggedInUser.getPendingReceived().contains(userId) &&
-//                            !loggedInUser.getPendingSent().contains(userId) &&
-//                            !user.getBlocked().contains(loggedInUser.getUserId()))
-//                        filteredResults.add(user);
-//                }
-//            }
-//        }
-        return filteredResults;
+    public ArrayList<String> searchUsers(User loggedInUser, String query) {
+        ArrayList<String> results = new ArrayList<>();
+        String lowercaseQuery = query.toLowerCase();
+        for (User user : BackendDuck.getUsers()) {
+            if (contains(user.getUsername(), lowercaseQuery) && !user.getUserId().equals(loggedInUser.getUserId())) {
+                results.add(user.getUserId());
+            }
+        }
+        return results;
     }
-//    public static ArrayList<Group> searchGroups(User loggedInUser, String query, String type) {
-//        switch(type) {
-//            case "joined" -> {
-//                return searchFacade.search(query, loggedInUser).getGroupSearcher().searchJoinedGroups(query, loggedInUser);
-//            }
-//            case "unjoined" -> {
-//                return searchFacade.search(query, loggedInUser).getGroupSearcher().searchUnjoinedGroups(query, loggedInUser);
-//            }
-//            default -> {
-//                return searchFacade.search(query, loggedInUser).getGroupSearcher().search(query, loggedInUser);
+
+//    public ArrayList<String> searchGroups(User loggedInUser, String query) {
+//        ArrayList<String> results = new ArrayList<>();
+//        String lowercaseQuery = query.toLowerCase();
+//
+//        for (Group group : BackendDuck.getGroups()) {
+//            if (contains(group.getGroupNmae(), lowercaseQuery)) {
+//                results.add(group.getGroupId());
 //            }
 //        }
+//        return results;
 //    }
+
+    private boolean contains(String username, String query) {
+        Pattern pattern = Pattern.compile(Pattern.quote(query));
+        Matcher matcher = pattern.matcher(username.toLowerCase());
+        return matcher.find();
+    }
 }
