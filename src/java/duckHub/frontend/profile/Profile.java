@@ -173,6 +173,7 @@ public class Profile implements Constants {
 
     private void showFriends() {
         // yala ya zoz
+        
     }
 
     private void showPosts(User user) {

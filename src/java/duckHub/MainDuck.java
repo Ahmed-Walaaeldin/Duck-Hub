@@ -3,7 +3,7 @@ package duckHub;
 import duckHub.backend.User;
 import duckHub.backend.database.Load;
 import duckHub.backend.database.Save;
-import duckHub.frontend.FriendsPage;
+import duckHub.frontend.friends.FriendsPage;
 import duckHub.frontend.LoginPage;
 import duckHub.frontend.SignupPage;
 import duckHub.frontend.feed.FeedPage;

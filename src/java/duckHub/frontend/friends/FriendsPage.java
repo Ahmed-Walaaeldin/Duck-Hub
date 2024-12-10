@@ -1,9 +1,9 @@
-package duckHub.frontend;
+package duckHub.frontend.friends;
 
 import duckHub.MainDuck;
 import duckHub.backend.User;
 import duckHub.backend.database.Load;
-import duckHub.backend.database.Save;
+import duckHub.frontend.Constants;
 import duckHub.frontend.common.ContentConvertor;
 import duckHub.frontend.titleBar.TitleBar;
 import javafx.geometry.Pos;
@@ -15,11 +15,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Screen;
 
 import java.util.Objects;
 
-public class FriendsPage implements Constants{
+public class FriendsPage implements Constants {
     private static MainDuck main = null;
     private static User mainUser;
     Scene scene;
@@ -136,6 +135,7 @@ public class FriendsPage implements Constants{
         VBox.setVgrow(mainLayout, Priority.ALWAYS);
         mainContainer.getChildren().addAll(titleBar.getTitleBar(), mainLayout);
 
+        Scene scene = new Scene(mainContainer, SCENE_WIDTH, SCENE_HEIGHT);
         try{
             String styles = Objects.requireNonNull(getClass().getResource("/duckHub/frontend/FriendsPageStyles.css")).toExternalForm();
             scene.getStylesheets().add(styles);

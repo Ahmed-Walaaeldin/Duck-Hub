@@ -4,6 +4,7 @@ import duckHub.backend.BackendDuck;
 import duckHub.backend.FriendsBackend;
 import duckHub.backend.User;
 import duckHub.backend.database.Save;
+import duckHub.frontend.friends.FriendsPage;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;

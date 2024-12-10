@@ -17,4 +17,5 @@ module LAB.duckHub {
     exports duckHub;
     opens duckHub.backend to com.fasterxml.jackson.databind;
     opens duckHub;
+    exports duckHub.frontend.friends to javafx.graphics;
 }
