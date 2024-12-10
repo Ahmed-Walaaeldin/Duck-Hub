@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import duckHub.backend.database.ImageDeserializer;
 import duckHub.backend.database.ImageSerializer;
 import duckHub.backend.database.Save;
+import duckHub.backend.groups.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -16,18 +17,18 @@ import duckHub.frontend.Constants;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class User implements Constants {
-
+public class User  extends Person implements Constants {
     private String userId;
     private String email;
     private String username;
     private String password;
     private String bioContent;
     private LocalDate dateOfBirth;
-
     @JsonSerialize(using = ImageSerializer.class)
     @JsonDeserialize(using = ImageDeserializer.class)
     private Image userProfileImage;
@@ -42,7 +43,7 @@ public class User implements Constants {
     private ArrayList<String> pendingReceived;
     private ArrayList<Post> posts;
     private ArrayList<Story> stories;
-
+    private Map<String, Role> groupRoles;
     public User() {
 
     }
@@ -54,9 +55,10 @@ public class User implements Constants {
         this.password = password;
         this.dateOfBirth = dateOfBirth;
         status = true;
+        groupRoles  = new HashMap<>();
         try {
             URL profileImageUrl = getClass().getResource(Constants.DEFAULT_PROFILE_IMAGE_PATH);
-            if(profileImageUrl != null) {
+            if (profileImageUrl != null) {
                 this.userProfileImage = new Image(profileImageUrl.toString());
             }
 
@@ -64,7 +66,7 @@ public class User implements Constants {
             save.saveImageToDirectory(this.userProfileImage, this);
 
             URL coverImageUrl = getClass().getResource(Constants.DEFAULT_COVER_IMAGE_PATH);
-            if(coverImageUrl != null) {
+            if (coverImageUrl != null) {
                 this.userCoverImage = new Image(coverImageUrl.toString());
             }
             save.saveImageToDirectory(this.userCoverImage, this);
@@ -89,6 +91,10 @@ public class User implements Constants {
     }
 
     // setters & getters ( as needed )
+
+    public Map<String, Role> getGroupRoles() {
+        return groupRoles;
+    }
     public String getUserId() {
         return userId;
     }
@@ -163,7 +169,7 @@ public class User implements Constants {
                     !potentialFriend.getBlocked().contains(userId) &&
                     !blocked.contains(potentialFriendId) &&
                     !pendingSent.contains(potentialFriendId) &&
-                    !pendingReceived.contains(potentialFriendId)&&
+                    !pendingReceived.contains(potentialFriendId) &&
                     !suggestedFriends.contains(potentialFriendId)) {
 
                 suggestedFriends.add(potentialFriendId);
@@ -262,5 +268,6 @@ public class User implements Constants {
         stackPane.getChildren().add(userImageView);
         return stackPane;
     }
+
 
 }
