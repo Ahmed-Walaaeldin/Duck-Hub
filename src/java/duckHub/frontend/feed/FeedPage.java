@@ -104,11 +104,8 @@ public class FeedPage implements Constants, Refreshable {
     private void showPosts(User user) {
         ContentConvertor contentConvertor = new ContentConvertor();
         contentConvertor.convertPostsToNodes(user,postsScrollPane ,allPostsVBox);
-
-        ArrayList<String> friendIds = user.getFriends();
-        for (String id : friendIds){
-            User friend = BackendDuck.getUserByID(id);
-            contentConvertor.convertPostsToNodes(friend,postsScrollPane,allPostsVBox);
+        for (User user1 : BackendDuck.getUsers()){
+            contentConvertor.convertPostsToNodes(user1,postsScrollPane,allPostsVBox);
         }
 
     }

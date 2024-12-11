@@ -3,6 +3,7 @@ package duckHub.frontend.friends;
 import duckHub.MainDuck;
 import duckHub.backend.User;
 import duckHub.backend.database.Load;
+import duckHub.backend.database.Save;
 import duckHub.frontend.Constants;
 import duckHub.frontend.common.ContentConvertor;
 import duckHub.frontend.titleBar.TitleBar;
@@ -26,10 +27,8 @@ public class FriendsPage implements Constants {
     VBox mainContainer;
 
     public void init(){
-
         mainContainer = new VBox();
         scene = new Scene(mainContainer, SCENE_WIDTH, SCENE_HEIGHT);
-
     }
 
     public void displayScene(MainDuck mainDuck, User user, String type) {
@@ -102,18 +101,26 @@ public class FriendsPage implements Constants {
         Load load = new Load();
         // navigation
         receivedButton.setOnAction(_ -> {
+            Save save = new Save();
+            save.saveAllUsers();
             load.loadFromFile();
             mainDuck.showFriendsPage(user,"pending");
         });
         suggestedButton.setOnAction(_ -> {
+            Save save = new Save();
+            save.saveAllUsers();
             load.loadFromFile();
             mainDuck.showFriendsPage(user,"suggested");
         });
         friendsButton.setOnAction(_ -> {
+            Save save = new Save();
+            save.saveAllUsers();
             load.loadFromFile();
             mainDuck.showFriendsPage(user,"friends");
         });
         blockedButton.setOnAction(_ -> {
+            Save save = new Save();
+            save.saveAllUsers();
             load.loadFromFile();
             mainDuck.showFriendsPage(user,"blocked");
         });
@@ -135,7 +142,7 @@ public class FriendsPage implements Constants {
         VBox.setVgrow(mainLayout, Priority.ALWAYS);
         mainContainer.getChildren().addAll(titleBar.getTitleBar(), mainLayout);
 
-        Scene scene = new Scene(mainContainer, SCENE_WIDTH, SCENE_HEIGHT);
+//        Scene scene = new Scene(mainContainer, SCENE_WIDTH, SCENE_HEIGHT);
         try{
             String styles = Objects.requireNonNull(getClass().getResource("/duckHub/frontend/FriendsPageStyles.css")).toExternalForm();
             scene.getStylesheets().add(styles);
@@ -143,22 +150,27 @@ public class FriendsPage implements Constants {
             System.out.println("StylesSheet unavailable");
         }
     }
-    public Scene getScene() {
-        return scene;
-    }
+//    public Scene getScene() {
+//        return scene;
+//    }
 
     public static void refresh(String type){
-        if (main != null)
+        if (main != null) {
+            Save save = new Save();
+            save.saveAllUsers(); // Add this line to save changes
             main.showFriendsPage(mainUser, type);
+        }
     }
-    public void display(MainDuck mainDuck,User user,String type){
+    public Scene display(MainDuck mainDuck,User user,String type){
         init();
         displayScene(mainDuck,user,type);
+        return scene;
     }
     public void refreshWindow(){
+        Save save = new Save();
+        save.saveAllUsers(); // Add this line to save changes
         mainContainer.getChildren().clear();
         mainLayout.getChildren().clear();
         displayScene(main,mainUser,"friends");
-
     }
 }

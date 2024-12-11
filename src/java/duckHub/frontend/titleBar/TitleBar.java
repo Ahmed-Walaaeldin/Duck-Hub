@@ -50,12 +50,7 @@ public class TitleBar implements Constants {
         Image logoutImage = new Image("/duckhub/frontend/logout.png");
         Button logoutButton = createNavigationButton(logoutImage, _ -> {
             mainDuck.showLoginPage();
-            // Set the user as offline
-            user.setStatus(false);
-
-            // Save all users data
-            Save save = new Save();
-            save.saveAllUsers();
+            user.logOut();
         });
 
         Image refreshImage = new Image("/duckhub/frontend/refresh.png");

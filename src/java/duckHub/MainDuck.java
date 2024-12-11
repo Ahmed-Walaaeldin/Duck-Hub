@@ -1,5 +1,8 @@
 package duckHub;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import duckHub.backend.User;
 import duckHub.backend.database.Load;
 import duckHub.backend.database.Save;
@@ -13,10 +16,11 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import java.io.IOException;
+
 public class MainDuck extends Application {
     private Stage primaryStage;
     private User user;
-    private Stage mainStage;
     private FeedPage feedPage;
     private FriendsPage friendsPage;
 
@@ -26,6 +30,20 @@ public class MainDuck extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        User testUser = new User();
+        testUser.initializeLists();
+        testUser.getFriends().add("friend1");
+        testUser.getPendingReceived().add("request1");
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+
+        try {
+            String json = mapper.writeValueAsString(testUser);
+            System.out.println(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         this.primaryStage = primaryStage;
 
         primaryStage.setTitle("DuckHub");
@@ -44,16 +62,10 @@ public class MainDuck extends Application {
     public void handleCloseRequest(WindowEvent event) {
         if (event.getEventType() == WindowEvent.WINDOW_CLOSE_REQUEST) {
             if (user != null) {
-                // set the status to offline and save the data.
-                user.setStatus(false);
+                user.logOut();
             }
             Save save = new Save();
             save.saveAllUsers();
-
-            // Close both stages
-            if (mainStage != null) {
-                mainStage.close();
-            }
             primaryStage.close();
         }
 
@@ -61,9 +73,6 @@ public class MainDuck extends Application {
 
     public void showLoginPage() {
         System.out.println("Switching to Login Page");
-        if (mainStage != null) {
-            mainStage.hide();
-        }
         LoginPage loginPage = new LoginPage();
         Scene loginScene = loginPage.getScene(this);
         primaryStage.setScene(loginScene);
@@ -80,34 +89,28 @@ public class MainDuck extends Application {
     public void showNewsfeed(User user) {
         this.user = user;
         System.out.println("Switching to Newsfeed Page");
-
-        // Create new stage for the main application
-        if (mainStage == null) {
-            mainStage = new Stage();
-            // mainStage.initStyle(StageStyle.UNDECORATED);
-            mainStage.setOnCloseRequest(this::handleCloseRequest);
-        }
-
         feedPage = new FeedPage();
         Scene feedScene = feedPage.getScene(this, user);
-        mainStage.setScene(feedScene);
-        primaryStage.hide();
-        mainStage.show();
+        primaryStage.setScene(feedScene);
+        System.out.println("############################");
+        System.out.println(user.getFriends());
+        System.out.println(user.getPendingReceived());
+        System.out.println(user.getPendingSent());
+        System.out.println("############################");
     }
 
     public void showFriendsPage(User user, String type) {
         System.out.println("Switching to Friends Page");
         friendsPage = new FriendsPage();
-        friendsPage.display(this, user, type);
-        Scene friendsScene = friendsPage.getScene();
-        mainStage.setScene(friendsScene);
+        Scene friendsScene = friendsPage.display(this, user, type);
+        primaryStage.setScene(friendsScene);
     }
 
     public void showProfilePage() {
         System.out.println("Switching to Profile Page");
         Profile profile = new Profile();
         Scene profileScene = profile.displayScene(this, user);
-        mainStage.setScene(profileScene);
+        primaryStage.setScene(profileScene);
     }
 
     public void refresh() {

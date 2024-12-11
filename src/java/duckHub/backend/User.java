@@ -1,6 +1,7 @@
 package duckHub.backend;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import duckHub.backend.database.ImageDeserializer;
@@ -27,7 +28,6 @@ public class User implements Constants {
     private String password;
     private String bioContent;
     private LocalDate dateOfBirth;
-
     @JsonSerialize(using = ImageSerializer.class)
     @JsonDeserialize(using = ImageDeserializer.class)
     private Image userProfileImage;
@@ -36,10 +36,15 @@ public class User implements Constants {
     private Image userCoverImage;
     private boolean status;
     private transient ArrayList<String> suggestedFriends;
+    @JsonProperty("friends")
     private ArrayList<String> friends;
+    @JsonProperty("blocked")
     private ArrayList<String> blocked;
+    @JsonProperty("pendingSent")
     private ArrayList<String> pendingSent;
+    @JsonProperty("pendingReceived")
     private ArrayList<String> pendingReceived;
+    @JsonProperty("posts")
     private ArrayList<Post> posts;
     private ArrayList<Story> stories;
 
@@ -56,7 +61,7 @@ public class User implements Constants {
         status = true;
         try {
             URL profileImageUrl = getClass().getResource(Constants.DEFAULT_PROFILE_IMAGE_PATH);
-            if(profileImageUrl != null) {
+            if (profileImageUrl != null) {
                 this.userProfileImage = new Image(profileImageUrl.toString());
             }
 
@@ -64,7 +69,7 @@ public class User implements Constants {
             save.saveImageToDirectory(this.userProfileImage, this);
 
             URL coverImageUrl = getClass().getResource(Constants.DEFAULT_COVER_IMAGE_PATH);
-            if(coverImageUrl != null) {
+            if (coverImageUrl != null) {
                 this.userCoverImage = new Image(coverImageUrl.toString());
             }
             save.saveImageToDirectory(this.userCoverImage, this);
@@ -74,14 +79,27 @@ public class User implements Constants {
         initializeLists();
     }
 
-    private void initializeLists() {
-        friends = new ArrayList<>();
-        blocked = new ArrayList<>();
-        pendingSent = new ArrayList<>();
-        pendingReceived = new ArrayList<>();
-        suggestedFriends = new ArrayList<>();
-        posts = new ArrayList<>();
-        stories = new ArrayList<>();
+    public void initializeLists() {
+        if (friends == null) friends = new ArrayList<>();
+        if (blocked == null) blocked = new ArrayList<>();
+        if (pendingSent == null) pendingSent = new ArrayList<>();
+        if (pendingReceived == null) pendingReceived = new ArrayList<>();
+        if (suggestedFriends == null) suggestedFriends = new ArrayList<>();
+        if (posts == null) posts = new ArrayList<>();
+        if (stories == null) stories = new ArrayList<>();
+    }
+
+    private void validateLists() {
+        if (pendingReceived == null) pendingReceived = new ArrayList<>();
+        if (pendingSent == null) pendingSent = new ArrayList<>();
+        if (friends == null) friends = new ArrayList<>();
+    }
+
+    public void logOut() {
+        this.status = false;
+        Save save = new Save();
+        // First save the user to ensure friend lists are up to date
+        save.saveAllUsers();
     }
 
     private static String generateId() {
@@ -137,16 +155,17 @@ public class User implements Constants {
         return friends;
     }
 
+    public ArrayList<String> getPendingReceived() {
+        validateLists();
+        return pendingReceived;
+    }
+
     public ArrayList<String> getBlocked() {
         return blocked;
     }
 
     public ArrayList<String> getPendingSent() {
         return pendingSent;
-    }
-
-    public ArrayList<String> getPendingReceived() {
-        return pendingReceived;
     }
 
     public String[] getSuggestedFriends() {
@@ -163,7 +182,7 @@ public class User implements Constants {
                     !potentialFriend.getBlocked().contains(userId) &&
                     !blocked.contains(potentialFriendId) &&
                     !pendingSent.contains(potentialFriendId) &&
-                    !pendingReceived.contains(potentialFriendId)&&
+                    !pendingReceived.contains(potentialFriendId) &&
                     !suggestedFriends.contains(potentialFriendId)) {
 
                 suggestedFriends.add(potentialFriendId);
@@ -198,12 +217,20 @@ public class User implements Constants {
 
     // helper methods
     public void addFriend(String friendId) {
-        friends.add(friendId);
+        if (!friends.contains(friendId)) {
+            friends.add(friendId);
+            // Clear any pending requests
+            pendingSent.remove(friendId);
+            pendingReceived.remove(friendId);
+        }
     }
 
     public void removeFriend(String friendId) {
         friends.remove(friendId);
-        BackendDuck.getUserByID(friendId).removeFriend(userId);
+        User friend = BackendDuck.getUserByID(friendId);
+        if (friend != null) {
+            friend.getFriends().remove(userId);
+        }
     }
 
     public void block(String blockedId) {
@@ -219,12 +246,15 @@ public class User implements Constants {
 
 
     public void createContent(boolean permanent, String contentText) {
+        Save save = new Save();
         if (permanent) {
             Post post = Post.create(userId, contentText);
             posts.add(post);
+            save.saveToFile(this);
         } else {
             Story story = Story.create(userId, contentText);
             stories.add(story);
+            save.saveToFile(this);
         }
     }
 
@@ -232,8 +262,12 @@ public class User implements Constants {
         if (permanent) {
             Post post = Post.create(userId, contentText, contentImage);
             posts.add(post);
+            Save save = new Save();
+            save.saveToFile(this);
         } else {
             Story story = Story.create(userId, contentText, contentImage);
+            Save save = new Save();
+            save.saveToFile(this);
             stories.add(story);
         }
     }

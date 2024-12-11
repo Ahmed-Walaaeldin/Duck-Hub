@@ -53,8 +53,6 @@ public class ListItem {
                         PopUp.display(true, "Error", "Error accepting friend request");
                     } else{
                         FriendsPage.refresh(type);
-                        Save save = new Save();
-                        save.saveAllUsers();
                     }
 
 
@@ -64,8 +62,6 @@ public class ListItem {
                         PopUp.display(true, "Error", "Error declining friend request");
                     } else{
                         FriendsPage.refresh(type);
-                        Save save = new Save();
-                        save.saveAllUsers();
                     }
                 });
                 banner.getChildren().addAll(spacer, acceptButton, declineButton);
@@ -78,8 +74,6 @@ public class ListItem {
                         PopUp.display(true, "Error", "Error removing friend");
                     else{
                         FriendsPage.refresh(type);
-                        Save save = new Save();
-                        save.saveAllUsers();
                     }
                 });
                 blockButton.setOnAction(_ -> {
@@ -87,8 +81,6 @@ public class ListItem {
                         PopUp.display(true, "Error", "Error blocking friend");
                     else{
                         FriendsPage.refresh(type);
-                        Save save = new Save();
-                        save.saveAllUsers();
                     }
                 });
 
@@ -114,8 +106,6 @@ public class ListItem {
                         PopUp.display(true, "Error", "Error sending friend request");
                     else{
                         FriendsPage.refresh(type);
-                        Save save = new Save();
-                        save.saveAllUsers();
                     }
                 });
 
@@ -128,8 +118,6 @@ public class ListItem {
                         PopUp.display(true, "Error", "Error unblocking user");
                     else{
                         FriendsPage.refresh(type);
-                        Save save = new Save();
-                        save.saveAllUsers();
                     }
                 });
                 banner.getChildren().addAll(spacer, unblockButton);

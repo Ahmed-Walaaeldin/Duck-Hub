@@ -142,20 +142,25 @@ public class NewContent {
     }
 
     // Will handle both stories and posts based on the flag passed.
-    private void addContent() {
-        if (newContentTextField.getText().isEmpty() && newContentImage == null) {
-            stage.close();
-        } else {
-            String contentText = newContentTextField.getText();
-            if (newContentImage != null) {
-                user.createContent(permanent, contentText, newContentImage);
-                stage.close();
-            } else {
-                user.createContent(permanent, contentText);
-                stage.close();
-            }
-        }
+private void addContent() {
+    if (newContentTextField.getText().isEmpty() && newContentImage == null) {
+        stage.close();
+        return;
     }
+
+    String contentText = newContentTextField.getText();
+    if (newContentImage != null) {
+        user.createContent(permanent, contentText, newContentImage);
+    } else {
+        user.createContent(permanent, contentText);
+    }
+
+    // Save the specific user first
+    Save save = new Save();
+    save.saveToFile(user);
+    save.saveAllUsers();
+    stage.close();
+}
 
     public void display(User user,boolean permanent) {
         this.permanent = permanent;

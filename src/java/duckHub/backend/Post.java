@@ -1,12 +1,15 @@
 package duckHub.backend;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import javafx.scene.image.Image;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 //@JsonIgnoreProperties(ignoreUnknown = true)
 public class Post extends Content {
-    private static int postCounter = 0;
 
+    @JsonCreator
     public Post(){
         super();
 
@@ -28,6 +31,6 @@ public class Post extends Content {
     }
 
     private static String generateId() {
-        return "post-" + postCounter++;
+        return UUID.randomUUID().toString();
     }
 }

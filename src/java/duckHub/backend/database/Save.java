@@ -1,6 +1,10 @@
 package duckHub.backend.database;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import duckHub.backend.*;
 import duckHub.frontend.Constants;
@@ -16,9 +20,20 @@ import java.util.UUID;
 
 public class Save implements Paths, Constants {
     public void saveToFile(User user) {
+
+        // Verify base directory
+        File baseDir = new File(USERS_DATABASE_PATH);
+        if (!baseDir.exists() && !baseDir.mkdirs()) {
+            System.err.println("Failed to create base directory: " + USERS_DATABASE_PATH);
+            return;
+        }
+
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-
+        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         try {
             String userDirectoryPath = USERS_DATABASE_PATH + user.getUserId();
             File userDirectory = new File(userDirectoryPath);
@@ -32,6 +47,12 @@ public class Save implements Paths, Constants {
             }
             File file = new File(userDirectory, JSON_FILE_NAME);
             objectMapper.writeValue(file, user);
+
+            // Save verification
+            User readBack = objectMapper.readValue(file, User.class);
+            if (readBack == null || !readBack.getUserId().equals(user.getUserId())) {
+                throw new IOException("Save verification failed");
+            }
             System.out.println("Successfully saved " + user.getUserId() + " to " + file.getAbsolutePath());
             } catch (IOException e) {
                 System.out.println("Error while saving user to file");
@@ -39,17 +60,17 @@ public class Save implements Paths, Constants {
             }
     }
 
-    public void saveAllUsers() {
-        ArrayList<User> users = BackendDuck.getUsers();
-        System.out.println("Saving " + users.size() + " users");
-        if (users.isEmpty()) {
-            System.out.println("No users to be saved");
-            return;
-        }
-        for (User user : users) {
-            saveToFile(user);
-        }
+public void saveAllUsers() {
+    ArrayList<User> users = BackendDuck.getUsers();
+    System.out.println("Saving " + users.size() + " users");
+    if (users.isEmpty()) {
+        System.out.println("No users to be saved");
+        return;
     }
+    for (User user : users) {
+        saveToFile(user);
+    }
+}
 
     public String saveImageToDirectory(Image image, User user) {
         try {

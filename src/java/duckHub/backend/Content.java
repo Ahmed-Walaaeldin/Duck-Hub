@@ -1,5 +1,6 @@
 package duckHub.backend;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import duckHub.backend.database.ImageDeserializer;
@@ -9,13 +10,17 @@ import javafx.scene.image.Image;
 import java.time.LocalDateTime;
 
 public abstract class Content {
+    @JsonProperty("contentId")
     private String contentId;
+    @JsonProperty("authorId")
     private String authorId;
+    @JsonProperty("contentText")
     private String contentText;
-//    @JsonIgnore
+    @JsonProperty("contentImage")
     @JsonSerialize(using = ImageSerializer.class)
     @JsonDeserialize(using = ImageDeserializer.class)
     private Image contentImage;
+    @JsonProperty("timestamp")
     private LocalDateTime timestamp;
 
     public Content(String contentId, String authorId, String contentText, Image contentImage, LocalDateTime timestamp) {
