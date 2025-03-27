@@ -1,2 +1,2 @@
 # Duck-Hub
-Arab 7aba Tzeed ma7aba
+Building an Instagram clone with a strong focus on OOP and design pattern implementation. 
